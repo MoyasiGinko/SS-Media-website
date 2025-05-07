@@ -7,8 +7,8 @@ import FAQ from "@/components/main/faq/FAQ";
 
 export default function Home() {
   return (
-    <div className="bg-[#111] text-white min-h-screen flex flex-col">
-      <main className="flex-1 flex flex-col items-center pt-20">
+    <div className="bg-[#141313] text-white min-h-screen flex flex-col">
+      <main className="flex-1 flex flex-col items-center ">
         <Hero />
         <Stats />
         <Services />

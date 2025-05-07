@@ -26,7 +26,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="w-full flex flex-col items-center justify-center py-16 px-4 text-center relative bg-gradient-to-b from-[#151515] to-[#0a0a0a] overflow-hidden">
+    <section className="w-full flex flex-col items-center justify-center pt-24 py-16 px-4 text-center relative bg-transparent overflow-hidden">
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] z-0"></div>
 
       {/* 3D Gradient Glow Effect */}
