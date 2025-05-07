@@ -65,7 +65,7 @@ const Hero = () => {
           <br />
           The{" "}
           <motion.span
-            className="bg-gradient-to-r from-purple-500 via-orange-400 to-pink-500 bg-clip-text text-transparent drop-shadow-sm"
+            className="bg-gradient-to-r from-[#BB6FFB] via-[#FC5F67] to-[#FFB054] bg-clip-text text-transparent drop-shadow-sm"
             animate={{
               backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
             }}
