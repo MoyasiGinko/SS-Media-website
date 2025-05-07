@@ -1,28 +1,108 @@
+"use client";
 import React from "react";
+import { motion } from "framer-motion";
 
-const Stats = () => (
-  <section className="w-full flex flex-col items-center py-10 px-4">
-    <div className="flex flex-col md:flex-row gap-8 md:gap-16 items-center justify-center mb-4">
-      <div className="flex flex-col items-center">
-        <span className="text-3xl font-bold text-orange-400">15+</span>
-        <span className="text-sm text-gray-300 mt-1">Satisfied Clients</span>
-      </div>
-      <div className="hidden md:block w-px h-10 bg-gradient-to-b from-orange-400 to-transparent" />
-      <div className="flex flex-col items-center">
-        <span className="text-3xl font-bold text-orange-400">6+</span>
-        <span className="text-sm text-gray-300 mt-1">Year Of Experience</span>
-      </div>
-      <div className="hidden md:block w-px h-10 bg-gradient-to-b from-orange-400 to-transparent" />
-      <div className="flex flex-col items-center">
-        <span className="text-3xl font-bold text-orange-400">10+</span>
-        <span className="text-sm text-gray-300 mt-1">Team Mates</span>
-      </div>
-    </div>
-    <p className="text-center text-gray-400 max-w-2xl text-base">
-      Don't Need To Search Multiple Agency Or Freelancer For Your Projects. We
-      Have Complete Solution For You.
-    </p>
-  </section>
-);
+const Stats = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+      },
+    },
+  };
+
+  const countVariants = {
+    hidden: { scale: 0.8, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        damping: 10,
+        stiffness: 100,
+      },
+    },
+  };
+
+  return (
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      variants={containerVariants}
+      className="w-full flex flex-col items-center py-16 px-4 bg-transparent"
+    >
+      <motion.div className="flex flex-col md:flex-row gap-8 md:gap-16 items-center justify-center mb-8">
+        <motion.div
+          variants={itemVariants}
+          className="flex flex-col items-center"
+        >
+          <motion.span
+            variants={countVariants}
+            className="text-4xl font-bold text-orange-400"
+          >
+            15+
+          </motion.span>
+          <span className="text-sm text-gray-300 mt-1">Satisfied Clients</span>
+        </motion.div>
+
+        <div className="hidden md:block w-px h-12 bg-gradient-to-b from-orange-400 to-transparent" />
+
+        <motion.div
+          variants={itemVariants}
+          className="flex flex-col items-center"
+        >
+          <motion.span
+            variants={countVariants}
+            className="text-4xl font-bold text-orange-400"
+          >
+            6+
+          </motion.span>
+          <span className="text-sm text-gray-300 mt-1">
+            Years Of Experience
+          </span>
+        </motion.div>
+
+        <div className="hidden md:block w-px h-12 bg-gradient-to-b from-orange-400 to-transparent" />
+
+        <motion.div
+          variants={itemVariants}
+          className="flex flex-col items-center"
+        >
+          <motion.span
+            variants={countVariants}
+            className="text-4xl font-bold text-orange-400"
+          >
+            10+
+          </motion.span>
+          <span className="text-sm text-gray-300 mt-1">Team Members</span>
+        </motion.div>
+      </motion.div>
+
+      <motion.p
+        variants={itemVariants}
+        className="text-center text-gray-400 max-w-2xl text-base backdrop-blur-sm p-4 rounded-lg border border-gray-800/30"
+      >
+        Don't Need To Search Multiple Agency Or Freelancer For Your Projects. We
+        Have Complete Solution For You.
+      </motion.p>
+    </motion.section>
+  );
+};
 
 export default Stats;
