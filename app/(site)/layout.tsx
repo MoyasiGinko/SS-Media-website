@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import Navbar from "@/components/main/header/Navbar";
 import Footer from "@/components/main/footer/Footer";
+import { Outfit, Syne } from "next/font/google";
 
-const geistSans = Geist({
+const geistSans = Outfit({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
+const geistMono = Syne({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
