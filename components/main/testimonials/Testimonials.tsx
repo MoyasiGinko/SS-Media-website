@@ -42,15 +42,18 @@ const Testimonials = () => {
     togglePlayPause();
   };
 
-  // Function to toggle play/pause with sound
+  // Updated togglePlayPause function
   const togglePlayPause = () => {
     if (!videoRef.current) return;
 
     if (isPlaying) {
       videoRef.current.pause();
+      // The small video will be paused via the onPause event handler
     } else {
-      videoRef.current.muted = false; // Unmute when playing
+      videoRef.current.muted = false; // Unmute the main video when playing
       videoRef.current.play();
+      // The small video will be played via the onPlay event handler
+      // (and will remain muted due to its muted attribute)
       if (!hasStartedPlaying) {
         setHasStartedPlaying(true);
       }
