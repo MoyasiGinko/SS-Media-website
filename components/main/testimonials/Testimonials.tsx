@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import { useState, useRef } from "react";
 
 const Testimonials = () => {
   const containerVariants = {
@@ -21,6 +22,127 @@ const Testimonials = () => {
       transition: { duration: 0.6 },
     },
   };
+
+  // State for video hover
+  const [isHovering, setIsHovering] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
+
+  // Mouse handlers for video container
+  const handleMouseEnter = () => setIsHovering(true);
+  const handleMouseLeave = () => setIsHovering(false);
+
+  // Video click handler to play/pause
+  const handleVideoClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Prevent clicks on the play/pause button from triggering this
+    if ((e.target as HTMLElement).closest(".play-pause-button")) {
+      return;
+    }
+    togglePlayPause();
+  };
+
+  // Function to toggle play/pause with sound
+  const togglePlayPause = () => {
+    if (!videoRef.current) return;
+
+    if (isPlaying) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.muted = false; // Unmute when playing
+      videoRef.current.play();
+      if (!hasStartedPlaying) {
+        setHasStartedPlaying(true);
+      }
+    }
+
+    setIsPlaying(!isPlaying);
+  };
+
+  // Creating the gradient play icon SVG
+  const PlayIcon = () => (
+    <svg
+      width="80"
+      height="80"
+      viewBox="0 0 80 80"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        cx="40"
+        cy="40"
+        r="38"
+        fill="rgba(0, 0, 0, 0.5)"
+        stroke="url(#playButtonGradient)"
+        strokeWidth="3"
+      />
+      <path d="M53 40L33 52V28L53 40Z" fill="url(#playButtonGradient)" />
+      <defs>
+        <linearGradient
+          id="playButtonGradient"
+          x1="10"
+          y1="10"
+          x2="70"
+          y2="70"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#BB6FFB" />
+          <stop offset="0.5" stopColor="#FC5F67" />
+          <stop offset="1" stopColor="#FFB054" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+
+  // Creating a pause icon
+  const PauseIcon = () => (
+    <svg
+      width="80"
+      height="80"
+      viewBox="0 0 80 80"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        cx="40"
+        cy="40"
+        r="38"
+        fill="rgba(0, 0, 0, 0.5)"
+        stroke="url(#pauseButtonGradient)"
+        strokeWidth="3"
+      />
+      <rect
+        x="30"
+        y="25"
+        width="8"
+        height="30"
+        rx="2"
+        fill="url(#pauseButtonGradient)"
+      />
+      <rect
+        x="42"
+        y="25"
+        width="8"
+        height="30"
+        rx="2"
+        fill="url(#pauseButtonGradient)"
+      />
+      <defs>
+        <linearGradient
+          id="pauseButtonGradient"
+          x1="10"
+          y1="10"
+          x2="70"
+          y2="70"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#BB6FFB" />
+          <stop offset="0.5" stopColor="#FC5F67" />
+          <stop offset="1" stopColor="#FFB054" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
 
   return (
     <section className="w-full py-16 bg-transparent text-white">
@@ -53,32 +175,15 @@ const Testimonials = () => {
             With Their Vision And Saw Real Results.
           </motion.p>
 
-          {/* Testimonial Container */}
+          {/* Testimonial Container with overlapping elements */}
           <motion.div
-            className="w-full flex flex-col md:flex-row gap-6 items-stretch"
+            className="w-7xl flex flex-col md:flex-row gap-6 items-stretch relative"
             variants={itemVariants}
           >
-            {/* Image Section */}
-            <div
-              className="w-full top-15 z-1 md:w-1/2 relative"
-              style={{ marginLeft: "20px" }}
-            >
+            {/* Quote Section (positioned behind) */}
+            <div className="w-full md:w-[687px] bg-transparent relative ml-auto">
               <div
-                className="bg-transparent rounded-2xl overflow-hidden"
-                style={{ width: "640px", height: "360px", marginLeft: "25px" }}
-              >
-                <img
-                  src="/images/testimonials/t1.png"
-                  alt="Mikasa Ackerman"
-                  className="w-full h-full rounded-3xl object-cover"
-                />
-              </div>
-            </div>
-
-            {/* Quote Section */}
-            <div className="w-full -z-0 md:w-[687px] bg-transparent relative flex items-center">
-              <div
-                className="bg-[#1D1D1D] border-1 border-gray-50 rounded-3xl relative flex items-center justify-center"
+                className="bg-[#1D1D1D] border-1 border-white rounded-3xl relative flex items-center justify-center"
                 style={{ width: "687px", height: "481px" }}
               >
                 <div
@@ -116,7 +221,7 @@ const Testimonials = () => {
                   </div>
                 </div>
 
-                <div className="absolute -right-3 -bottom-3 bg-black p-2 rounded-full border border-gray-800">
+                <div className="absolute -right-7 items-center bg-black p-2 rounded-full border border-gray-800">
                   <div className="bg-pink-500 rounded-full p-2">
                     <svg
                       width="20"
@@ -130,6 +235,56 @@ const Testimonials = () => {
                     </svg>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Video container with mouse events (positioned on top with z-index) */}
+            <div
+              className="w-full md:w-[640px] md:h-[360px] cursor-pointer absolute left-10 top-16 z-10"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onClick={handleVideoClick}
+            >
+              {/* Video element */}
+              <video
+                ref={videoRef}
+                className="w-full h-full object-cover rounded-xl"
+                src="/videos/intro.mp4"
+                playsInline
+                loop
+                muted={!isPlaying} // Only muted when not playing
+                onLoadedData={() =>
+                  console.log("Video loaded - extracting colors and thumbnail")
+                }
+              ></video>
+
+              {/* Custom Thumbnail Overlay - only shown in initial state */}
+              {!hasStartedPlaying && !isPlaying && (
+                <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px] transition-opacity duration-300">
+                  {/* Thumbnail Image */}
+                  <div className="w-full h-full">
+                    <img
+                      src="/videos/thumbnail.png"
+                      alt="Video thumbnail"
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+
+                    {/* Gradient overlay on thumbnail */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-xl"></div>
+                  </div>
+                </div>
+              )}
+
+              {/* Play/Pause Button */}
+              <div
+                className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 transition-all duration-300 hover:scale-110 play-pause-button ${
+                  !isPlaying || (isPlaying && isHovering)
+                    ? "opacity-100"
+                    : "opacity-0 pointer-events-none"
+                }`}
+                onClick={togglePlayPause}
+              >
+                {isPlaying ? <PauseIcon /> : <PlayIcon />}
               </div>
             </div>
           </motion.div>
