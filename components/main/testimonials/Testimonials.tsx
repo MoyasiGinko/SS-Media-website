@@ -159,14 +159,14 @@ const Testimonials = () => {
         >
           {/* Heading Section */}
           <motion.h2
-            className="text-4xl md:text-5xl font-bold mb-4 text-center"
+            className="text-3xl text-white md:text-6xl font-bold mb-4 text-center"
             variants={itemVariants}
           >
             What Our Clients Say
           </motion.h2>
 
           <motion.p
-            className="text-center text-gray-300 max-w-3xl mx-auto mb-16"
+            className="text-center text-xl md:text-[28px] text-white/80 max-w-6xl mx-auto mb-16"
             variants={itemVariants}
           >
             We Take Pride In Delivering High-Quality Edits That Make Content

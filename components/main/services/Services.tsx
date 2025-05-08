@@ -80,7 +80,7 @@ const Services = () => (
       viewport={{ once: true }}
       className="text-center"
     >
-      <h2 className="text-3xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-white">
+      <h2 className="text-3xl md:text-6xl font-bold mb-4 text-white">
         Services
       </h2>
       <p className="text-xl md:text-[28px] text-white/80 mb-12 text-center max-w-2xl">
