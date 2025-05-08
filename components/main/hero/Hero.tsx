@@ -8,6 +8,9 @@ const Hero = () => {
   const glowRef = useRef(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [dominantColors, setDominantColors] = useState({
     primary: "rgba(147, 51, 234, 0.3)",
     secondary: "rgba(249, 115, 22, 0.3)",
@@ -16,6 +19,39 @@ const Hero = () => {
     quinary: "rgba(239, 68, 68, 0.3)",
   });
   const previousColorsRef = useRef(dominantColors);
+
+  // State for video hover
+  const [isHovering, setIsHovering] = useState(false);
+
+  // Function to toggle play/pause with sound
+  const togglePlayPause = () => {
+    if (!videoRef.current) return;
+
+    if (isPlaying) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.muted = false; // Unmute when playing
+      videoRef.current.play();
+      if (!hasStartedPlaying) {
+        setHasStartedPlaying(true);
+      }
+    }
+
+    setIsPlaying(!isPlaying);
+  };
+
+  // Mouse handlers for video container
+  const handleMouseEnter = () => setIsHovering(true);
+  const handleMouseLeave = () => setIsHovering(false);
+
+  // Video click handler to play/pause
+  const handleVideoClick = (e: React.MouseEvent) => {
+    // Prevent clicks on the play/pause button from triggering this
+    if ((e.target as HTMLElement).closest(".play-pause-button")) {
+      return;
+    }
+    togglePlayPause();
+  };
 
   // 3D parallax effect for the glow
   useEffect(() => {
@@ -271,6 +307,91 @@ const Hero = () => {
     };
   }, []);
 
+  // Creating the gradient play icon SVG
+  const PlayIcon = () => (
+    <svg
+      width="80"
+      height="80"
+      viewBox="0 0 80 80"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        cx="40"
+        cy="40"
+        r="38"
+        fill="rgba(0, 0, 0, 0.5)"
+        stroke="url(#playButtonGradient)"
+        strokeWidth="3"
+      />
+      <path d="M53 40L33 52V28L53 40Z" fill="url(#playButtonGradient)" />
+      <defs>
+        <linearGradient
+          id="playButtonGradient"
+          x1="10"
+          y1="10"
+          x2="70"
+          y2="70"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#BB6FFB" />
+          <stop offset="0.5" stopColor="#FC5F67" />
+          <stop offset="1" stopColor="#FFB054" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+
+  // Creating a pause icon
+  const PauseIcon = () => (
+    <svg
+      width="80"
+      height="80"
+      viewBox="0 0 80 80"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        cx="40"
+        cy="40"
+        r="38"
+        fill="rgba(0, 0, 0, 0.5)"
+        stroke="url(#pauseButtonGradient)"
+        strokeWidth="3"
+      />
+      <rect
+        x="30"
+        y="25"
+        width="8"
+        height="30"
+        rx="2"
+        fill="url(#pauseButtonGradient)"
+      />
+      <rect
+        x="42"
+        y="25"
+        width="8"
+        height="30"
+        rx="2"
+        fill="url(#pauseButtonGradient)"
+      />
+      <defs>
+        <linearGradient
+          id="pauseButtonGradient"
+          x1="10"
+          y1="10"
+          x2="70"
+          y2="70"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#BB6FFB" />
+          <stop offset="0.5" stopColor="#FC5F67" />
+          <stop offset="1" stopColor="#FFB054" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+
   return (
     <section className="w-full flex flex-col items-center justify-center pt-34 py-16 px-4 text-center relative bg-transparent overflow-hidden">
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] z-0"></div>
@@ -410,15 +531,72 @@ const Hero = () => {
             }}
             className="absolute -inset-0.5 bg-gradient-to-br from-purple-500/10 to-orange-500/10 blur-sm"
           ></motion.div>
-          <video
-            ref={videoRef}
-            className="w-full h-full object-cover rounded-xl"
-            src="/videos/intro.mp4"
-            autoPlay
-            loop
-            muted
-            onLoadedData={() => console.log("Video loaded - extracting colors")}
-          ></video>
+
+          {/* Video container with mouse events */}
+          <div
+            className="relative w-full h-full cursor-pointer"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onClick={handleVideoClick}
+          >
+            {/* Video element */}
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover rounded-xl"
+              src="/videos/intro.mp4"
+              playsInline
+              loop
+              muted={!isPlaying} // Only muted when not playing
+              onLoadedData={() =>
+                console.log("Video loaded - extracting colors and thumbnail")
+              }
+            ></video>
+
+            {/* Custom Thumbnail Overlay - only shown in initial state */}
+            {!hasStartedPlaying && !isPlaying && (
+              <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px] transition-opacity duration-300">
+                {/* Thumbnail Image */}
+                <div className="w-full h-full">
+                  <img
+                    src="/videos/thumbnail.png"
+                    alt="Video thumbnail"
+                    className="w-full h-full object-cover rounded-xl"
+                  />
+
+                  {/* Gradient overlay on thumbnail */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-xl"></div>
+
+                  {/* Video duration badge - shown on thumbnail */}
+                  <div className="absolute bottom-4 right-4 bg-black/70 text-white text-xs px-2 py-1 rounded-md">
+                    2:45
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Video duration badge - shown only when playing */}
+            {/* {isPlaying && (
+              <div className="absolute bottom-4 right-4 bg-black/70 text-white text-xs px-2 py-1 rounded-md transition-opacity duration-300">
+                2:45
+              </div>
+            )} */}
+
+            {/* Play/Pause Button - shown when:
+                1. Initial state (not yet played)
+                2. Paused
+                3. Playing + Hovering
+            */}
+            <div
+              className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 transition-all duration-300 hover:scale-110 play-pause-button ${
+                !isPlaying || (isPlaying && isHovering)
+                  ? "opacity-100"
+                  : "opacity-0 pointer-events-none"
+              }`}
+              onClick={togglePlayPause}
+            >
+              {isPlaying ? <PauseIcon /> : <PlayIcon />}
+            </div>
+          </div>
         </motion.div>
       </div>
       <Stats />
