@@ -33,58 +33,41 @@ body {
   font-family: "Syne", sans-serif;
 }
 
-/* Add this to your global.css or a similar stylesheet */
-/* Add these styles to your global CSS file */
+/* Streamlined CSS with performance optimizations */
 
-/* Define CSS variables for mouse position that will be used by the Spotlight component */
 :root {
   --mouse-x: 0px;
   --mouse-y: 0px;
+  --spotlight-color: rgba(241, 99, 106, 0.8);
+  --spotlight-fade: rgba(99, 102, 241, 0);
 }
 
-/* Styles for the service cards with spotlight effect */
-.group\/card {
-  position: relative;
-  transition: all 0.3s ease;
+/* Only apply transitions to non-touch devices to improve performance */
+@media (hover: hover) {
+  .group\/card {
+    position: relative;
+    /* Reduced from all 0.3s to just color/opacity transitions */
+    transition: color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .group\/card:hover::before {
+    opacity: 0.7;
+  }
+
+  .group\/card:hover::after {
+    opacity: 0.15;
+  }
 }
 
-/* Ensure the before/after pseudo-elements have content */
-.group\/card::before,
-.group\/card::after {
-  content: "";
-  pointer-events: none;
-  transition: opacity 0.5s ease;
-}
-
-/* Make the spotlight glow more visible on hover */
-.group\/card:hover::before {
-  opacity: 0.8 !important;
-}
-
-.group\/card:hover::after {
-  opacity: 0.2 !important;
-}
-
-/* Create a subtle gradient overlay for better text readability */
-.group\/card::before {
-  background: radial-gradient(
-    circle,
-    rgba(241, 99, 106, 0.8) 0%,
-    rgba(99, 102, 241, 0) 70%
-  );
-}
-
-/* Make the text more readable when hovering over the card */
-.group\/card:hover .text-gray-400 {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* Add responsive adjustments for the spotlight effect */
-@media (max-width: 768px) {
+/* Skip all these effects on mobile/touch devices for better performance */
+@media (hover: none) {
   .group\/card::before,
   .group\/card::after {
-    height: 60px;
-    width: 60px;
-    opacity: 0.6;
+    display: none;
+  }
+
+  /* Simple hover fallback for touch */
+  .group\/card:active {
+    border-color: #fc5f67;
   }
 }
