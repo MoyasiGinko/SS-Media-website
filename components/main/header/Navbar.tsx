@@ -96,8 +96,7 @@ const Navbar = () => {
           <span
             className={`${
               isScrolled ? "block md:hidden" : "hidden md:block "
-            } font-semibold text-lg tracking-wide text-white
-        drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]`}
+            } font-semibold text-lg tracking-wide text-white`}
           >
             SS Media
           </span>

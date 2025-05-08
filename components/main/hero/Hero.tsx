@@ -1,13 +1,19 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import TextSwapButton from "@/components/common/Button";
 
 const Hero = () => {
-  const glowRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef(null);
 
   // 3D parallax effect for the glow
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    interface MouseMoveEvent extends MouseEvent {
+      clientX: number;
+      clientY: number;
+    }
+
+    const handleMouseMove = (e: MouseMoveEvent): void => {
       if (!glowRef.current) return;
 
       const { clientX, clientY } = e;
@@ -18,7 +24,9 @@ const Hero = () => {
       const moveX = ((clientX - centerX) / centerX) * 25; // max 25px movement
       const moveY = ((clientY - centerY) / centerY) * 25;
 
-      glowRef.current.style.transform = `translate3d(${moveX}px, ${moveY}px, 0) scale(1.1)`;
+      (
+        glowRef.current as HTMLDivElement
+      ).style.transform = `translate3d(${moveX}px, ${moveY}px, 0) scale(1.1)`;
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -98,21 +106,19 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
         >
+          {/* Using the TextSwapButton component with props */}
+          <TextSwapButton
+            initialText="Book A Call"
+            hoverText="Book A Call"
+            textColor="#000"
+            className="bg-gradient-to-r text-black from-[#BB6FFB] via-[#FC5F67] to-[#FFB054] h-12 w-40 text-xl font-medium"
+            href="#services"
+          />
           <motion.a
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            href="#book"
-            className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 py-3 rounded-lg font-semibold text-sm transition-all shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30"
-          >
-            Book A Call
-          </motion.a>
-          <motion.a
-            whileHover={{ scale: 1.05, borderColor: "rgba(255,165,0,0.4)" }}
-            whileTap={{ scale: 0.95 }}
             href="#work"
-            className="border border-gray-700 bg-[#181818] hover:bg-[#202020] text-white px-8 py-3 rounded-lg font-semibold text-sm transition-all hover:border-gray-600"
+            className="bg-white/15 text-white h-12 w-40 text-xl font-normal flex items-center justify-center rounded-2xl border-2 border-gray-50  hover:bg-white/20 transition-all duration-300"
           >
-            Our Work
+            Works
           </motion.a>
         </motion.div>
 
@@ -143,21 +149,66 @@ const Hero = () => {
             <svg
               width="40"
               height="40"
-              viewBox="0 0 40 40"
+              viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <circle cx="20" cy="20" r="20" fill="#232323" />
+              <circle cx="12" cy="12" r="12" fill="#232323" />
               <motion.polygon
                 initial={{ x: -2 }}
                 animate={{ x: 0 }}
                 whileHover={{ fill: "#FFA500" }}
-                points="16,13 28,20 16,27"
+                points="10,7 17,12 10,17"
                 fill="#FF7849"
               />
             </svg>
           </motion.button>
         </motion.div>
+      </div>
+
+      <div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center justify-center gap-8">
+        <h1 className="text-2xl font-bold mb-8">TextSwapButton Examples</h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+          <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md">
+            <h2 className="mb-4 text-lg font-semibold">Default Button</h2>
+            <TextSwapButton
+              initialText="Our Services"
+              hoverText="View Services"
+              href="#services"
+            />
+          </div>
+
+          <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md">
+            <h2 className="mb-4 text-lg font-semibold">Custom Color</h2>
+            <TextSwapButton
+              initialText="Learn More"
+              hoverText="Start Learning"
+              href="#learn"
+            />
+          </div>
+
+          <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md">
+            <h2 className="mb-4 text-lg font-semibold">Without Icon</h2>
+            <TextSwapButton
+              initialText="Contact Us"
+              hoverText="Get in Touch"
+              href="#contact"
+              textColor="#FFFFFF"
+              className="text-lg font-semibold"
+              icon="none"
+            />
+          </div>
+
+          <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md">
+            <h2 className="mb-4 text-lg font-semibold">Dark Theme</h2>
+            <TextSwapButton
+              initialText="Join Newsletter"
+              hoverText="Subscribe Now"
+              href="#newsletter"
+            />
+          </div>
+        </div>
       </div>
     </section>
   );
