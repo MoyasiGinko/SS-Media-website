@@ -183,7 +183,7 @@ const Testimonials = () => {
             {/* Quote Section (positioned behind) */}
             <div className="w-full md:w-[687px] bg-transparent relative ml-auto">
               <div
-                className="bg-[#1D1D1D] border-1 border-white rounded-3xl relative flex items-center justify-center"
+                className="bg-[#1D1D1D] border-1 border-white rounded-[21px] relative flex items-center justify-center"
                 style={{ width: "687px", height: "481px" }}
               >
                 <div
@@ -198,16 +198,16 @@ const Testimonials = () => {
                     alt="Quote"
                     className="mb-4 w-15 h-15"
                   />
-                  <p className="text-[28px] leading-tight font-medium text-gray-200 mb-6 text-left">
+                  <p className="text-[28px] leading-tight font-medium text-white/80 mb-6 text-left">
                     I Wanted Someone To Help Me With My YouTube Channel, The
                     Seller Did A Great Job And I'm Very Happy With The Result,
                   </p>
 
                   <div className="flex flex-col items-start">
-                    <span className="text-base font-medium">
+                    <span className="text-xl text-white font-medium">
                       Mikasa Ackerman
                     </span>
-                    <span className="text-sm text-gray-400">
+                    <span className="text-xl text-white/70">
                       CEO - Eren Life
                     </span>
                   </div>
@@ -234,7 +234,7 @@ const Testimonials = () => {
               {/* Video element */}
               <video
                 ref={videoRef}
-                className="w-full h-full object-cover rounded-xl"
+                className="w-full h-full object-cover rounded-[21px]"
                 src="/videos/intro.mp4"
                 playsInline
                 loop
@@ -252,11 +252,11 @@ const Testimonials = () => {
                     <img
                       src="/videos/thumbnail.png"
                       alt="Video thumbnail"
-                      className="w-full h-full object-cover rounded-xl"
+                      className="w-full h-full object-cover rounded-[21px]"
                     />
 
                     {/* Gradient overlay on thumbnail */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-xl"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-[21px]"></div>
                   </div>
                 </div>
               )}
