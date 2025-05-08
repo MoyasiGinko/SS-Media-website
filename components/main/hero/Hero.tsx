@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import TextSwapButton from "@/components/common/Button";
 import Stats from "../stats/Stats";
+import Services from "../services/Services";
 
 const Hero = () => {
   const glowRef = useRef(null);
@@ -412,38 +413,10 @@ const Hero = () => {
 
   return (
     <section className="w-full flex flex-col items-center justify-center pt-34 py-16 px-4 text-center relative bg-transparent overflow-hidden">
-      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] z-0"></div>
+      {/* <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] z-0"></div> */}
 
       {/* Hidden canvas for color extraction */}
       <canvas ref={canvasRef} className="hidden"></canvas>
-
-      {/* Enhanced 3D Gradient Glow Effect using strategically extracted colors */}
-      <div
-        ref={glowRef}
-        style={{
-          background: `radial-gradient(circle at center,
-            ${videoColors.center} 0%,
-            ${videoColors.topCenter} 25%,
-            ${videoColors.middleRight} 50%,
-            ${videoColors.bottomRight} 75%,
-            ${videoColors.bottomLeft} 100%)`,
-          transition: "background 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-        }}
-        className="absolute bottom-1/5 left-1/2 -translate-x-1/2 translate-y-1/6 w-[900px] h-[900px] rounded-full blur-[120px] opacity-75 z-5 transition-transform duration-300 ease-out"
-      ></div>
-
-      {/* Bottom gradient background with video-extracted colors */}
-      <div
-        style={{
-          background: `linear-gradient(135deg,
-            ${videoColors.topLeft} 0%,
-            ${videoColors.center} 35%,
-            ${videoColors.bottomRight} 65%,
-            ${videoColors.bottomCenter} 100%)`,
-          transition: "background 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-        }}
-        className="absolute bottom-48 left-0 right-0 h-[600px] blur-[150px] opacity-70 z-5"
-      ></div>
 
       <div className="relative z-10 w-full max-w-5xl">
         <motion.div
@@ -531,6 +504,34 @@ const Hero = () => {
           </motion.a>
         </motion.div>
 
+        {/* Enhanced 3D Gradient Glow Effect using strategically extracted colors */}
+        <div
+          ref={glowRef}
+          style={{
+            background: `radial-gradient(circle at center,
+        ${videoColors.center} 0%,
+        ${videoColors.topCenter} 25%,
+        ${videoColors.middleRight} 50%,
+        ${videoColors.bottomRight} 75%,
+        ${videoColors.bottomLeft} 100%)`,
+            transition: "background 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          }}
+          className="absolute top-0 left-1/2 -translate-x-1/2 translate-y-1/4 w-[900px] h-[900px] rounded-full blur-[120px] opacity-75 z-5 transition-transform duration-300 ease-out"
+        ></div>
+
+        {/* Bottom gradient background with video-extracted colors */}
+        <div
+          style={{
+            background: `linear-gradient(135deg,
+        ${videoColors.topLeft} 0%,
+        ${videoColors.center} 35%,
+        ${videoColors.bottomRight} 65%,
+        ${videoColors.bottomCenter} 100%)`,
+            transition: "background 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          }}
+          className="absolute bottom-0 left-0 right-0 h-[600px] blur-[150px] opacity-70 z-5"
+        ></div>
+
         {/* Video container with dynamic color-responsive background */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -538,7 +539,7 @@ const Hero = () => {
           transition={{ duration: 1, delay: 0.8 }}
           className="w-full max-w-7xl mx-auto aspect-video rounded-3xl border-7 border-white/20 bg-transparent flex items-center justify-center relative shadow-2xl shadow-orange-500/10 overflow-hidden"
         >
-          <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03]"></div>
+          {/* <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03]"></div> */}
 
           {/* Enhanced dynamic background that responds to video colors */}
           <motion.div
@@ -566,7 +567,7 @@ const Hero = () => {
 
           {/* Video container with mouse events */}
           <div
-            className="relative w-full h-full cursor-pointer"
+            className="relative w-full h-full z-10 cursor-pointer"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             onClick={handleVideoClick}
@@ -620,6 +621,9 @@ const Hero = () => {
         </motion.div>
       </div>
       <Stats />
+      <Services />
+
+      {/* Footer section with gradient background */}
     </section>
   );
 };

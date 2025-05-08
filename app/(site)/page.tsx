@@ -10,7 +10,7 @@ export default function Home() {
     <div className="bg-[#141313] text-white min-h-screen flex flex-col">
       <main className="flex-1 flex flex-col items-center ">
         <Hero />
-        <Services />
+        {/* <Services /> */}
         <Testimonials />
         <Portfolio />
         <FAQ />

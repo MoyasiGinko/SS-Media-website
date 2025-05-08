@@ -100,7 +100,7 @@ const Stats = () => {
 
       <motion.p
         variants={itemVariants}
-        className="text-center text-gray-400 max-w-3xl text-3xl font-medium backdrop-blur-sm p-4 rounded-lg border border-gray-800/30"
+        className="text-center text-gray-400 max-w-3xl text-3xl font-medium backdrop-blur-sm p-4 rounded-lg "
       >
         Don't Need To Search Multiple Agency Or Freelancer For Your Projects. We
         Have Complete Solution For You.
