@@ -386,7 +386,7 @@ const Hero = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="w-full max-w-2xl mx-auto aspect-video rounded-xl border border-orange-500/30 bg-gradient-to-br from-[#1c1c1c] to-[#0f0f0f] flex items-center justify-center relative shadow-2xl shadow-orange-500/10 overflow-hidden"
+          className="w-full max-w-2xl mx-auto aspect-video rounded-3xl border-7 border-white/20 bg-transparent flex items-center justify-center relative shadow-2xl shadow-orange-500/10 overflow-hidden"
         >
           <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03]"></div>
           <motion.div
