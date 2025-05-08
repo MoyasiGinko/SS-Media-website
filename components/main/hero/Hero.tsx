@@ -121,7 +121,6 @@ const Hero = () => {
             Works
           </motion.a>
         </motion.div>
-
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -141,28 +140,13 @@ const Hero = () => {
             }}
             className="absolute -inset-0.5 bg-gradient-to-br from-purple-500/10 to-orange-500/10 blur-sm"
           ></motion.div>
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="w-20 h-20 bg-[#232323] bg-opacity-80 rounded-full flex items-center justify-center border-4 border-orange-400 shadow-lg hover:scale-105 transition-all duration-300 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
-          >
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="12" cy="12" r="12" fill="#232323" />
-              <motion.polygon
-                initial={{ x: -2 }}
-                animate={{ x: 0 }}
-                whileHover={{ fill: "#FFA500" }}
-                points="10,7 17,12 10,17"
-                fill="#FF7849"
-              />
-            </svg>
-          </motion.button>
+          <video
+            className="w-full h-full object-cover rounded-xl"
+            src="/videos/intro.mp4"
+            autoPlay
+            loop
+            muted
+          ></video>
         </motion.div>
       </div>
     </section>
