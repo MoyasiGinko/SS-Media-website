@@ -226,27 +226,51 @@ const Testimonials = () => {
 
             {/* Video container with mouse events (positioned on top with z-index) */}
             <div
-              className="w-full md:w-[640px] md:h-[360px] cursor-pointer absolute left-10 top-16 z-10"
+              className="w-full md:w-[640px] rounded-[21px] md:h-[360px] cursor-pointer absolute left-10 top-16 z-10"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
               onClick={handleVideoClick}
             >
               {/* Video element */}
+              {/* Bigger Video */}
               <video
                 ref={videoRef}
-                className="w-full h-full object-cover rounded-[21px]"
+                className="w-full h-full z-10 object-cover rounded-[21px] backdrop-blur-[2px] shadow-[0px_0px_200px_30px_rgba(255,255,255,0.1)]"
                 src="/videos/intro.mp4"
                 playsInline
                 loop
                 muted={!isPlaying} // Only muted when not playing
-                onLoadedData={() =>
-                  console.log("Video loaded - extracting colors and thumbnail")
-                }
+                onPlay={() => {
+                  const smallVideo = document.getElementById(
+                    "smallVideo"
+                  ) as HTMLVideoElement;
+                  if (smallVideo && smallVideo.paused) {
+                    smallVideo.play();
+                  }
+                }}
+                onPause={() => {
+                  const smallVideo = document.getElementById(
+                    "smallVideo"
+                  ) as HTMLVideoElement;
+                  if (smallVideo && !smallVideo.paused) {
+                    smallVideo.pause();
+                  }
+                }}
+              ></video>
+
+              {/* Smaller Video */}
+              <video
+                id="smallVideo"
+                className="w-[570px] h-[320px] absolute -z-1 left-1/2 bottom-4 transform -translate-x-1/2 blur-[80px] object-cover"
+                src="/videos/intro.mp4"
+                playsInline
+                loop
+                muted
               ></video>
 
               {/* Custom Thumbnail Overlay - only shown in initial state */}
               {!hasStartedPlaying && !isPlaying && (
-                <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px] transition-opacity duration-300">
+                <div className="absolute inset-0 bg-transparent backdrop-blur-[2px] transition-opacity duration-300 rounded-[21px]  shadow-[0px_0px_200px_30px_rgba(255,255,255,0.1)]">
                   {/* Thumbnail Image */}
                   <div className="w-full h-full">
                     <img
