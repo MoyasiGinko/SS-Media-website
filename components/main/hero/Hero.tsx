@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import TextSwapButton from "@/components/common/Button";
+import Stats from "../stats/Stats";
 
 const Hero = () => {
   const glowRef = useRef(null);
@@ -289,7 +290,7 @@ const Hero = () => {
         ${dominantColors.quinary} 100%)`,
           transition: "background 2s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         }}
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 w-[900px] h-[900px] rounded-full blur-[120px] opacity-75 z-0 transition-transform duration-300 ease-out"
+        className="absolute bottom-1/5 left-1/2 -translate-x-1/2 translate-y-1/6 w-[900px] h-[900px] rounded-full blur-[120px] opacity-75 z-5 transition-transform duration-300 ease-out"
       ></div>
 
       {/* Bottom gradient background with video-extracted colors */}
@@ -302,7 +303,7 @@ const Hero = () => {
         ${dominantColors.quaternary} 100%)`,
           transition: "background 2s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         }}
-        className="absolute bottom-0 left-0 right-0 h-[600px] blur-[150px] opacity-70 z-0"
+        className="absolute bottom-48 left-0 right-0 h-[600px] blur-[150px] opacity-70 z-5"
       ></div>
 
       <div className="relative z-10 w-full max-w-5xl">
@@ -411,6 +412,7 @@ const Hero = () => {
           ></video>
         </motion.div>
       </div>
+      <Stats />
     </section>
   );
 };
