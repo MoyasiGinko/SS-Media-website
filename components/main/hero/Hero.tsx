@@ -11,14 +11,21 @@ const Hero = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [dominantColors, setDominantColors] = useState({
-    primary: "rgba(147, 51, 234, 0.3)",
-    secondary: "rgba(249, 115, 22, 0.3)",
-    tertiary: "rgba(219, 39, 119, 0.3)",
-    quaternary: "rgba(16, 185, 129, 0.3)",
-    quinary: "rgba(239, 68, 68, 0.3)",
+
+  // Updated state to store colors from specific regions
+  const [videoColors, setVideoColors] = useState({
+    topLeft: "rgba(147, 51, 234, 0.3)",
+    topCenter: "rgba(249, 115, 22, 0.3)",
+    topRight: "rgba(219, 39, 119, 0.3)",
+    middleLeft: "rgba(59, 130, 246, 0.3)",
+    center: "rgba(16, 185, 129, 0.3)",
+    middleRight: "rgba(239, 68, 68, 0.3)",
+    bottomLeft: "rgba(139, 92, 246, 0.3)",
+    bottomCenter: "rgba(234, 179, 8, 0.3)",
+    bottomRight: "rgba(236, 72, 153, 0.3)",
   });
-  const previousColorsRef = useRef(dominantColors);
+
+  const previousColorsRef = useRef(videoColors);
 
   // State for video hover
   const [isHovering, setIsHovering] = useState(false);
@@ -80,7 +87,7 @@ const Hero = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // Extract dominant colors from video frames
+  // Extract dominant colors from video frames - enhanced version
   useEffect(() => {
     if (!videoRef.current || !canvasRef.current) return;
 
@@ -91,8 +98,8 @@ const Hero = () => {
     if (!ctx) return;
 
     // Set canvas size (can be smaller than video for performance)
-    canvas.width = 200;
-    canvas.height = 112;
+    canvas.width = 300; // Increased for better sampling
+    canvas.height = 168; // Maintain aspect ratio
 
     // Color enhancement function to make colors more vibrant
     const enhanceColor = (r: number, g: number, b: number) => {
@@ -100,7 +107,7 @@ const Hero = () => {
       const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
 
       // Boost saturation
-      const saturationBoost = 1.3; // Increase for more vibrant colors
+      const saturationBoost = 1.5; // Increased for more vibrant colors
       const avgColor = (r + g + b) / 3;
 
       let newR = r + (r - avgColor) * saturationBoost;
@@ -115,18 +122,116 @@ const Hero = () => {
       return { r: newR, g: newG, b: newB };
     };
 
+    // Define regions to sample from the video
+    const regions = [
+      { name: "topLeft", x: 0, y: 0, width: 50, height: 50 },
+      { name: "topCenter", x: 125, y: 0, width: 50, height: 50 },
+      { name: "topRight", x: 250, y: 0, width: 50, height: 50 },
+      { name: "middleLeft", x: 0, y: 59, width: 50, height: 50 },
+      { name: "center", x: 125, y: 59, width: 50, height: 50 },
+      { name: "middleRight", x: 250, y: 59, width: 50, height: 50 },
+      { name: "bottomLeft", x: 0, y: 118, width: 50, height: 50 },
+      { name: "bottomCenter", x: 125, y: 118, width: 50, height: 50 },
+      { name: "bottomRight", x: 250, y: 118, width: 50, height: 50 },
+    ];
+
+    // Function to get dominant color from a specific region
+    const getRegionDominantColor = (region: any) => {
+      try {
+        // Get image data for the region
+        const imageData = ctx.getImageData(
+          region.x,
+          region.y,
+          region.width,
+          region.height
+        );
+        const data = imageData.data;
+
+        // Color binning for the region
+        const colorBins: {
+          [key: string]: { count: number; r: number; g: number; b: number };
+        } = {};
+
+        // Process pixels to find dominant colors
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+
+          // Skip very dark (near black) pixels
+          if (r < 15 && g < 15 && b < 15) continue;
+
+          // Skip very light (near white) pixels
+          if (r > 240 && g > 240 && b > 240) continue;
+
+          // Skip low saturation (grayscale) pixels
+          const max = Math.max(r, g, b);
+          const min = Math.min(r, g, b);
+          const saturation = max === 0 ? 0 : (max - min) / max;
+          if (saturation < 0.1) continue; // Skip grayish colors
+
+          // Enhance color vibrance
+          const enhanced = enhanceColor(r, g, b);
+
+          // Create a color key with reduced precision for better grouping
+          const colorKey = `${Math.floor(enhanced.r / 5) * 5},${
+            Math.floor(enhanced.g / 5) * 5
+          },${Math.floor(enhanced.b / 5) * 5}`;
+
+          // Count occurrences with weighted importance
+          if (!colorBins[colorKey]) {
+            colorBins[colorKey] = {
+              count: 0,
+              r: enhanced.r,
+              g: enhanced.g,
+              b: enhanced.b,
+            };
+          }
+
+          // Weight by saturation and brightness to favor vibrant colors
+          const brightness = (r + g + b) / 3 / 255;
+          const importance = saturation * (0.6 + brightness * 0.4) * 2.5;
+
+          colorBins[colorKey].count += importance;
+        }
+
+        // Find most dominant color in the region
+        const sortedColors = Object.entries(colorBins).sort(
+          (a, b) => b[1].count - a[1].count
+        );
+
+        // Return the most dominant color, or a fallback if none found
+        if (sortedColors.length > 0) {
+          const dominant = sortedColors[0][1];
+          return `rgba(${Math.round(dominant.r)}, ${Math.round(
+            dominant.g
+          )}, ${Math.round(dominant.b)}, 0.35)`;
+        } else {
+          // Fallback to a semi-random color if no dominant color found
+          return `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
+            Math.random() * 255
+          )}, ${Math.floor(Math.random() * 255)}, 0.35)`;
+        }
+      } catch (error) {
+        console.error(
+          `Error extracting color for region ${region.name}:`,
+          error
+        );
+        return `rgba(100, 100, 100, 0.35)`;
+      }
+    };
+
     // Weighted color transition for smoother changes
     const blendWithPreviousColors = (newColors: any) => {
       const prev = previousColorsRef.current;
-      const blendFactor = 0.85; // Higher = smoother transitions (0.7-0.9 is good)
+      // Lower blend factor for faster transitions (was 0.85)
+      const blendFactor = 0.75;
 
       const blendedColors: any = {};
 
       // Blend each color with its previous value for smoother transitions
       for (const key in newColors) {
-        const prevColor =
-          prev[key as keyof typeof prev] ||
-          newColors[key as keyof typeof newColors];
+        const prevColor = prev[key as keyof typeof prev] || newColors[key];
 
         // Parse RGBA values
         const prevMatch = prevColor.match(
@@ -173,111 +278,25 @@ const Hero = () => {
       return blendedColors;
     };
 
-    // Function to extract dominant colors from a frame
+    // Function to extract colors from all regions of a frame
     const extractColors = () => {
       try {
         // Draw current video frame to canvas
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Get image data
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
+        // Extract dominant color from each region
+        const newColors: any = {};
 
-        // Advanced color binning with vibrance enhancement
-        const colorBins: {
-          [key: string]: { count: number; r: number; g: number; b: number };
-        } = {};
-        const sampleRate = 5; // Sample every 5th pixel for better accuracy
-
-        // Process pixels to find dominant colors
-        for (let i = 0; i < data.length; i += 4 * sampleRate) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-
-          // Skip very dark (near black) pixels
-          if (r < 15 && g < 15 && b < 15) continue;
-
-          // Skip very light (near white) pixels
-          if (r > 240 && g > 240 && b > 240) continue;
-
-          // Skip low saturation (grayscale) pixels
-          const max = Math.max(r, g, b);
-          const min = Math.min(r, g, b);
-          const saturation = max === 0 ? 0 : (max - min) / max;
-          if (saturation < 0.15) continue; // Skip grayish colors
-
-          // Enhance color vibrance
-          const enhanced = enhanceColor(r, g, b);
-
-          // Create a color key with reduced precision for better grouping of similar colors
-          const colorKey = `${Math.floor(enhanced.r / 8) * 8},${
-            Math.floor(enhanced.g / 8) * 8
-          },${Math.floor(enhanced.b / 8) * 8}`;
-
-          // Count occurrences with weighted importance
-          if (!colorBins[colorKey]) {
-            colorBins[colorKey] = {
-              count: 0,
-              r: enhanced.r,
-              g: enhanced.g,
-              b: enhanced.b,
-            };
-          }
-
-          // Weight by saturation and brightness to favor more vibrant colors
-          const brightness = (r + g + b) / 3 / 255;
-          const importance = saturation * (0.5 + brightness * 0.5) * 2;
-
-          colorBins[colorKey].count += importance;
-        }
-
-        // Sort and get top 5 colors
-        const sortedColors = Object.entries(colorBins)
-          .sort((a, b) => b[1].count - a[1].count)
-          .slice(0, 8) // Get more colors than needed for better diversity
-          .map(([_, value]) => {
-            // Increase opacity for more vibrant effect
-            return `rgba(${Math.round(value.r)}, ${Math.round(
-              value.g
-            )}, ${Math.round(value.b)}, 0.3)`;
-          });
-
-        // Create a diverse color palette by selecting colors that are visually distinct
-        const palette: string[] = [];
-        if (sortedColors.length > 0) {
-          // Always use the most dominant color
-          palette.push(sortedColors[0]);
-
-          // Try to find diverse colors from the remaining options
-          for (let i = 1; i < sortedColors.length && palette.length < 5; i++) {
-            palette.push(sortedColors[i]);
-          }
-        }
-
-        // Fill with fallback colors if needed
-        while (palette.length < 5) {
-          palette.push(
-            `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${
-              Math.random() * 255
-            }, 0.3)`
-          );
-        }
-
-        // Create new color object
-        const newColors = {
-          primary: palette[0],
-          secondary: palette[1],
-          tertiary: palette[2],
-          quaternary: palette[3],
-          quinary: palette[4],
-        };
+        // Process each region to get its dominant color
+        regions.forEach((region) => {
+          newColors[region.name] = getRegionDominantColor(region);
+        });
 
         // Blend with previous colors for smoother transitions
         const blendedColors = blendWithPreviousColors(newColors);
 
         // Update state with extracted colors
-        setDominantColors(blendedColors);
+        setVideoColors(blendedColors);
       } catch (error) {
         console.error("Error extracting colors:", error);
       }
@@ -286,15 +305,14 @@ const Hero = () => {
     // Extract colors when the video is loaded
     video.addEventListener("loadeddata", extractColors);
 
-    // Update colors periodically
-    const intervalId = setInterval(extractColors, 800); // Sample more frequently for smoother transitions
+    // Update colors more frequently for responsive changes
+    const intervalId = setInterval(extractColors, 300); // Faster sampling for more responsive transitions
 
     // Extract colors on seek/timeupdate for more responsiveness
     video.addEventListener("seeked", extractColors);
     video.addEventListener("timeupdate", () => {
-      // Only extract on certain intervals to avoid performance issues
-      if (Math.floor(video.currentTime * 2) % 3 === 0) {
-        // About every 1.5 seconds
+      // More frequent extraction for smoother color transitions
+      if (Math.floor(video.currentTime * 4) % 2 === 0) {
         extractColors();
       }
     });
@@ -399,17 +417,17 @@ const Hero = () => {
       {/* Hidden canvas for color extraction */}
       <canvas ref={canvasRef} className="hidden"></canvas>
 
-      {/* Dynamic 3D Gradient Glow Effect using extracted colors */}
+      {/* Enhanced 3D Gradient Glow Effect using strategically extracted colors */}
       <div
         ref={glowRef}
         style={{
           background: `radial-gradient(circle at center,
-        ${dominantColors.primary} 0%,
-        ${dominantColors.secondary} 25%,
-        ${dominantColors.tertiary} 50%,
-        ${dominantColors.quaternary} 75%,
-        ${dominantColors.quinary} 100%)`,
-          transition: "background 2s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+            ${videoColors.center} 0%,
+            ${videoColors.topCenter} 25%,
+            ${videoColors.middleRight} 50%,
+            ${videoColors.bottomRight} 75%,
+            ${videoColors.bottomLeft} 100%)`,
+          transition: "background 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         }}
         className="absolute bottom-1/5 left-1/2 -translate-x-1/2 translate-y-1/6 w-[900px] h-[900px] rounded-full blur-[120px] opacity-75 z-5 transition-transform duration-300 ease-out"
       ></div>
@@ -418,11 +436,11 @@ const Hero = () => {
       <div
         style={{
           background: `linear-gradient(135deg,
-        ${dominantColors.primary} 0%,
-        transparent 35%,
-        ${dominantColors.tertiary} 65%,
-        ${dominantColors.quaternary} 100%)`,
-          transition: "background 2s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+            ${videoColors.topLeft} 0%,
+            ${videoColors.center} 35%,
+            ${videoColors.bottomRight} 65%,
+            ${videoColors.bottomCenter} 100%)`,
+          transition: "background 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         }}
         className="absolute bottom-48 left-0 right-0 h-[600px] blur-[150px] opacity-70 z-5"
       ></div>
@@ -512,6 +530,8 @@ const Hero = () => {
             Works
           </motion.a>
         </motion.div>
+
+        {/* Video container with dynamic color-responsive background */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -519,17 +539,29 @@ const Hero = () => {
           className="w-full max-w-7xl mx-auto aspect-video rounded-3xl border-7 border-white/20 bg-transparent flex items-center justify-center relative shadow-2xl shadow-orange-500/10 overflow-hidden"
         >
           <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03]"></div>
+
+          {/* Enhanced dynamic background that responds to video colors */}
           <motion.div
+            style={{
+              background: `
+                radial-gradient(circle at 25% 25%, ${videoColors.topLeft} 0%, transparent 50%),
+                radial-gradient(circle at 75% 25%, ${videoColors.topRight} 0%, transparent 50%),
+                radial-gradient(circle at 25% 75%, ${videoColors.bottomLeft} 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, ${videoColors.bottomRight} 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, ${videoColors.center} 0%, transparent 70%)
+              `,
+              transition: "background 0.5s ease-out",
+            }}
             animate={{
-              opacity: [0.5, 0.8, 0.5],
-              scale: [1, 1.05, 1],
+              opacity: [0.4, 0.65, 0.4],
+              scale: [1, 1.03, 1],
             }}
             transition={{
               duration: 4,
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="absolute -inset-0.5 bg-gradient-to-br from-purple-500/10 to-orange-500/10 blur-sm"
+            className="absolute inset-0 blur-md"
           ></motion.div>
 
           {/* Video container with mouse events */}
@@ -567,25 +599,13 @@ const Hero = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent rounded-xl"></div>
 
                   {/* Video duration badge - shown on thumbnail */}
-                  <div className="absolute bottom-4 right-4 bg-black/70 text-white text-xs px-2 py-1 rounded-md">
+                  {/* <div className="absolute bottom-4 right-4 bg-black/70 text-white text-xs px-2 py-1 rounded-md">
                     2:45
-                  </div>
+                  </div> */}
                 </div>
               </div>
             )}
 
-            {/* Video duration badge - shown only when playing */}
-            {/* {isPlaying && (
-              <div className="absolute bottom-4 right-4 bg-black/70 text-white text-xs px-2 py-1 rounded-md transition-opacity duration-300">
-                2:45
-              </div>
-            )} */}
-
-            {/* Play/Pause Button - shown when:
-                1. Initial state (not yet played)
-                2. Paused
-                3. Playing + Hovering
-            */}
             <div
               className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 transition-all duration-300 hover:scale-110 play-pause-button ${
                 !isPlaying || (isPlaying && isHovering)
