@@ -386,7 +386,7 @@ const Hero = () => {
           />
           <motion.a
             href="#work"
-            className="bg-white/15 text-white h-10 w-36 text-md font-medium flex items-center justify-center rounded-xl border-2 border-gray-50  hover:bg-white/20 transition-all duration-300"
+            className="bg-white/15 text-white h-10 w-32 text-md font-medium flex items-center justify-center rounded-xl border-2 border-gray-50  hover:bg-white/20 transition-all duration-300"
           >
             Works
           </motion.a>
