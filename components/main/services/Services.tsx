@@ -118,10 +118,10 @@ const Services = () => (
             {/* Actual card */}
             <motion.div
               variants={item}
-              className={`group rounded-xl p-4 overflow-hidden bg-[#181818] hover:bg-gradient-to-br hover:from-[#BB6FFB] hover:via-[#FC5F67] hover:to-[#FFB054] border transition-all shadow-lg h-full flex flex-col ${
+              className={`group rounded-xl p-4 overflow-hidden bg-[#1d1d1d] border transition-all shadow-lg h-full flex flex-col ${
                 service.highlight
                   ? "border-[0.36px] border-[#FC5F67]"
-                  : "border-[0.36px] border-white hover:border-gray-500"
+                  : "border-[0.36px] border-white/90 hover:border-white"
               }`}
             >
               {/* Image container */}
@@ -135,10 +135,10 @@ const Services = () => (
 
               {/* Content container */}
               <div className="pt-4 flex text-left flex-col flex-grow">
-                <h3 className="font-bold text-3xl mb-3 text-white group-hover:text-black transition-colors duration-300">
+                <h3 className="font-bold text-3xl mb-3 text-white group-hover:text-white transition-colors duration-300">
                   {service.title}
                 </h3>
-                <p className="text-gray-400 text-xl flex-grow group-hover:text-black transition-colors duration-300">
+                <p className="text-gray-400 text-xl flex-grow group-hover:text-white/90 transition-colors duration-300">
                   {service.desc}
                 </p>
               </div>
