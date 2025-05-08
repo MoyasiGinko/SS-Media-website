@@ -47,7 +47,7 @@ const Stats = () => {
       variants={containerVariants}
       className="w-full flex flex-col items-center py-16 px-4 bg-transparent"
     >
-      <motion.div className="flex flex-col md:flex-row gap-8 md:gap-16 items-center justify-center mb-8 z-50">
+      <motion.div className="flex flex-col md:flex-row gap-8 md:gap-16 items-center justify-center mb-8 z-10">
         <motion.div
           variants={itemVariants}
           className="flex flex-col items-center"
