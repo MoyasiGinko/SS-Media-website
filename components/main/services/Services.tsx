@@ -2,37 +2,45 @@
 import React from "react";
 import { motion } from "framer-motion";
 
+// Updated services array with image URLs
 const services = [
   {
     title: "Video Editing",
     desc: "Videos Are Valuable Assets. Therefore, We Make Sure Exceptional Video Editing Services To Help You Stay Updated On Evolving Trends.",
     highlight: true,
-    icon: "✂️",
+    image: "/images/services/s1_video.png", // Replace with your actual image path
+    alt: "Video editing service illustration",
   },
   {
     title: "Graphics Design",
     desc: "We Will Provide You With High Quality Thumbnails, Banners, And Posters That Meet Your Specific Requirements.",
-    icon: "🎨",
+    image: "/images/services/s2_graphics.png", // Replace with your actual image path
+    alt: "Graphics design service illustration",
   },
   {
     title: "UI/UX",
     desc: "Next-Gen UI Designs—Blending Today's Trends With End-User Functionality To Create Stunning, User-Friendly Apps And Websites.",
-    icon: "📱",
+    image: "/images/services/s3_uiux.png", // Replace with your actual image path
+    alt: "UI/UX design service illustration",
   },
   {
     title: "SEO",
     desc: "We Do Full SEO For YouTube Videos. (Title, Description, Tags) Along With Off Page SEO For Thumbnails.",
-    icon: "🔍",
+    image: "/images/services/s4_seo.png", // Replace with your actual image path
+    alt: "SEO service illustration",
   },
   {
     title: "Management",
+    highlight: true,
     desc: "We Can Advise You On Creating Better Video Content For Your Niche And Manage Your Social Media To Ensure Your Content Reaches All Platforms.",
-    icon: "📊",
+    image: "/images/services/s5_manage.png", // Replace with your actual image path
+    alt: "Management service illustration",
   },
   {
     title: "Individual Services",
     desc: "If You Want To Try Every Single Services Individually, This Will Be A Better Option For You.",
-    icon: "👤",
+    image: "/images/services/s6_others.png", // Replace with your actual image path
+    alt: "Individual services illustration",
   },
 ];
 
@@ -71,8 +79,8 @@ const Services = () => (
       viewport={{ once: true }}
       className="text-center"
     >
-      <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500">
-        Our Services
+      <h2 className="text-3xl md:text-4xl font-bold mb-2 bg-clip-text text-transparent bg-white">
+        Services
       </h2>
       <p className="text-gray-400 mb-12 text-center max-w-2xl">
         We Provide Benefits That Are Convenient For You.
@@ -90,16 +98,15 @@ const Services = () => (
         <motion.div
           key={service.title}
           variants={item}
-          whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
-          className={`rounded-xl p-8 bg-[#181818] border transition-all shadow-lg h-full flex flex-col relative overflow-hidden ${
+          className={`group rounded-xl overflow-hidden bg-[#181818] hover:bg-gradient-to-br hover:from-[#BB6FFB] hover:via-[#FC5F67] hover:to-[#FFB054] border transition-all shadow-lg h-full flex flex-col relative ${
             service.highlight
-              ? "border-2 border-orange-400 bg-gradient-to-br from-[#232323] to-[#181818]"
+              ? "border-2 border-orange-400"
               : "border border-gray-700 hover:border-gray-500"
           }`}
         >
           {service.highlight && (
             <motion.div
-              className="absolute top-0 right-0 bg-orange-400 text-black font-bold px-3 py-1 text-xs rounded-bl-lg"
+              className="absolute top-0 right-0 z-10 bg-orange-400 text-black font-bold px-3 py-1 text-xs rounded-bl-lg"
               initial={{ x: 100 }}
               animate={{ x: 0 }}
               transition={{ delay: 0.5 }}
@@ -107,20 +114,25 @@ const Services = () => (
               POPULAR
             </motion.div>
           )}
-          <div className="text-3xl mb-4">{service.icon}</div>
-          <h3 className="font-bold text-xl mb-3 text-white">{service.title}</h3>
-          <p className="text-gray-400 text-sm flex-grow">{service.desc}</p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className={`mt-4 px-4 py-2 rounded-md text-sm font-medium ${
-              service.highlight
-                ? "bg-orange-500 text-white"
-                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-            }`}
-          >
-            Learn More
-          </motion.button>
+
+          {/* Image container */}
+          <div className="w-full h-60 overflow-hidden flex items-center justify-center">
+            <img
+              src={service.image}
+              alt={service.alt}
+              className="w-full h-full p-2 rounded-2xl object-fit cover "
+            />
+          </div>
+
+          {/* Content container */}
+          <div className="p-6 flex flex-col flex-grow">
+            <h3 className="font-bold text-xl mb-3 text-white group-hover:text-black transition-colors duration-300">
+              {service.title}
+            </h3>
+            <p className="text-gray-400 text-sm flex-grow group-hover:text-black transition-colors duration-300">
+              {service.desc}
+            </p>
+          </div>
         </motion.div>
       ))}
     </motion.div>
