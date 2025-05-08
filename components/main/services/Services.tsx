@@ -70,7 +70,7 @@ const item = {
 const Services = () => (
   <section
     id="services"
-    className="w-full py-20 px-4 flex flex-col items-center bg-gradient-to-b from-black to-[#121212]"
+    className="w-full py-20 px-4 flex flex-col items-center bg-transparent"
   >
     <motion.div
       initial={{ opacity: 0, y: -20 }}
