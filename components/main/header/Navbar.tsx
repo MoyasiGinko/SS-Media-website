@@ -139,8 +139,8 @@ const Navbar = () => {
           hoverText={`${isScrolled ? "" : "Book A Call"}`}
           textColor="#000"
           className={`${
-            isScrolled ? "w-14 h-12" : "h-12 w-40 "
-          } bg-gradient-to-r text-black from-[#BB6FFB] via-[#FC5F67] to-[#FFB054] text-lg font-medium`}
+            isScrolled ? "w-11 h-10" : "h-10 w-36 "
+          } bg-gradient-to-r text-black from-[#BB6FFB] via-[#FC5F67] to-[#FFB054]  text-md font-medium`}
           href="#services"
         />
       </motion.nav>

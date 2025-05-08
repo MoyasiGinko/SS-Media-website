@@ -272,7 +272,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="w-full flex flex-col items-center justify-center pt-24 py-16 px-4 text-center relative bg-transparent overflow-hidden">
+    <section className="w-full flex flex-col items-center justify-center pt-34 py-16 px-4 text-center relative bg-transparent overflow-hidden">
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] z-0"></div>
 
       {/* Hidden canvas for color extraction */}
@@ -311,17 +311,26 @@ const Hero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-8"
+          className="mb-4 mx-auto inline-flex items-center justify-center relative"
         >
-          <motion.span
-            whileHover={{
-              scale: 1.05,
-              boxShadow: "0 0 15px rgba(255, 165, 0, 0.3)",
-            }}
-            className="text-xs bg-[#1a1a1a] text-orange-300 px-4 py-1.5 rounded-full font-semibold tracking-wide border border-orange-500/20 shadow-sm shadow-orange-500/10 inline-block"
-          >
-            Your Content Deserves The Best. And We Deliver It.
-          </motion.span>
+          {/* Gradient border created with pseudo-element */}
+          <div className="relative rounded-md overflow-hidden">
+            {/* Gradient background layer */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#BB6FFB]/30 via-[#FC5F67]/25 to-[#FFB054]/20"></div>
+
+            {/* Content container with precise padding for exact 1px border */}
+            <div className="relative bg-gray-800/20 mt-[1px] mx-[1px] mb-[0.5px] rounded-[5px]">
+              <motion.span
+                className="block text-xs md:text-sm bg-clip-text text-transparent px-2 py-1 font-sans font-normal tracking-wide text-center"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(to right, #BB6FFB, #FC5F67, #FFB054)",
+                }}
+              >
+                Your Content Deserves The Best. And We Deliver It.
+              </motion.span>
+            </div>
+          </div>
         </motion.div>
 
         <motion.h1
@@ -358,26 +367,26 @@ const Hero = () => {
         >
           From Edits To Interfaces, Visuals To Vision. We Bring Your Brand To
           Life. UI/UX Design, Video Editing, And Graphic Design, Tailored For
-          Every Style And Platform.
+          <span className="block"> Every Style And Platform.</span>
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+          className="flex flex-col sm:flex-row gap-4 justify-center mt-8 mb-16"
         >
           {/* Using the TextSwapButton component with props */}
           <TextSwapButton
             initialText="Book A Call"
             hoverText="Book A Call"
             textColor="#000"
-            className="bg-gradient-to-r text-black from-[#BB6FFB] via-[#FC5F67] to-[#FFB054] h-12 w-40 text-xl font-medium"
+            className="bg-gradient-to-r text-black from-[#BB6FFB] via-[#FC5F67] to-[#FFB054] h-10 w-36 text-md font-medium"
             href="#services"
           />
           <motion.a
             href="#work"
-            className="bg-white/15 text-white h-12 w-40 text-xl font-normal flex items-center justify-center rounded-2xl border-2 border-gray-50  hover:bg-white/20 transition-all duration-300"
+            className="bg-white/15 text-white h-10 w-36 text-md font-medium flex items-center justify-center rounded-xl border-2 border-gray-50  hover:bg-white/20 transition-all duration-300"
           >
             Works
           </motion.a>
@@ -386,7 +395,7 @@ const Hero = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="w-full max-w-2xl mx-auto aspect-video rounded-3xl border-7 border-white/20 bg-transparent flex items-center justify-center relative shadow-2xl shadow-orange-500/10 overflow-hidden"
+          className="w-full max-w-7xl mx-auto aspect-video rounded-3xl border-7 border-white/20 bg-transparent flex items-center justify-center relative shadow-2xl shadow-orange-500/10 overflow-hidden"
         >
           <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03]"></div>
           <motion.div

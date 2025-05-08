@@ -52,8 +52,6 @@ const TextSwapButton = ({
   const buttonStyles = {
     // border: "1px solid rgba(255, 255, 255, 0.1)",
     // borderRadius: "8px",
-    boxShadow:
-      "rgba(0, 0, 0, 0.15) 0px 0.7px 0.7px -0.6px, rgba(0, 0, 0, 0.145) 0px 1.8px 1.8px -1.25px, rgba(0, 0, 0, 0.137) 0px 3.6px 3.6px -1.9px, rgba(0, 0, 0, 0.125) 0px 6.9px 6.9px -2.5px, rgba(0, 0, 0, 0.106) 0px 13.6px 13.6px -3.1px, rgba(0, 0, 0, 0.05) 0px 30px 30px -3.75px",
     // width: dimensions.width > 0 ? `${dimensions.width}px` : "auto",
     // height: dimensions.height > 0 ? `${dimensions.height}px` : "auto",
   };
@@ -90,7 +88,7 @@ const TextSwapButton = ({
     <motion.a
       href={href}
       ref={buttonRef}
-      className={`relative inline-flex items-center justify-center overflow-hidden rounded-2xl ${
+      className={`relative inline-flex items-center justify-center overflow-hidden rounded-xl ${
         textColor === `text-${textColor}`
       } ${className}`}
       style={buttonStyles}
