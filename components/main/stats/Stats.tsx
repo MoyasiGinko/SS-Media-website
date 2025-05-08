@@ -47,21 +47,23 @@ const Stats = () => {
       variants={containerVariants}
       className="w-full flex flex-col items-center py-16 px-4 bg-transparent"
     >
-      <motion.div className="flex flex-col md:flex-row gap-8 md:gap-16 items-center justify-center mb-8">
+      <motion.div className="flex flex-col md:flex-row gap-8 md:gap-16 items-center justify-center mb-8 z-10">
         <motion.div
           variants={itemVariants}
           className="flex flex-col items-center"
         >
           <motion.span
             variants={countVariants}
-            className="text-4xl font-bold text-orange-400"
+            className="text-6xl font-bold text-white"
           >
             15+
           </motion.span>
-          <span className="text-sm text-gray-300 mt-1">Satisfied Clients</span>
+          <span className="text-lg font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#DC66AF] via-[#FC5F67] to-[#FFAF54] mt-1">
+            Satisfied Clients
+          </span>
         </motion.div>
 
-        <div className="hidden md:block w-px h-12 bg-gradient-to-b from-orange-400 to-transparent" />
+        <div className="hidden md:block w-1 h-18 bg-gray-50" />
 
         <motion.div
           variants={itemVariants}
@@ -69,16 +71,16 @@ const Stats = () => {
         >
           <motion.span
             variants={countVariants}
-            className="text-4xl font-bold text-orange-400"
+            className="text-6xl font-bold text-white"
           >
             6+
           </motion.span>
-          <span className="text-sm text-gray-300 mt-1">
+          <span className="text-lg font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#DC66AF] via-[#FC5F67] to-[#FFAF54] mt-1">
             Years Of Experience
           </span>
         </motion.div>
 
-        <div className="hidden md:block w-px h-12 bg-gradient-to-b from-orange-400 to-transparent" />
+        <div className="hidden md:block w-1 h-18 bg-gray-50" />
 
         <motion.div
           variants={itemVariants}
@@ -86,17 +88,19 @@ const Stats = () => {
         >
           <motion.span
             variants={countVariants}
-            className="text-4xl font-bold text-orange-400"
+            className="text-6xl font-bold text-white"
           >
             10+
           </motion.span>
-          <span className="text-sm text-gray-300 mt-1">Team Members</span>
+          <span className="text-lg font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#DC66AF] via-[#FC5F67] to-[#FFAF54] mt-1">
+            Team Members
+          </span>
         </motion.div>
       </motion.div>
 
       <motion.p
         variants={itemVariants}
-        className="text-center text-gray-400 max-w-2xl text-base backdrop-blur-sm p-4 rounded-lg border border-gray-800/30"
+        className="text-center text-gray-400 max-w-3xl text-3xl font-medium backdrop-blur-sm p-4 rounded-lg border border-gray-800/30"
       >
         Don't Need To Search Multiple Agency Or Freelancer For Your Projects. We
         Have Complete Solution For You.
