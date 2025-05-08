@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import TextSwapButton from "@/components/common/Button";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -74,7 +75,7 @@ const Navbar = () => {
       <motion.nav
         className={`${
           isScrolled
-            ? "bg-black max-w-2xl shadow-lg border border-white/10"
+            ? "bg-black max-w-lg shadow-lg border border-white/10"
             : "bg-black max-w-6xl border border-white/5"
         } flex items-center justify-between rounded-2xl w-full transition-all duration-300 backdrop-blur-xl relative overflow-hidden`}
         style={{
@@ -133,14 +134,15 @@ const Navbar = () => {
           ))}
         </ul>
         {/* CTA Button */}
-        <motion.a
-          href="#book"
-          className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-2 rounded-lg font-semibold text-sm flex-shrink-0 relative z-10 shadow-[0_0_15px_rgba(249,115,22,0.4)] hover:shadow-[0_0_20px_rgba(249,115,22,0.6)]"
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 400, damping: 10 }}
-        >
-          Book A Call
-        </motion.a>
+        <TextSwapButton
+          initialText={`${isScrolled ? "" : "Book A Call"}`}
+          hoverText={`${isScrolled ? "" : "Book A Call"}`}
+          textColor="#000"
+          className={`${
+            isScrolled ? "w-14 h-12" : "h-12 w-40 "
+          } bg-gradient-to-r text-black from-[#BB6FFB] via-[#FC5F67] to-[#FFB054] text-lg font-medium`}
+          href="#services"
+        />
       </motion.nav>
     </div>
   );

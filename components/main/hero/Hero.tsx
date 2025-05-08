@@ -165,51 +165,6 @@ const Hero = () => {
           </motion.button>
         </motion.div>
       </div>
-
-      <div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center justify-center gap-8">
-        <h1 className="text-2xl font-bold mb-8">TextSwapButton Examples</h1>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
-          <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md">
-            <h2 className="mb-4 text-lg font-semibold">Default Button</h2>
-            <TextSwapButton
-              initialText="Our Services"
-              hoverText="View Services"
-              href="#services"
-            />
-          </div>
-
-          <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md">
-            <h2 className="mb-4 text-lg font-semibold">Custom Color</h2>
-            <TextSwapButton
-              initialText="Learn More"
-              hoverText="Start Learning"
-              href="#learn"
-            />
-          </div>
-
-          <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md">
-            <h2 className="mb-4 text-lg font-semibold">Without Icon</h2>
-            <TextSwapButton
-              initialText="Contact Us"
-              hoverText="Get in Touch"
-              href="#contact"
-              textColor="#FFFFFF"
-              className="text-lg font-semibold"
-              icon="none"
-            />
-          </div>
-
-          <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-md">
-            <h2 className="mb-4 text-lg font-semibold">Dark Theme</h2>
-            <TextSwapButton
-              initialText="Join Newsletter"
-              hoverText="Subscribe Now"
-              href="#newsletter"
-            />
-          </div>
-        </div>
-      </div>
     </section>
   );
 };
