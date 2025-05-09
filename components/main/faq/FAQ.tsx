@@ -28,7 +28,9 @@ const FAQ = () => {
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section id="faqs" className="w-full py-16 px-4 flex flex-col items-center">
-      <h2 className="text-2xl md:text-3xl font-bold mb-8">FAQ's</h2>
+      <h2 className="text-3xl text-white md:text-6xl font-bold mb-8 text-center">
+        FAQ's
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
         {faqs.map((faq, i) => (
           <div
@@ -39,17 +41,21 @@ const FAQ = () => {
               className="w-full flex justify-between items-center px-6 py-4 text-left text-white font-semibold focus:outline-none"
               onClick={() => setOpen(open === i ? null : i)}
             >
-              <span>{faq.q}</span>
+              <span className="text-[24px] text-white">{faq.q}</span>
               <span
                 className={`ml-4 transition-transform ${
-                  open === i ? "rotate-45" : ""
+                  open === i ? "rotate-180" : ""
                 }`}
               >
-                ✕
+                <img
+                  src={open === i ? "/cross.svg" : "/down.svg"}
+                  alt="FAQ Icon"
+                  className="w-4 h-4"
+                />
               </span>
             </button>
             {open === i && (
-              <div className="px-6 pb-4 text-gray-400 text-sm">{faq.a}</div>
+              <div className="px-6 pb-4 text-[18px] text-white/60">{faq.a}</div>
             )}
           </div>
         ))}
