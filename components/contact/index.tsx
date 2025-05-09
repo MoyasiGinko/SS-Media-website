@@ -18,9 +18,7 @@ export default function ContactPage() {
         </div>
       </div>
       {/* Bottom: Quick Chat */}
-      <div className="">
-        <QuickChatSection />
-      </div>
+      <QuickChatSection />
     </div>
   );
 }

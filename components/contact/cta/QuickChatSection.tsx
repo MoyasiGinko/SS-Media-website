@@ -2,14 +2,21 @@ import QRCodeCard from "./QRcard";
 
 const QuickChatSection: React.FC = () => {
   return (
-    <div className="bg-white  p-8">
-      <h2 className="text-3xl font-bold text-center mb-2">Quick Chat!</h2>
-      <p className="text-center text-gray-500 mb-8">
-        Want To Ask A Quick Question.. Or Say Hello?
-      </p>
-      <div className="flex justify-center gap-8"></div>
-      <QRCodeCard label="Whatsapp" />
-      <QRCodeCard label="Instagram" />
+    <div className="bg-white h-[467px] flex flex-col md:flex-row items-center justify-center p-8 ">
+      {/* Text Container */}
+      <div className="text-center items-center w-1/2 mb-8 md:mb-0">
+        <h2 className="text-[48px] md:w-full md:text-[66px] font-bold text-black leading-tight syne-unique mb-4">
+          Quick Chat!
+        </h2>
+        <p className="max-w-[520px] mx-auto leading-tight text-[18px] md:text-[25px] text-gray-500">
+          Want To Ask A Quick Question.. Or Say Hello?
+        </p>
+      </div>
+      {/* QR Code Cards */}
+      <div className="flex flex-wrap md:flex-nowrap justify-center gap-8 md:w-1/2">
+        <QRCodeCard label="Whatsapp" />
+        <QRCodeCard label="Instagram" />
+      </div>
     </div>
   );
 };
