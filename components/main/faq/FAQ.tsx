@@ -61,7 +61,7 @@ const FAQ = () => {
   const renderFaqItem = (faq: FAQ, i: number) => (
     <div
       key={i}
-      className="flex flex-col bg-[#181818] rounded-xl border border-gray-700 shadow-md w-full max-w-[590px] mb-6"
+      className="flex flex-col bg-[#1d1d1d] rounded-xl border border-gray-700 shadow-md w-full max-w-[590px] mb-6"
     >
       <button
         className="w-full flex justify-between items-center px-6 py-4 text-left text-white font-semibold focus:outline-none"
@@ -87,7 +87,10 @@ const FAQ = () => {
   );
 
   return (
-    <section id="faqs" className="w-full py-16 px-4 flex flex-col items-center">
+    <section
+      id="faqs"
+      className="w-full  bg-transparent py-16 px-4 flex flex-col items-center"
+    >
       <h2 className="text-3xl text-white md:text-6xl font-bold mb-8 text-center">
         FAQ's
       </h2>
