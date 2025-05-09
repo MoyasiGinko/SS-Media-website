@@ -12,7 +12,7 @@ export const ContactIntro = () => {
         Fill The Contact Form Or Scan Those QR. It's An Honor To Support You In
         Your Content Creation Journey.
       </p>
-      <button className="w-[160px] h-[50px] rounded-2xl text-2xl text-center border-[1.5px] border-white bg-gradient-to-r from-[#BB6FFB]/30 via-[#FC5F67]/30 to-[#FFB054]/30 text-white font-medium  items-center">
+      <button className="w-[160px] h-[50px] rounded-[15px] text-2xl text-center border-[1.5px] border-white bg-gradient-to-r from-[#BB6FFB]/30 via-[#FC5F67]/30 to-[#FFB054]/30 text-white font-medium  items-center">
         Quick Chat
       </button>
     </div>
