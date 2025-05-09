@@ -15,8 +15,13 @@ const Portfolio = () => (
         className="relative bg-[#181818] rounded-xl overflow-hidden shadow-md border border-gray-700"
         style={{ width: "590px", height: "410px" }}
       >
+        <img
+          src="/video_card.svg"
+          alt="Video Thumbnail"
+          className="w-full h-full object-fit cover"
+        />
         <button
-          className="absolute border-[1px] border-[#FC5F67] rounded-full text-[30px] top-2 right-2 bg-white text-transparent bg-clip-text px-2 py-1  text-sm"
+          className="absolute border-[1px] border-[#FC5F67] rounded-full text-[30px] top-2 right-2 bg-white text-transparent bg-clip-text px-2 py-1 cursor-pointer text-sm"
           style={{
             width: "245px",
             height: "60px",
@@ -26,13 +31,8 @@ const Portfolio = () => (
         >
           Videos
         </button>
-        <img
-          src="/video_card.svg"
-          alt="Video Thumbnail"
-          className="w-full h-full object-fit cover"
-        />
         <button
-          className="absolute border-[1px] border-[#FC5F67] text-[30px] bottom-2 right-2 bg-[#1d1d1d] p-2 rounded-full flex items-center justify-center"
+          className="absolute border-[1px] border-[#FC5F67] text-[30px] bottom-2 right-2 bg-[#1d1d1d] p-2 rounded-full flex items-center cursor-pointer justify-center"
           style={{ width: "60px", height: "60px" }}
         >
           <svg
@@ -60,8 +60,13 @@ const Portfolio = () => (
         className="relative bg-[#181818] rounded-xl overflow-hidden shadow-md border border-gray-700"
         style={{ width: "590px", height: "410px" }}
       >
+        <img
+          src="/graphics_card.svg"
+          alt="Graphic Thumbnail"
+          className="w-full h-full object-fit cover"
+        />
         <button
-          className="absolute border-[1px] border-[#FC5F67] rounded-full text-[30px] top-2 right-2 bg-white text-transparent bg-clip-text px-2 py-1  text-sm"
+          className="absolute border-[1px] border-[#FC5F67] rounded-full text-[30px] top-2 right-2 bg-white text-transparent bg-clip-text cursor-pointer px-2 py-1 text-sm"
           style={{
             width: "245px",
             height: "60px",
@@ -71,13 +76,8 @@ const Portfolio = () => (
         >
           Graphic Design
         </button>
-        <img
-          src="/graphics_card.svg"
-          alt="Graphic Thumbnail"
-          className="w-full h-full object-fit cover"
-        />
         <button
-          className="absolute border-[1px] border-[#FC5F67] text-[30px] bottom-2 right-2 bg-[#1d1d1d] p-2 rounded-full flex items-center justify-center"
+          className="absolute border-[1px] border-[#FC5F67] text-[30px] bottom-2 right-2 bg-[#1d1d1d] p-2 rounded-full flex items-center cursor-pointer justify-center"
           style={{ width: "60px", height: "60px" }}
         >
           <svg
