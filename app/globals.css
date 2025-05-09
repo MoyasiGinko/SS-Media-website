@@ -32,3 +32,42 @@ body {
 .syne-unique {
   font-family: "Syne", sans-serif;
 }
+
+/* Streamlined CSS with performance optimizations */
+
+:root {
+  --mouse-x: 0px;
+  --mouse-y: 0px;
+  --spotlight-color: rgba(241, 99, 106, 0.8);
+  --spotlight-fade: rgba(99, 102, 241, 0);
+}
+
+/* Only apply transitions to non-touch devices to improve performance */
+@media (hover: hover) {
+  .group\/card {
+    position: relative;
+    /* Reduced from all 0.3s to just color/opacity transitions */
+    transition: color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .group\/card:hover::before {
+    opacity: 0.7;
+  }
+
+  .group\/card:hover::after {
+    opacity: 0.15;
+  }
+}
+
+/* Skip all these effects on mobile/touch devices for better performance */
+@media (hover: none) {
+  .group\/card::before,
+  .group\/card::after {
+    display: none;
+  }
+
+  /* Simple hover fallback for touch */
+  .group\/card:active {
+    border-color: #fc5f67;
+  }
+}
