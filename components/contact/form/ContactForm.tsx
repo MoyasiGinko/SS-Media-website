@@ -9,27 +9,27 @@ export const ZoomCallForm = () => {
       <div className="text-black flex flex-col gap-5 mb-5">
         <div className="flex gap-4">
           <input
-            className="input h-[84px] w-1/2 rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="input h-[84px] text-[24px] text-gray-500 w-1/2 rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
             placeholder="Full Name*"
           />
           <input
-            className="input h-[84px] w-1/2 rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="input h-[84px] text-[24px] text-gray-500 w-1/2 rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
             placeholder="WhatsApp Number*"
           />
         </div>
         <div className="flex gap-4">
           <input
-            className="input h-[84px] w-1/2 rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="input h-[84px] text-[24px] text-gray-500 w-1/2 rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
             placeholder="Work Email*"
           />
           <input
-            className="input h-[84px] w-1/2 rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="input h-[84px] text-[24px] text-gray-500 w-1/2 rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
             placeholder="Company Name*"
           />
         </div>
         <div>
           <select
-            className="input h-[84px] w-full rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="input h-[84px] text-[24px] text-gray-500 w-full rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
             defaultValue=""
           >
             <option value="" disabled>
@@ -39,11 +39,11 @@ export const ZoomCallForm = () => {
         </div>
         <div className="flex gap-4">
           <input
-            className="input h-[84px] w-1/2 rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="input h-[84px] text-[24px] text-gray-500 w-1/2 rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
             placeholder="Website*"
           />
           <select
-            className="input h-[84px] w-1/2 rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="input h-[84px] text-[24px] text-gray-500 w-1/2 rounded-[10px] border-[2px] border-black/40 p-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
             defaultValue=""
           >
             <option value="" disabled>
