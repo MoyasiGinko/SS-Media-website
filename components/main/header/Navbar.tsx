@@ -141,7 +141,7 @@ const Navbar = () => {
           className={`${
             isScrolled ? "w-11 h-10" : "h-10 w-32 "
           } bg-gradient-to-r text-black from-[#BB6FFB] via-[#FC5F67] to-[#FFB054]  text-md font-medium`}
-          href="#services"
+          href="/contact"
         />
       </motion.nav>
     </div>

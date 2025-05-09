@@ -486,7 +486,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center mt-8 mb-16"
+          className="flex flex-col sm:flex-row gap-4 justify-center mt-8 mb-16 relative z-20"
         >
           {/* Using the TextSwapButton component with props */}
           <TextSwapButton
@@ -494,7 +494,7 @@ const Hero = () => {
             hoverText="Book A Call"
             textColor="#000"
             className="bg-gradient-to-r text-black from-[#BB6FFB] via-[#FC5F67] to-[#FFB054] h-10 w-36 text-md font-medium"
-            href="#services"
+            href="/contact"
           />
           <motion.a
             href="#work"
