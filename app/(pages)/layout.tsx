@@ -3,6 +3,7 @@ import "../globals.css";
 import Navbar from "@/components/main/header/Navbar";
 import Footer from "@/components/main/footer/Footer";
 import { Outfit, Syne } from "next/font/google";
+import { BackHomeButton } from "@/components/common/HomeButton";
 
 const geistSans = Outfit({
   variable: "--font-geist-sans",
@@ -29,8 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-
+        <BackHomeButton />
         {children}
         <Footer />
       </body>
