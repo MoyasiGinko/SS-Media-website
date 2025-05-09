@@ -13,9 +13,9 @@ const QuickChatSection: React.FC = () => {
         </p>
       </div>
       {/* QR Code Cards */}
-      <div className="flex flex-wrap md:flex-nowrap justify-center gap-8 md:w-1/2">
-        <QRCodeCard label="Whatsapp" />
-        <QRCodeCard label="Instagram" />
+      <div className="flex flex-wrap md:flex-nowrap justify-center gap-10 md:w-1/2">
+        <QRCodeCard src="/images/qr1.png" label="Whatsapp" />
+        <QRCodeCard src="/images/qr2.png" label="Instagram" />
       </div>
     </div>
   );
