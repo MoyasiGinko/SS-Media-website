@@ -5,11 +5,11 @@ import QuickChatSection from "@/components/contact/cta/QuickChatSection";
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black relative ">
       {/* Top Section: Split Layout */}
-      <div className="flex flex-col md:flex-row min-h-[70vh]">
+      <div className="flex -z-0 flex-col md:flex-row min-h-[70vh]">
         {/* Left: Intro */}
-        <div className="flex-1 flex flex-col items-center justify-center p-8">
+        <div className="flex-1 flex flex-col items-center justify-center">
           <ContactIntro />
         </div>
         {/* Right: Form */}
@@ -18,7 +18,9 @@ export default function ContactPage() {
         </div>
       </div>
       {/* Bottom: Quick Chat */}
-      <QuickChatSection />
+      <div className="">
+        <QuickChatSection />
+      </div>
     </div>
   );
 }
