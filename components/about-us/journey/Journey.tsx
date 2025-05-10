@@ -53,7 +53,7 @@ const Journey: React.FC = () => {
         <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 z-10">
           <div className="relative h-64 w-64">
             <Image
-              src="/profile.jpg"
+              src="/images/team/journey1.png"
               alt="Profile"
               layout="fill"
               objectFit="cover"

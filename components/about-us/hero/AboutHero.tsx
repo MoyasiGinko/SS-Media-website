@@ -15,7 +15,7 @@ const AboutHero: React.FC = () => {
         <div className="relative h-96 w-full overflow-hidden rounded-lg">
           <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-transparent z-10"></div>
           <Image
-            src="/founder.jpg"
+            src="/images/team/hero.png"
             alt="Founder"
             layout="fill"
             objectFit="cover"

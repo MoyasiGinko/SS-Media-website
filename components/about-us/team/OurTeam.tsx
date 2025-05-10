@@ -12,27 +12,27 @@ const teamMembers: TeamMember[] = [
   {
     name: "Sofik",
     role: "Video Editor",
-    imageUrl: "/team/sofik.jpg",
+    imageUrl: "/images/team/team1.png",
   },
   {
     name: "Jahid",
     role: "Graphic Designer",
-    imageUrl: "/team/jahid.jpg",
+    imageUrl: "/images/team/team2.png",
   },
   {
     name: "Sami",
     role: "Video Editor",
-    imageUrl: "/team/sami.jpg",
+    imageUrl: "/images/team/team3.png",
   },
   {
     name: "Sayem",
     role: "SEO Expert",
-    imageUrl: "/team/sayem.jpg",
+    imageUrl: "/images/team/team4.png",
   },
   {
     name: "Sam",
     role: "UI Designer",
-    imageUrl: "/team/sam.jpg",
+    imageUrl: "/images/team/team5.png",
   },
 ];
 
