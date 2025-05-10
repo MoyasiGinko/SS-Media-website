@@ -4,7 +4,7 @@ export const BackHomeButton = () => {
     <div className="max-w-6xl fixed top-0 z-999 flex justify-start mx-auto pl-16 pt-14">
       <a
         href="/"
-        className="w-[160px] inline-flex h-[50px] rounded-[22px] text-xl text-center bg-gradient-to-r from-[#BB6FFB] via-[#FC5F67] to-[#FFB054] text-black font-medium justify-center self-start  items-center"
+        className="w-[160px] inline-flex h-[50px] rounded-[15px] text-xl text-center bg-gradient-to-r from-[#BB6FFB] via-[#FC5F67] to-[#FFB054] text-black font-medium justify-center self-start  items-center"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
