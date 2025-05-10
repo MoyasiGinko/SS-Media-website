@@ -5,7 +5,7 @@ import React from "react";
 
 export default function Page() {
   return (
-    <div className="bg-[#141313]">
+    <div className="bg-transparent">
       <AboutHero />
       <Journey />
       <OurTeam />
