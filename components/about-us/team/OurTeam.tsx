@@ -49,7 +49,13 @@ const OurTeam: React.FC = () => {
             key={index}
             className="relative overflow-hidden h-[506px] w-[278px] rounded-[24px] group cursor-pointer"
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#BB6FFB] via-[#FC5F67] to-[#FFB054] z-0"></div>
+            <div
+              className="absolute inset-0 z-0"
+              style={{
+                background:
+                  "linear-gradient(-151deg, #FFAD54, #FC5F67, #BD6EF6)",
+              }}
+            ></div>
             <div className="absolute inset-0 bottom-0 overflow-hidden z-0">
               <Image
                 src={member.imageUrl}
@@ -59,7 +65,7 @@ const OurTeam: React.FC = () => {
                 className="transition-transform duration-300 "
               />
             </div>
-            <div className="absolute bg-gradient-to-t rounded-b-[24px] h-[120px] from-black/80 to-transparent backdrop-blur-[5px] w-full bottom-0 left-0 p-4 z-20 flex flex-col justify-center items-left">
+            <div className="absolute bg-gradient-to-t rounded-b-[24px] h-[120px] from-black/80 to-transparent backdrop-blur-[5px] w-full bottom-0 left-0 p-4 z-2 flex flex-col justify-center items-left">
               <h3 className="text-[45px] mt-4 leading-[35px] syne-unique text-white font-bold mb-1">
                 {member.name}
               </h3>
