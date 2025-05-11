@@ -15,6 +15,7 @@ const ShamratText = () => {
   const textRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef(null);
   const charactersRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const backgroundRef = useRef<HTMLDivElement>(null);
 
   // Create refs for each character
   const setCharRef = (el: HTMLSpanElement | null, index: number): void => {
@@ -56,8 +57,21 @@ const ShamratText = () => {
           : "bottom top",
         pin: textRef.current,
         pinSpacing: false,
-        // No onUpdate effects for characters as requested
       });
+
+      // Create an animation to toggle background colors
+      if (backgroundRef.current) {
+        gsap.to(backgroundRef.current, {
+          backgroundColor: "rgba(255, 255, 255, 1)",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            toggleActions: "play none none reverse",
+            scrub: true,
+          },
+        });
+      }
 
       return () => {
         // Clean up ScrollTrigger when component unmounts
@@ -73,14 +87,26 @@ const ShamratText = () => {
   const characters = "SHAMRAT".split("");
 
   return (
-    <div ref={sectionRef} className="relative min-h-[100vh]">
-      <div ref={textRef} className="w-full text-center pt-[144px]">
+    <div
+      ref={sectionRef}
+      className="relative mix-blend-difference min-h-[100vh]"
+    >
+      {/* Background element that toggles between dark and light */}
+      <div
+        ref={backgroundRef}
+        className="absolute inset-0 transition-colors duration-500"
+      />
+
+      <div
+        ref={textRef}
+        className="w-full text-center pt-[144px] relative z-10 "
+      >
         <div className="flex justify-center items-center">
           {characters.map((char, index) => (
             <span
               key={index}
               ref={(el) => setCharRef(el, index)}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-[250px] syne-unique font-bold tracking-tighter inline-block mix-blend-difference"
+              className="text-5xl sm:text-6xl md:text-7xl lg:text-[250px] syne-unique font-bold tracking-tighter inline-block text-white"
             >
               {char}
             </span>
