@@ -42,27 +42,30 @@ const OurTeam: React.FC = () => {
       <h2 className="text-5xl md:text-6xl font-bold mb-16 text-center">
         Get To Know Our Amazing Team
       </h2>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+      <div className="flex flex-wrap justify-center gap-6"></div>
+      <div className="flex flex-wrap justify-center gap-[60px]">
         {teamMembers.map((member, index) => (
           <div
             key={index}
-            className="relative overflow-hidden rounded-xl group cursor-pointer"
+            className="relative overflow-hidden h-[506px] w-[278px] rounded-[24px] group cursor-pointer"
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-red-500 opacity-50 z-0"></div>
-            <div className="relative aspect-[3/4] overflow-hidden z-0">
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#BB6FFB] via-[#FC5F67] to-[#FFB054] z-0"></div>
+            <div className="absolute inset-0 bottom-0 overflow-hidden z-0">
               <Image
                 src={member.imageUrl}
                 alt={member.name}
                 layout="fill"
                 objectFit="cover"
-                className="transition-transform duration-300 group-hover:scale-110"
+                className="transition-transform duration-300 "
               />
             </div>
-            <div className="absolute bottom-0 left-0 p-4 z-20">
-              <h3 className="text-2xl font-bold mb-1">{member.name}</h3>
-              <p className="text-sm text-gray-300">{member.role}</p>
+            <div className="absolute bg-gradient-to-t rounded-b-[24px] h-[120px] from-black/80 to-transparent backdrop-blur-[5px] w-full bottom-0 left-0 p-4 z-20 flex flex-col justify-center items-left">
+              <h3 className="text-[45px] mt-4 leading-[35px] syne-unique text-white font-bold mb-1">
+                {member.name}
+              </h3>
+              <p className="text-[28px] leading-[35px] text-white/70">
+                {member.role}
+              </p>
             </div>
           </div>
         ))}
