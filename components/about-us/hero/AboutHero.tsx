@@ -124,12 +124,10 @@ const AboutHero = () => {
   const sectionRef = useRef(null); // Add reference for the main section element
 
   useEffect(() => {
-    // Set visible after a short delay for entrance animations
     const timeout = setTimeout(() => {
       setIsVisible(true);
     }, 300);
 
-    // Create scroll animation for background image opacity and content elements
     if (
       typeof window !== "undefined" &&
       backgroundRef.current &&
@@ -137,22 +135,37 @@ const AboutHero = () => {
       sectionRef.current
     ) {
       const animations = gsap.context(() => {
-        // Background opacity animation - MODIFIED FOR SLOWER FADE
+        // Background and side content opacity animation
         ScrollTrigger.create({
           trigger: sectionRef.current,
           start: "top top",
-          // Extended end point for slower fade effect
           end: "bottom+=50% bottom",
           scrub: true,
-          // markers: true, // Uncomment for debugging
           onUpdate: (self) => {
-            // Modified opacity calculation for slower fade
-            // Using a smaller factor (0.4 instead of 0.7) and power function for non-linear fading
             const fadeProgress = Math.pow(self.progress, 1.5); // Non-linear easing
+            const imgOpacity = 1 - fadeProgress * 0.9; // Increased fade effect
+            const textOpacity = 1 - fadeProgress * 5;
+            // Fade background
             gsap.to(backgroundRef.current, {
-              opacity: 1 - fadeProgress * 0.8, // Fade to 0.6 opacity at bottom (less fade)
-              duration: 0.3, // Slightly longer duration for smoother transition
-              ease: "power1.out", // Gentle easing function
+              opacity: imgOpacity,
+              duration: 0.3,
+              ease: "power1.out",
+            });
+
+            // Fade left content (move left and fade out)
+            gsap.to(contentRef.current?.children[0], {
+              opacity: textOpacity,
+              x: -fadeProgress * 1000, // Move left
+              duration: 0.3,
+              ease: "power1.out",
+            });
+
+            // Fade right content (move right and fade out)
+            gsap.to(contentRef.current?.children[1], {
+              opacity: textOpacity,
+              x: fadeProgress * 1000, // Move right
+              duration: 0.3,
+              ease: "power1.out",
             });
           },
         });
@@ -171,7 +184,7 @@ const AboutHero = () => {
             },
             {
               y: -20,
-              opacity: 0.7 + index * 0.05,
+              opacity: 0.5 + index * 0.05, // Decreased base opacity for more fade
               scrollTrigger: {
                 trigger: element,
                 start: "top 70%",
@@ -240,7 +253,7 @@ const AboutHero = () => {
         className="absolute inset-0 flex flex-col md:flex-row justify-between w-full px-4 sm:px-8 md:px-16 space-y-8 md:space-y-0 items-center md:items-center"
       >
         <motion.div
-          className="md:max-w-[470px] md:ml-4 lg:ml-16 flex flex-col justify-center"
+          className="md:max-w-[470px] md:ml-4 lg:ml-[220px] mt-[200px] flex flex-col justify-center"
           variants={containerVariants}
           initial="hidden"
           animate={isVisible ? "visible" : "hidden"}
