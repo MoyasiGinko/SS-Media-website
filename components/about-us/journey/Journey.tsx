@@ -41,7 +41,7 @@ const Journey: React.FC = () => {
 
   return (
     <section className="mb-20">
-      <h2 className="text-5xl md:text-[60px] syne-unique text-white font-bold mb-16 text-center">
+      <h2 className="text-5xl md:text-[60px] leading-[70px] syne-unique text-white font-bold mb-5 text-center">
         Journey
       </h2>
 
@@ -75,7 +75,7 @@ const Journey: React.FC = () => {
             >
               {/* Year */}
               <div className="md:w-1/2 md:text-left md:pr-16">
-                <h3 className="text-4xl md:text-[60px] syne-unique text-white/70 font-bold group-hover:text-white transition-colors duration-300">
+                <h3 className="text-4xl md:text-[60px] leading-[70px] syne-unique text-white/70 font-bold group-hover:text-white transition-colors duration-300">
                   {item.year}
                 </h3>
               </div>
