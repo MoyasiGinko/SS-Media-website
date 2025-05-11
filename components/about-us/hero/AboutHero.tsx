@@ -34,7 +34,7 @@ const AboutHero: React.FC = () => {
     tl.fromTo(
       shamratRef.current,
       {
-        y: "-20%", // Start at the top of the viewport
+        y: "0%", // Start at the top of the viewport
         opacity: 0.2,
         scale: 0.8,
       },
@@ -119,49 +119,47 @@ const AboutHero: React.FC = () => {
           priority
         />
       </div>
+      <div className="fixed-center top-[144px] w-full">
+        <h1
+          ref={shamratRef}
+          className="text-7xl md:text-[250px] leading-[125px] syne-unique font-bold tracking-tighter mix-blend-difference text-center"
+          style={{
+            position: "absolute",
+            top: "144px", // Adjusted to be 144px from the top
+            left: "50%",
+            transform: "translate(-50%, 0)",
+            width: "100%",
+            textShadow: "0 0 15px rgba(255,255,255,0.3)",
+          }}
+        >
+          SHAMRAT
+        </h1>
+      </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 relative">
-        {/* Centered Name in Viewport */}
-        <div className="fixed-center w-full">
-          <h1
-            ref={shamratRef}
-            className="text-7xl md:text-[250px] leading-[125px] syne-unique font-bold tracking-tighter mix-blend-difference text-center"
-            style={{
-              position: "absolute",
-              top: "0%", // Start at the top
-              left: "50%",
-              transform: "translate(-50%, 0)",
-              width: "100%",
-              textShadow: "0 0 15px rgba(255,255,255,0.3)",
-            }}
-          >
-            SHAMRAT
-          </h1>
+      {/* Side Texts */}
+      <div className="flex justify-between  items-start mt-20 absolute  w-full left-0 px-8 md:px-16">
+        <div
+          ref={leftContentRef}
+          className="max-w-[470px] opacity-0 ml-[260px]"
+        >
+          <h2 className="text-2xl max-w-[470px] md:text-[35px] font-bold syne-unique mb-2">
+            Founder
+          </h2>
+          <p className="text-[24px] leading-tight tracking-tight text-white/70">
+            SS Media
+          </p>
         </div>
-
-        {/* Side Texts */}
-        <div className="flex justify-between items-start mt-20 absolute bottom-24 w-full left-0 px-8 md:px-16">
-          <div ref={leftContentRef} className="max-w-sm opacity-0">
-            <h2 className="text-2xl max-w-[470px] md:text-[35px] font-bold syne-unique mb-2">
-              Founder
-            </h2>
-            <p className="text-[24px] leading-tight tracking-tight text-white/70">
-              SS Media
-            </p>
-          </div>
-          <div
-            ref={rightContentRef}
-            className="max-w-[470px] text-left opacity-0"
-          >
-            <h2 className="text-2xl max-w-[470px] md:text-[35px] font-bold syne-unique mb-2">
-              FROM IDEA TO IMPACT
-            </h2>
-            <p className="text-[24px] leading-tight tracking-tight text-white/70">
-              From Stunning Thumbnails To Sleek Interfaces, We Craft Digital
-              Content That Connects, Converts, And Leaves A Lasting Mark.
-            </p>
-          </div>
+        <div
+          ref={rightContentRef}
+          className="max-w-[470px] text-left mr-[80px] opacity-0"
+        >
+          <h2 className="text-2xl max-w-[470px] md:text-[35px] font-bold syne-unique mb-2">
+            FROM IDEA TO IMPACT
+          </h2>
+          <p className="text-[24px] leading-tight tracking-tight text-white/70">
+            From Stunning Thumbnails To Sleek Interfaces, We Craft Digital
+            Content That Connects, Converts, And Leaves A Lasting Mark.
+          </p>
         </div>
       </div>
     </section>

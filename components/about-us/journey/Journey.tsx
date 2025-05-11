@@ -67,7 +67,7 @@ const Journey: React.FC = () => {
           {timelineItems.map((item, index) => (
             <div
               key={index}
-              className="flex flex-col md:flex-row md:items-center mb-6 relative"
+              className="flex flex-col md:flex-row md:items-center justify-between mb-6 relative"
             >
               {/* Year */}
               <div
