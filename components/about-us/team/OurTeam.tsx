@@ -39,7 +39,7 @@ const teamMembers: TeamMember[] = [
 const OurTeam: React.FC = () => {
   return (
     <section className="mb-20">
-      <h2 className="text-5xl md:text-[60px] syne-unique font-bold mb-16 text-center">
+      <h2 className="text-5xl md:text-[60px] syne-unique font-bold mb-[120px] text-center">
         Get To Know Our Amazing Team
       </h2>
       <div className="flex flex-wrap justify-center gap-6"></div>
@@ -52,7 +52,7 @@ const OurTeam: React.FC = () => {
         {teamMembers.map((member, index) => (
           <div
             key={index}
-            className="relative overflow-hidden h-[506px] w-[278px] rounded-[24px] group cursor-pointer z-10"
+            className="relative overflow-hidden h-[506px] w-[278px]  rounded-[24px] group cursor-pointer z-10 shadow-lg transition-transform duration-300 hover:scale-105"
           >
             <div
               className="absolute inset-0 z-0"
@@ -65,14 +65,14 @@ const OurTeam: React.FC = () => {
               <img
                 src={member.imageUrl}
                 alt={member.name}
-                className="transition-transform object-fit cover duration-300 "
+                className="transition-transform object-cover w-full h-full duration-300 group-hover:scale-110"
               />
             </div>
-            <div className="absolute bg-gradient-to-t rounded-b-[24px] h-[120px] from-black/80 to-transparent backdrop-blur-[5px] w-full bottom-0 left-0 p-4 z-2 flex flex-col justify-center items-left">
-              <h3 className="text-[45px] mt-4 leading-[35px] syne-unique text-white font-bold mb-1">
+            <div className="absolute bg-gradient-to-t rounded-b-[24px] h-[120px] sm:h-[140px] md:h-[160px] from-black/80 to-transparent backdrop-blur-[5px] w-full bottom-0 left-0 p-4 z-10 flex flex-col justify-end items-start">
+              <h3 className="text-[20px] sm:text-[24px] md:text-[28px] lg:text-[32px] leading-[1.2] syne-unique text-white font-bold mb-1">
                 {member.name}
               </h3>
-              <p className="text-[28px] leading-[35px] text-white/70">
+              <p className="text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] leading-[1.5] text-white/70">
                 {member.role}
               </p>
             </div>
