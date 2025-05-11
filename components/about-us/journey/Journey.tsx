@@ -75,7 +75,7 @@ const Journey: React.FC = () => {
             >
               {/* Year */}
               <div className="md:w-1/2 md:text-left md:pr-16">
-                <h3 className="text-4xl md:text-[60px] syne-unique font-bold group-hover:text-yellow-400 transition-colors duration-300">
+                <h3 className="text-4xl md:text-[60px] syne-unique text-white/70 font-bold group-hover:text-white transition-colors duration-300">
                   {item.year}
                 </h3>
               </div>

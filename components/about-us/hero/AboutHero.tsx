@@ -35,23 +35,17 @@ const AboutHero: React.FC = () => {
       shamratRef.current,
       {
         y: "0%", // Start at the top of the viewport
-        opacity: 0.2,
-        scale: 0.8,
-      },
-      {
-        y: "35vh", // Centered vertically in viewport
         opacity: 1,
         scale: 1,
-        ease: "power2.inOut", // More sophisticated easing
-        duration: 0.5,
+      },
+      {
+        y: "50vh", // Move to the bottom
+        opacity: 1, // Keep fully visible
+        scale: 1,
+        ease: "power2.inOut", // Smooth easing
+        duration: 1, // Adjusted duration for smoother transition
       }
-    ).to(shamratRef.current, {
-      y: "50vh", // Continue moving down
-      opacity: 0, // Fade out completely
-      scale: 1.2,
-      ease: "power1.in",
-      duration: 0.5,
-    });
+    );
 
     // Animation for image opacity - smoother and faster fade
     tl.fromTo(
