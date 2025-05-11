@@ -106,7 +106,7 @@ const ShamratText = () => {
             <span
               key={index}
               ref={(el) => setCharRef(el, index)}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-[250px] syne-unique font-bold tracking-tighter inline-block text-white"
+              className="text-5xl sm:text-6xl md:text-7xl lg:text-[250px] leading-[200px] syne-unique font-bold tracking-tighter inline-block text-white"
             >
               {char}
             </span>
