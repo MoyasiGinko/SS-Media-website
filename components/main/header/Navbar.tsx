@@ -29,7 +29,7 @@ const Navbar = () => {
 
   // Update active section based on scroll position
   useEffect(() => {
-    const sections = ["services", "reviews", "work", "faqs", "aboutus"];
+    const sections = ["services", "reviews", "work", "faqs", "about-us"];
 
     const handleScroll = () => {
       // Find all section elements
@@ -106,15 +106,15 @@ const Navbar = () => {
         {/* Navigation Links */}
         <ul className="hidden md:flex gap-6 text-sm font-medium justify-center flex-grow mx-4 relative z-10">
           {[
-            { name: "Services", id: "services" },
-            { name: "Reviews", id: "reviews" },
-            { name: "Work", id: "work" },
-            { name: "FAQs", id: "faqs" },
-            { name: "About Us", id: "aboutus" },
+            { name: "Services", id: "#services" },
+            { name: "Reviews", id: "#reviews" },
+            { name: "Work", id: "#work" },
+            { name: "FAQs", id: "#faqs" },
+            { name: "About Us", id: "about-us" },
           ].map((item) => (
             <motion.li key={item.name}>
               <a
-                href={`#${item.id}`}
+                href={`${item.id}`}
                 className={`relative group transition-colors ${
                   activeSection === item.id
                     ? "text-transparent bg-clip-text bg-gradient-to-r from-[#C76CDE] via-[#FC5F67] to-[#FE925B]"
