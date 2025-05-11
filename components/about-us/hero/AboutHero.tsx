@@ -119,9 +119,11 @@ const ShamratText = () => {
 
 const AboutHero = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const backgroundRef = useRef(null);
+  const backgroundRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef(null); // Add reference for the main section element
+  const leftContentRef = useRef<HTMLDivElement>(null);
+  const rightContentRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null); // Add reference for the main section element
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -145,28 +147,35 @@ const AboutHero = () => {
             const fadeProgress = Math.pow(self.progress, 1.5); // Non-linear easing
             const imgOpacity = 1 - fadeProgress * 0.9; // Increased fade effect
             const textOpacity = 1 - fadeProgress * 5;
+
             // Fade background
-            gsap.to(backgroundRef.current, {
-              opacity: imgOpacity,
-              duration: 0.3,
-              ease: "power1.out",
-            });
+            if (backgroundRef.current) {
+              gsap.to(backgroundRef.current, {
+                opacity: imgOpacity,
+                duration: 0.3,
+                ease: "power1.out",
+              });
+            }
 
             // Fade left content (move left and fade out)
-            gsap.to(contentRef.current?.children[0], {
-              opacity: textOpacity,
-              x: -fadeProgress * 1000, // Move left
-              duration: 0.3,
-              ease: "power1.out",
-            });
+            if (leftContentRef.current) {
+              gsap.to(leftContentRef.current, {
+                opacity: textOpacity,
+                x: -fadeProgress * 1000, // Move left
+                duration: 0.3,
+                ease: "power1.out",
+              });
+            }
 
             // Fade right content (move right and fade out)
-            gsap.to(contentRef.current?.children[1], {
-              opacity: textOpacity,
-              x: fadeProgress * 1000, // Move right
-              duration: 0.3,
-              ease: "power1.out",
-            });
+            if (rightContentRef.current) {
+              gsap.to(rightContentRef.current, {
+                opacity: textOpacity,
+                x: fadeProgress * 1000, // Move right
+                duration: 0.3,
+                ease: "power1.out",
+              });
+            }
           },
         });
 
@@ -253,6 +262,7 @@ const AboutHero = () => {
         className="absolute inset-0 flex flex-col md:flex-row justify-between w-full px-4 sm:px-8 md:px-16 space-y-8 md:space-y-0 items-center md:items-center"
       >
         <motion.div
+          ref={leftContentRef}
           className="md:max-w-[470px] md:ml-4 lg:ml-[220px] mt-[200px] flex flex-col justify-center"
           variants={containerVariants}
           initial="hidden"
@@ -273,6 +283,7 @@ const AboutHero = () => {
         </motion.div>
 
         <motion.div
+          ref={rightContentRef}
           className="md:max-w-[470px] md:mr-4 lg:mr-16 flex flex-col justify-center"
           variants={containerVariants}
           initial="hidden"
