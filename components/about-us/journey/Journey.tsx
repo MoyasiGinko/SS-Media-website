@@ -41,7 +41,7 @@ const Journey: React.FC = () => {
 
   return (
     <section className="mb-20">
-      <h2 className="text-5xl md:text-6xl font-bold mb-16 text-center">
+      <h2 className="text-5xl md:text-[60px] syne-unique text-white font-bold mb-16 text-center">
         Journey
       </h2>
 
@@ -51,47 +51,40 @@ const Journey: React.FC = () => {
 
         {/* Person image in middle */}
         <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 top-1/2 -translate-y-1/2 z-10">
-          <div className="relative h-64 w-64">
+          <div className="relative h-[625px] w-[528px]">
             <Image
               src="/images/team/journey1.png"
               alt="Profile"
               layout="fill"
               objectFit="cover"
-              className="rounded-full"
+              className=" shadow-lg"
             />
           </div>
         </div>
 
         {/* Timeline */}
-        <div className="relative z-0">
+        <div className="relative  max-w-[1686px] items-center mx-auto z-0">
           {timelineItems.map((item, index) => (
             <div
               key={index}
-              className="flex flex-col md:flex-row md:items-center justify-between mb-6 relative"
+              className={`flex flex-col h-[112px] md:flex-row md:items-center justify-between relative group pb-4 mb-4 ${
+                index !== timelineItems.length - 1
+                  ? "border-b-2 border-white/70 hover:border-white"
+                  : ""
+              }`}
             >
               {/* Year */}
-              <div
-                className={`md:w-1/2 pb-8 ${
-                  index % 2 === 0
-                    ? "md:text-right md:pr-16"
-                    : "md:order-3 md:text-left md:pl-16"
-                }`}
-              >
-                <h3 className="text-4xl font-bold">{item.year}</h3>
+              <div className="md:w-1/2 md:text-left md:pr-16">
+                <h3 className="text-4xl md:text-[60px] syne-unique font-bold group-hover:text-yellow-400 transition-colors duration-300">
+                  {item.year}
+                </h3>
               </div>
 
-              {/* Line */}
-              <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-gray-700"></div>
-
               {/* Description */}
-              <div
-                className={`md:w-1/2 pb-8 ${
-                  index % 2 === 0
-                    ? "md:order-3 md:text-left md:pl-16"
-                    : "md:text-right md:pr-16"
-                }`}
-              >
-                <p className="text-gray-300">{item.description}</p>
+              <div className="md:w-[547px] md:text-right ">
+                <p className="text-white/70 text-[24px] tracking-tight group-hover:text-white transition-colors duration-300">
+                  {item.description}
+                </p>
               </div>
             </div>
           ))}
