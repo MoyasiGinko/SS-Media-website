@@ -2,56 +2,71 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Enhanced ShamratText component with continuous blend effect and animations
+// Register ScrollTrigger plugin with GSAP
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+// Enhanced ShamratText component with GSAP for scroll effects
 const ShamratText = () => {
-  const textRef = useRef(null);
+  const textRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef(null);
-  const [isSticky, setIsSticky] = useState(false);
-  const [reachedBottom, setReachedBottom] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const charactersRef = useRef<(HTMLSpanElement | null)[]>([]);
+
+  // Create refs for each character
+  const setCharRef = (el: HTMLSpanElement | null, index: number): void => {
+    charactersRef.current[index] = el;
+  };
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!textRef.current || !sectionRef.current) return;
+    // Make sure we're in the browser environment
+    if (
+      typeof window === "undefined" ||
+      !sectionRef.current ||
+      !textRef.current
+    )
+      return;
 
-      const textElement = textRef.current;
-      const sectionElement = sectionRef.current;
-      const sectionRect = sectionElement.getBoundingClientRect();
-      const textHeight = textElement.offsetHeight;
-
-      // Calculate the point at which the text should stop (section bottom minus text height)
-      const stopPoint = sectionRect.height - textHeight;
-
-      // Calculate scroll progress (0 to 1)
-      const progress = Math.min(
-        Math.max(Math.abs(sectionRect.top) / stopPoint, 0),
-        1
-      );
-      setScrollProgress(progress);
-
-      // When section top enters viewport
-      if (sectionRect.top <= 0) {
-        setIsSticky(true);
-
-        // If we've scrolled past the stop point, pin to bottom
-        if (Math.abs(sectionRect.top) >= stopPoint) {
-          setReachedBottom(true);
-        } else {
-          setReachedBottom(false);
+    const ctx = gsap.context(() => {
+      // Initial animation for characters coming in
+      gsap.fromTo(
+        charactersRef.current,
+        {
+          opacity: 0,
+          y: 50,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.1,
+          duration: 0.8,
+          ease: "power3.out",
         }
-      } else {
-        setIsSticky(false);
-        setReachedBottom(false);
-      }
-    };
+      );
 
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Check initial position
+      // Create the scroll-based animation
+      const scrollTrigger = ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top top",
+        end: textRef.current
+          ? `bottom-=${textRef.current.offsetHeight} top`
+          : "bottom top",
+        pin: textRef.current,
+        pinSpacing: false,
+        // No onUpdate effects for characters as requested
+      });
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+      return () => {
+        // Clean up ScrollTrigger when component unmounts
+        scrollTrigger.kill();
+      };
+    }, sectionRef);
+
+    // Clean up context when component unmounts
+    return () => ctx.revert();
   }, []);
 
   // Split "SHAMRAT" into individual characters for animation
@@ -59,37 +74,16 @@ const ShamratText = () => {
 
   return (
     <div ref={sectionRef} className="relative min-h-[100vh]">
-      <div
-        ref={textRef}
-        className={`w-full text-center pt-[144px] ${
-          isSticky
-            ? reachedBottom
-              ? "absolute bottom-0"
-              : "fixed top-0 left-0 right-0 z-10"
-            : "relative"
-        }`}
-      >
+      <div ref={textRef} className="w-full text-center pt-[144px]">
         <div className="flex justify-center items-center">
           {characters.map((char, index) => (
-            <motion.span
+            <span
               key={index}
+              ref={(el) => setCharRef(el, index)}
               className="text-5xl sm:text-6xl md:text-7xl lg:text-[250px] syne-unique font-bold tracking-tighter inline-block mix-blend-difference"
-              style={{
-                textShadow: "0 0 15px rgba(255,255,255,0.3)",
-              }}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                delay: 0.1 * index,
-                duration: 0.8,
-                ease: "easeOut",
-              }}
             >
               {char}
-            </motion.span>
+            </span>
           ))}
         </div>
       </div>
@@ -99,12 +93,76 @@ const ShamratText = () => {
 
 const AboutHero = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const backgroundRef = useRef(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef(null); // Add reference for the main section element
 
   useEffect(() => {
     // Set visible after a short delay for entrance animations
     const timeout = setTimeout(() => {
       setIsVisible(true);
     }, 300);
+
+    // Create scroll animation for background image opacity and content elements
+    if (
+      typeof window !== "undefined" &&
+      backgroundRef.current &&
+      contentRef.current &&
+      sectionRef.current
+    ) {
+      const animations = gsap.context(() => {
+        // Background opacity animation - MODIFIED FOR SLOWER FADE
+        ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: "top top",
+          // Extended end point for slower fade effect
+          end: "bottom+=50% bottom",
+          scrub: true,
+          // markers: true, // Uncomment for debugging
+          onUpdate: (self) => {
+            // Modified opacity calculation for slower fade
+            // Using a smaller factor (0.4 instead of 0.7) and power function for non-linear fading
+            const fadeProgress = Math.pow(self.progress, 1.5); // Non-linear easing
+            gsap.to(backgroundRef.current, {
+              opacity: 1 - fadeProgress * 0.8, // Fade to 0.6 opacity at bottom (less fade)
+              duration: 0.3, // Slightly longer duration for smoother transition
+              ease: "power1.out", // Gentle easing function
+            });
+          },
+        });
+
+        // Content elements animation on scroll
+        const contentElements = contentRef.current
+          ? contentRef.current.querySelectorAll("h2, p")
+          : [];
+
+        contentElements.forEach((element, index) => {
+          gsap.fromTo(
+            element,
+            {
+              y: 0,
+              opacity: 1,
+            },
+            {
+              y: -20,
+              opacity: 0.7 + index * 0.05,
+              scrollTrigger: {
+                trigger: element,
+                start: "top 70%",
+                end: "bottom top",
+                scrub: true,
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        });
+      });
+
+      return () => {
+        animations.revert();
+        clearTimeout(timeout);
+      };
+    }
 
     return () => clearTimeout(timeout);
   }, []);
@@ -132,9 +190,10 @@ const AboutHero = () => {
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden">
-      {/* Background Image with parallax effect */}
+    <section ref={sectionRef} className="relative min-h-screen overflow-hidden">
+      {/* Background Image with parallax effect and scroll opacity animation */}
       <motion.div
+        ref={backgroundRef}
         className="absolute inset-0 -z-10 isolation-auto"
         initial={{ scale: 1.1 }}
         animate={{ scale: 1 }}
@@ -149,8 +208,11 @@ const AboutHero = () => {
         />
       </motion.div>
 
-      {/* Content */}
-      <div className="absolute inset-0 flex flex-col md:flex-row justify-between w-full px-4 sm:px-8 md:px-16 space-y-8 md:space-y-0 items-center md:items-center">
+      {/* Content with enhanced scroll animations */}
+      <div
+        ref={contentRef}
+        className="absolute inset-0 flex flex-col md:flex-row justify-between w-full px-4 sm:px-8 md:px-16 space-y-8 md:space-y-0 items-center md:items-center"
+      >
         <motion.div
           className="md:max-w-[470px] md:ml-4 lg:ml-16 flex flex-col justify-center"
           variants={containerVariants}
@@ -197,7 +259,7 @@ const AboutHero = () => {
 };
 
 // Text reveal animation component
-const TextReveal = ({ text }) => {
+const TextReveal: React.FC<{ text: string }> = ({ text }) => {
   // Split text into words
   const words = text.split(" ");
 
