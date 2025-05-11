@@ -243,7 +243,7 @@ const AboutHero = () => {
       <motion.div
         ref={backgroundRef}
         className="absolute inset-0 -z-10 isolation-auto"
-        initial={{ scale: 1.1 }}
+        initial={{ scale: 1 }}
         animate={{ scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
       >
@@ -251,7 +251,7 @@ const AboutHero = () => {
           src="/images/team/hero.png"
           alt="Founder"
           layout="fill"
-          className="object-cover"
+          className="object-cover scale-95"
           priority
         />
       </motion.div>
