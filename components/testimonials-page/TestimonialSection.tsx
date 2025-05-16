@@ -38,14 +38,17 @@ const TestimonialSection: React.FC = () => {
           Our Clients
         </h1>
 
-        <p className="text-xs md:text-sm lg:text-base text-gray-400 max-w-sm">
+        <p className="text-sm md:text-base lg:text-lg pb-4  text-gray-400 max-w-sm">
           Hear What Our Clients Have To Say About The Quality Of Our Edits And
           How We Helped Bring Their Vision To Life.
         </p>
 
-        <Button variant="purple" className="text-xs md:text-sm px-4 py-2 w-max">
+        <a
+          href="#"
+          className="w-[160px] h-[50px] rounded-[15px] text-2xl text-center border-[1.5px] border-white bg-gradient-to-r from-[#BB6FFB]/30 via-[#FC5F67]/30 to-[#FFB054]/30 text-white font-medium inline-flex justify-center items-center"
+        >
           View All
-        </Button>
+        </a>
       </div>
 
       <div className="flex-shrink-0 w-full md:max-w-[440px] lg:max-w-[540px]">
