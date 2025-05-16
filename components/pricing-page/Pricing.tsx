@@ -282,7 +282,7 @@ const PackagesAndServices: React.FC = () => {
             {youtubePackages.map((pkg, index) => (
               <article
                 key={index}
-                className={`rounded-lg p-6 w-full md:w-[280px] flex flex-col justify-between ${
+                className={`relative rounded-lg p-6 w-full md:w-[280px] flex flex-col justify-between ${
                   pkg.highlight ? "bg-white text-black" : "bg-[#2a2a2a]"
                 }`}
               >
