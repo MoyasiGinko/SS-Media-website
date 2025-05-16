@@ -278,13 +278,24 @@ const PackagesAndServices: React.FC = () => {
           </div>
 
           {/* Packages cards container */}
-          <div className="flex flex-col md:flex-row justify-center gap-6 md:gap-8 flex-wrap max-w-[1100px] mx-auto">
+          <div className="flex flex-col md:flex-row max-w-[1100px] mx-auto">
             {youtubePackages.map((pkg, index) => (
               <article
                 key={index}
-                className={`relative rounded-lg p-6 w-full md:w-[280px] flex flex-col justify-between ${
-                  pkg.highlight ? "bg-white text-black" : "bg-[#2a2a2a]"
-                }`}
+                className={`relative flex-1 flex flex-col justify-between ${
+                  pkg.highlight
+                    ? "bg-white text-black md:scale-105 md:z-10 shadow-2xl"
+                    : "bg-[#2a2a2a]"
+                } ${
+                  pkg.highlight
+                    ? "md:min-h-[520px] min-h-[480px]"
+                    : "md:min-h-[460px] min-h-[420px]"
+                } p-6 transition-transform duration-300`}
+                style={
+                  pkg.highlight
+                    ? { marginTop: "-20px", marginBottom: "-20px" }
+                    : undefined
+                }
               >
                 {pkg.highlight && (
                   <div className="absolute top-0 right-0 bg-gradient-to-r from-[#ff4c4c] via-[#ff9a4c] to-[#ffb14c] rounded-bl-md px-3 py-1 text-[10px] font-semibold font-['Orbitron'] text-black select-none">
