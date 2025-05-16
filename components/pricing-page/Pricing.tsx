@@ -278,99 +278,115 @@ const PackagesAndServices: React.FC = () => {
           </div>
 
           {/* Packages cards container */}
-          <div className="flex flex-col md:flex-row max-w-[1100px] mx-auto">
-            {youtubePackages.map((pkg, index) => (
-              <article
-                key={index}
-                className={`relative flex-1 flex flex-col justify-between ${
-                  pkg.highlight
-                    ? "bg-white text-black md:scale-105 md:z-10 shadow-2xl"
-                    : "bg-[#2a2a2a]"
-                } ${
-                  pkg.highlight
-                    ? "md:min-h-[520px] min-h-[480px]"
-                    : "md:min-h-[460px] min-h-[420px]"
-                } p-6 transition-transform duration-300`}
-                style={
-                  pkg.highlight
-                    ? { marginTop: "-20px", marginBottom: "-20px" }
-                    : undefined
+          <div className="rounded-2xl bg-[#2a2a2a]">
+            <div className="flex flex-col md:flex-row max-w-[1100px] mx-auto">
+              {youtubePackages.map((pkg, index) => (
+                <article
+                  key={index}
+                  className={`relative flex-1 flex flex-col justify-between ${
+                    pkg.highlight
+                      ? "bg-white text-black md:scale-105 md:z-10 shadow-2xl"
+                      : "bg-[#2a2a2a]"
+                  } ${
+                    pkg.highlight
+                      ? "md:min-h-[520px] min-h-[480px]"
+                      : "md:min-h-[460px] min-h-[420px]"
+                  } p-6 transition-transform duration-300
+                ${
+                  index === 0
+                    ? "md:rounded-l-2xl"
+                    : index === youtubePackages.length - 1
+                    ? "md:rounded-r-2xl"
+                    : ""
                 }
-              >
-                {pkg.highlight && (
-                  <div className="absolute top-0 right-0 bg-gradient-to-r from-[#ff4c4c] via-[#ff9a4c] to-[#ffb14c] rounded-bl-md px-3 py-1 text-[10px] font-semibold font-['Orbitron'] text-black select-none">
-                    Most Popular
-                  </div>
-                )}
+                ${index === 0 ? "rounded-t-2xl md:rounded-t-none" : ""}
+                ${
+                  index === youtubePackages.length - 1
+                    ? "rounded-b-2xl md:rounded-b-none"
+                    : ""
+                }
+                `}
+                  style={
+                    pkg.highlight
+                      ? { marginTop: "-20px", marginBottom: "-20px" }
+                      : undefined
+                  }
+                >
+                  {pkg.highlight && (
+                    <div className="absolute top-0 right-0 bg-gradient-to-r from-[#ff4c4c] via-[#ff9a4c] to-[#ffb14c] rounded-bl-md px-3 py-1 text-[10px] font-semibold font-['Orbitron'] text-black select-none">
+                      Most Popular
+                    </div>
+                  )}
 
-                <div>
-                  <p
-                    className={`text-xs ${
-                      pkg.highlight
-                        ? 'font-["Orbitron"] font-semibold'
-                        : "text-gray-300"
-                    } mb-1`}
-                  >
-                    {pkg.title}
-                  </p>
-                  <p
-                    className={`font-bold ${
-                      pkg.highlight ? "text-2xl" : "text-lg"
-                    } mb-4`}
-                  >
-                    {pkg.price}
-                  </p>
-                  <hr
-                    className={`border-${
-                      pkg.highlight ? "gray-300" : "gray-600"
-                    } mb-4`}
-                  />
-                  <p
-                    className={`text-xs ${
-                      pkg.highlight ? "" : "text-gray-400"
-                    } mb-4`}
-                    dangerouslySetInnerHTML={{ __html: pkg.description }}
-                  />
-                  <button
-                    type="button"
-                    className="w-full bg-gradient-to-r from-[#ff4c4c] via-[#ff9a4c] to-[#ffb14c] rounded-full py-2 text-black font-semibold mb-6"
-                  >
-                    Get Started
-                  </button>
-                  <p
-                    className={`text-xs ${
-                      pkg.highlight ? "text-gray-600" : "text-gray-400"
-                    } mb-2 font-semibold`}
-                  >
-                    Features
-                  </p>
-                  <hr
-                    className={`border-${
-                      pkg.highlight ? "gray-300" : "gray-600"
-                    } mb-3`}
-                  />
-                  <ul
-                    className={`text-xs ${
-                      pkg.highlight ? "" : "text-gray-300"
-                    } space-y-${pkg.highlight ? "2" : "1"}`}
-                  >
-                    {pkg.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-2">
-                        {pkg.highlight ? (
-                          <FontAwesomeIcon
-                            icon={faCheckCircle}
-                            className="text-gray-600"
-                          />
-                        ) : (
-                          <span className="w-4 h-4 rounded-full bg-[#a3ff00] inline-block flex-shrink-0"></span>
-                        )}
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </article>
-            ))}
+                  <div>
+                    <p
+                      className={`text-xs ${
+                        pkg.highlight
+                          ? 'font-["Orbitron"] font-semibold'
+                          : "text-gray-300"
+                      } mb-1`}
+                    >
+                      {pkg.title}
+                    </p>
+                    <p
+                      className={`font-bold ${
+                        pkg.highlight ? "text-2xl" : "text-lg"
+                      } mb-4`}
+                    >
+                      {pkg.price}
+                    </p>
+                    <hr
+                      className={`border-${
+                        pkg.highlight ? "gray-300" : "gray-600"
+                      } mb-4`}
+                    />
+                    <p
+                      className={`text-xs ${
+                        pkg.highlight ? "" : "text-gray-400"
+                      } mb-4`}
+                      dangerouslySetInnerHTML={{ __html: pkg.description }}
+                    />
+                    <button
+                      type="button"
+                      className="w-full bg-gradient-to-r from-[#ff4c4c] via-[#ff9a4c] to-[#ffb14c] rounded-full py-2 text-black font-semibold mb-6"
+                    >
+                      Get Started
+                    </button>
+                    <p
+                      className={`text-xs ${
+                        pkg.highlight ? "text-gray-600" : "text-gray-400"
+                      } mb-2 font-semibold`}
+                    >
+                      Features
+                    </p>
+                    <hr
+                      className={`border-${
+                        pkg.highlight ? "gray-300" : "gray-600"
+                      } mb-3`}
+                    />
+                    <ul
+                      className={`text-xs ${
+                        pkg.highlight ? "" : "text-gray-300"
+                      } space-y-${pkg.highlight ? "2" : "1"}`}
+                    >
+                      {pkg.features.map((feature, i) => (
+                        <li key={i} className="flex items-center gap-2">
+                          {pkg.highlight ? (
+                            <FontAwesomeIcon
+                              icon={faCheckCircle}
+                              className="text-gray-600 w-3 h-3"
+                            />
+                          ) : (
+                            <span className="w-4 h-4 rounded-full bg-[#a3ff00] inline-block flex-shrink-0"></span>
+                          )}
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
