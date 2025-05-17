@@ -194,8 +194,10 @@ const PlansSection = () => {
                     <button
                       type="button"
                       className={`${
-                        isHighlight ? "w-[240px]" : "w-[190px]"
-                      }  h-[58px] text-[15.73px] bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] rounded-[13.5px] py-2 text-black font-semibold mb-[40px] `}
+                        isHighlight
+                          ? "w-[240px] h-[58px]"
+                          : "w-[190px] h-[48px]"
+                      }   text-[15.73px] bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] rounded-[13.5px] py-2 text-black font-semibold mb-[40px] `}
                     >
                       Get Started
                     </button>
