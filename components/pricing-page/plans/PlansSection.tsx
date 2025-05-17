@@ -128,9 +128,9 @@ const PlansSection = () => {
                   key={index}
                   className={`relative flex flex-col justify-between ${
                     isHighlight
-                      ? "bg-white text-black shadow-2xl z-10 transform-none"
-                      : "bg-[#2a2a2a] self-center"
-                  } px-[46px] py-[38px] transition-transform duration-300
+                      ? "bg-white px-[46px] text-black shadow-2xl z-10 transform-none"
+                      : "bg-[#2a2a2a] px-[43px] self-center"
+                  }  py-[38px] transition-transform duration-300
           ${
             index === 0
               ? "rounded-l-2xl"
@@ -174,8 +174,8 @@ const PlansSection = () => {
                       } mb-[40px]`}
                     />
                     <p
-                      className={`text-[15.5px] ${
-                        isHighlight ? "" : "text-gray-400"
+                      className={` ${
+                        isHighlight ? "text-[15.5px]" : "text-[13px] text-white"
                       } mb-[40px] leading-tight`}
                       dangerouslySetInnerHTML={{ __html: pkg.description }}
                     />
