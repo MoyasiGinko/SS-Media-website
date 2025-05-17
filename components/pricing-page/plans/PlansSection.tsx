@@ -128,7 +128,7 @@ const PlansSection = () => {
                   pkg.highlight
                     ? "bg-white text-black shadow-2xl z-10 transform-none"
                     : "bg-[#2a2a2a] self-center"
-                } p-6 transition-transform duration-300
+                } px-[46px] py-[45px] transition-transform duration-300
                 ${
                   index === 0
                     ? "rounded-l-2xl"
@@ -159,48 +159,50 @@ const PlansSection = () => {
                     {pkg.title}
                   </p>
                   <p
-                    className={`font-bold ${
-                      pkg.highlight ? "text-2xl" : "text-lg"
-                    } mb-4`}
+                    className={`font-bold leading-tight  ${
+                      pkg.highlight ? "text-[52.5px]" : "text-[43.5px]"
+                    } mb-[40px]`}
                   >
                     {pkg.price}
                   </p>
                   <hr
                     className={`border-${
                       pkg.highlight ? "gray-300" : "gray-600"
-                    } mb-4`}
+                    } mb-[40px]`}
                   />
                   <p
-                    className={`text-xs ${
+                    className={`text-[15.5px] ${
                       pkg.highlight ? "" : "text-gray-400"
-                    } mb-4`}
+                    } mb-[40px] leading-tight`}
                     dangerouslySetInnerHTML={{ __html: pkg.description }}
                   />
                   <button
                     type="button"
-                    className="w-full bg-gradient-to-r from-[#ff4c4c] via-[#ff9a4c] to-[#ffb14c] rounded-full py-2 text-black font-semibold mb-6"
+                    className="w-[240px] h-[58px] text-[15.73px] bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] rounded-[13.5px] py-2 text-black font-semibold mb-[40px]"
                   >
                     Get Started
                   </button>
                   <p
-                    className={`text-xs ${
+                    className={`text-[21px] ${
                       pkg.highlight ? "text-gray-600" : "text-gray-400"
-                    } mb-2 font-semibold`}
+                    } mb-4 font-semibold`}
                   >
                     Features
                   </p>
                   <hr
                     className={`border-${
                       pkg.highlight ? "gray-300" : "gray-600"
-                    } mb-3`}
+                    } mb-[40px]`}
                   />
                   <ul
-                    className={`text-xs ${
-                      pkg.highlight ? "" : "text-gray-300"
+                    className={`${
+                      pkg.highlight
+                        ? "text-[15.73px] "
+                        : "text-[13.73px] text-gray-300"
                     } space-y-${pkg.highlight ? "2" : "1"}`}
                   >
                     {pkg.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-2">
+                      <li key={i} className="flex items-center mb-[25px] gap-2">
                         {pkg.highlight ? (
                           <FontAwesomeIcon
                             icon={faCheckCircle}
