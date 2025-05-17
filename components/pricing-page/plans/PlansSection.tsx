@@ -121,103 +121,112 @@ const PlansSection = () => {
         {/* Wrapper for cards - using overflow-x-auto for mobile scrolling */}
         <div className="overflow-x-auto pb-6">
           <div className="flex flex-row max-w-full md:max-w-[1305px] mx-auto min-w-max py-12">
-            {youtubePackages.map((pkg, index) => (
-              <article
-                key={index}
-                className={`relative flex flex-col justify-between ${
-                  pkg.highlight
-                    ? "bg-white text-black shadow-2xl z-10 transform-none"
-                    : "bg-[#2a2a2a] self-center"
-                } px-[46px] py-[45px] transition-transform duration-300
-                ${
-                  index === 0
-                    ? "rounded-l-2xl"
-                    : index === youtubePackages.length - 1
-                    ? "rounded-r-2xl"
-                    : ""
-                }
-                ${pkg.highlight ? "rounded-2xl" : ""}
-                `}
-                style={{
-                  width: pkg.highlight ? "380px" : "315px",
-                  height: pkg.highlight ? "900px" : "762px",
-                  ...(!pkg.highlight ? {} : {}),
-                }}
-              >
-                {pkg.highlight && (
-                  <div className="absolute rounded-tr-[13.5px] text-center rounded-bl-[13.5px] w-[120px] h-[28px] md:w-[156px] md:h-[36px] top-0 right-0 bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] text-[13px] md:text-[15px] font-semibold text-black select-none flex items-center justify-center">
-                    Most Popular
-                  </div>
-                )}
+            {youtubePackages.map((pkg, index) => {
+              const isHighlight = pkg.highlight;
+              return (
+                <article
+                  key={index}
+                  className={`relative flex flex-col justify-between ${
+                    isHighlight
+                      ? "bg-white text-black shadow-2xl z-10 transform-none"
+                      : "bg-[#2a2a2a] self-center"
+                  } px-[46px] py-[38px] transition-transform duration-300
+          ${
+            index === 0
+              ? "rounded-l-2xl"
+              : index === youtubePackages.length - 1
+              ? "rounded-r-2xl"
+              : ""
+          }
+          ${isHighlight ? "rounded-2xl" : ""}
+          `}
+                  style={{
+                    width: isHighlight ? "380px" : "315px",
+                    height: isHighlight ? "900px" : "762px",
+                  }}
+                >
+                  {isHighlight && (
+                    <div className="absolute rounded-tr-[13.5px] text-center rounded-bl-[13.5px] w-[120px] h-[28px] md:w-[156px] md:h-[36px] top-0 right-0 bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] text-[13px] md:text-[15px] font-semibold text-black select-none flex items-center justify-center">
+                      Most Popular
+                    </div>
+                  )}
 
-                <div>
-                  <p
-                    className={`text-[23px] ${
-                      pkg.highlight ? " font-semibold" : "text-gray-300"
-                    } mb-1`}
-                  >
-                    {pkg.title}
-                  </p>
-                  <p
-                    className={`font-bold leading-tight  ${
-                      pkg.highlight ? "text-[52.5px]" : "text-[43.5px]"
-                    } mb-[40px]`}
-                  >
-                    {pkg.price}
-                  </p>
-                  <hr
-                    className={`border-${
-                      pkg.highlight ? "gray-300" : "gray-600"
-                    } mb-[40px]`}
-                  />
-                  <p
-                    className={`text-[15.5px] ${
-                      pkg.highlight ? "" : "text-gray-400"
-                    } mb-[40px] leading-tight`}
-                    dangerouslySetInnerHTML={{ __html: pkg.description }}
-                  />
-                  <button
-                    type="button"
-                    className="w-[240px] h-[58px] text-[15.73px] bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] rounded-[13.5px] py-2 text-black font-semibold mb-[40px]"
-                  >
-                    Get Started
-                  </button>
-                  <p
-                    className={`text-[21px] ${
-                      pkg.highlight ? "text-gray-600" : "text-gray-400"
-                    } mb-4 font-semibold`}
-                  >
-                    Features
-                  </p>
-                  <hr
-                    className={`border-${
-                      pkg.highlight ? "gray-300" : "gray-600"
-                    } mb-[40px]`}
-                  />
-                  <ul
-                    className={`${
-                      pkg.highlight
-                        ? "text-[15.73px] "
-                        : "text-[13.73px] text-gray-300"
-                    } space-y-${pkg.highlight ? "2" : "1"}`}
-                  >
-                    {pkg.features.map((feature, i) => (
-                      <li key={i} className="flex items-center mb-[25px] gap-2">
-                        {pkg.highlight ? (
-                          <FontAwesomeIcon
-                            icon={faCheckCircle}
-                            className="text-gray-600 w-3 h-3"
-                          />
-                        ) : (
-                          <span className="w-4 h-4 rounded-full bg-[#a3ff00] inline-block flex-shrink-0"></span>
-                        )}
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </article>
-            ))}
+                  <div>
+                    <p
+                      className={`text-[23px] ${
+                        isHighlight ? " font-semibold" : "text-gray-300"
+                      } mb-1`}
+                    >
+                      {pkg.title}
+                    </p>
+                    <p
+                      className={`font-bold leading-tight  ${
+                        isHighlight ? "text-[52.5px]" : "text-[38px]"
+                      } mb-[40px]`}
+                    >
+                      {pkg.price}
+                    </p>
+                    <hr
+                      className={`border-${
+                        isHighlight ? "gray-300" : "gray-600"
+                      } mb-[40px]`}
+                    />
+                    <p
+                      className={`text-[15.5px] ${
+                        isHighlight ? "" : "text-gray-400"
+                      } mb-[40px] leading-tight`}
+                      dangerouslySetInnerHTML={{ __html: pkg.description }}
+                    />
+                    <button
+                      type="button"
+                      className={`w-[240px] h-[58px] text-[15.73px] bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] rounded-[13.5px] py-2 text-black font-semibold mb-[40px] `}
+                    >
+                      Get Started
+                    </button>
+                    <p
+                      className={`text-[21px] ${
+                        isHighlight ? "text-gray-600" : "text-gray-400"
+                      } mb-4 font-semibold`}
+                    >
+                      Features
+                    </p>
+                    <hr
+                      className={`border-${
+                        isHighlight ? "gray-300" : "gray-600"
+                      } mb-[20px]`}
+                    />
+                    <ul
+                      className={`${
+                        isHighlight
+                          ? "text-[15.73px]"
+                          : "text-[12.5px] text-gray-300"
+                      } space-y-${isHighlight ? "2" : "1"}`}
+                    >
+                      {pkg.features.map((feature, i) => (
+                        <li
+                          key={i}
+                          className={`flex items-center ${
+                            isHighlight
+                              ? "mb-[25px] gap-2"
+                              : "mb-[13px] gap-1.5"
+                          }`}
+                        >
+                          {isHighlight ? (
+                            <FontAwesomeIcon
+                              icon={faCheckCircle}
+                              className="text-gray-600 w-3 h-3"
+                            />
+                          ) : (
+                            <span className="w-3 h-3 rounded-full bg-[#a3ff00] inline-block flex-shrink-0"></span>
+                          )}
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </div>
