@@ -41,7 +41,7 @@ const youtubePackages: Package[] = [
   },
   {
     title: "Standard Plan",
-    price: "$1600",
+    price: "$1500",
     description:
       "Our best offer ensures consistency for a month – we'll schedule your videos in a sequence to help your channel start a strong and successful journey",
     features: [
@@ -159,15 +159,27 @@ const PlansSection = () => {
                     >
                       {pkg.title}
                     </p>
-                    <p
-                      className={`font-bold leading-tight  ${
-                        isHighlight
-                          ? "text-[52.5px] text-[#00A832]"
-                          : "text-[38px]"
-                      } mb-[40px]`}
-                    >
-                      {pkg.price}
-                    </p>
+                    <div className="flex items-center mb-[40px]">
+                      <p
+                        className={`font-bold leading-tight  ${
+                          isHighlight
+                            ? "text-[52.5px] text-[#00A832]"
+                            : "text-[38px]"
+                        }`}
+                      >
+                        {pkg.price}
+                      </p>
+                      {isHighlight && (
+                        <span className="ml-2 flex flex-col">
+                          <span className="text-xs text-[#00A832] font-semibold">
+                            Limited Offer
+                          </span>
+                          <span className="text-sm text-gray-400 line-through">
+                            $1750
+                          </span>
+                        </span>
+                      )}
+                    </div>
                     <hr
                       className={`border-${
                         isHighlight ? "gray-300" : "gray-600"
@@ -181,7 +193,9 @@ const PlansSection = () => {
                     />
                     <button
                       type="button"
-                      className={`w-[240px] h-[58px] text-[15.73px] bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] rounded-[13.5px] py-2 text-black font-semibold mb-[40px] `}
+                      className={`${
+                        isHighlight ? "w-[240px]" : "w-[190px]"
+                      }  h-[58px] text-[15.73px] bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] rounded-[13.5px] py-2 text-black font-semibold mb-[40px] `}
                     >
                       Get Started
                     </button>
