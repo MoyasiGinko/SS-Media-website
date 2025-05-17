@@ -161,7 +161,9 @@ const PlansSection = () => {
                     </p>
                     <p
                       className={`font-bold leading-tight  ${
-                        isHighlight ? "text-[52.5px]" : "text-[38px]"
+                        isHighlight
+                          ? "text-[52.5px] text-[#00A832]"
+                          : "text-[38px]"
                       } mb-[40px]`}
                     >
                       {pkg.price}
@@ -217,7 +219,10 @@ const PlansSection = () => {
                               className="text-gray-600 w-3 h-3"
                             />
                           ) : (
-                            <span className="w-3 h-3 rounded-full bg-[#a3ff00] inline-block flex-shrink-0"></span>
+                            <FontAwesomeIcon
+                              icon={faCheckCircle}
+                              className="text-[#BFFF00] w-3 h-3"
+                            />
                           )}
                           {feature}
                         </li>
