@@ -82,7 +82,7 @@ const PlansSection = () => {
   return (
     <>
       {/* Our Packages Section */}
-      <section className="mb-20">
+      <section className="mb-10">
         <h3 className="text-xl md:text-2xl font-semibold text-center mb-2">
           Our Packages
         </h3>
@@ -91,7 +91,7 @@ const PlansSection = () => {
           Journey Our Packages Will Provide You The Best Value.
         </p>
 
-        <div className="flex justify-center mb-10 gap-2 text-xs md:text-sm font-semibold">
+        <div className="flex justify-center gap-2 text-xs md:text-sm font-semibold">
           <button
             type="button"
             className={`rounded-full px-4 py-1 ${
@@ -232,7 +232,7 @@ const PlansSection = () => {
                           {isHighlight ? (
                             <FontAwesomeIcon
                               icon={faCheckCircle}
-                              className="text-gray-600 w-3 h-3"
+                              className="text-black w-3 h-3"
                             />
                           ) : (
                             <FontAwesomeIcon
