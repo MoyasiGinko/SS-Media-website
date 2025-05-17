@@ -89,19 +89,20 @@ const Navbar = () => {
         transition={{ type: "spring", stiffness: 120, damping: 20 }}
       >
         {/* Logo */}
-        <motion.div
+        <motion.a
           className="flex items-center gap-2 flex-shrink-0 relative z-10"
           transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          href="/"
         >
           <img src="/images/logo/ss.svg" alt="Logo" className="h-10 w-10" />
           <span
             className={`${
-              isScrolled ? "block md:hidden" : "hidden md:block "
+              isScrolled ? "hidden" : "block "
             } font-semibold text-lg tracking-wide text-white`}
           >
             SS Media
           </span>
-        </motion.div>
+        </motion.a>
 
         {/* Navigation Links */}
         <ul className="hidden md:flex gap-6 text-sm font-medium justify-center flex-grow mx-4 relative z-10">

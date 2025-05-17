@@ -215,7 +215,7 @@ const Testimonials = () => {
                     </span>
                   </div>
                 </div>
-                <a href="#services">
+                <a href="/testimonials">
                   <div className="absolute w-[109px] h-[109px] -right-14 top-1/2 transform -translate-y-1/2 flex items-center justify-center bg-[#241E20] rounded-full shadow-[0px_0px_45px_-9px_rgba(0,0,0,0.5)]">
                     <img
                       src="/images/logo/gallery.svg"
