@@ -97,7 +97,7 @@ const PlansSection = () => {
             className={`w-[153px] text-[20px] rounded-[14.25px] leading-tight h-[45px] px-4 py-1 ${
               activeTab === "youtube"
                 ? "bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] text-black"
-                : " text-gray-400"
+                : "text-gray-400"
             }`}
             onClick={() => setActiveTab("youtube")}
           >
@@ -106,9 +106,9 @@ const PlansSection = () => {
           <button
             type="button"
             className={`w-[153px] text-[20px] rounded-[14.25px] leading-tight h-[45px] px-4 py-1 ${
-              activeTab === "youtube"
+              activeTab === "website"
                 ? "bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] text-black"
-                : " text-gray-400"
+                : "text-gray-400"
             }`}
             onClick={() => setActiveTab("website")}
           >
