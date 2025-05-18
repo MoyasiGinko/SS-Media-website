@@ -83,21 +83,21 @@ const PlansSection = () => {
     <>
       {/* Our Packages Section */}
       <section className="mb-10">
-        <h3 className="text-xl md:text-2xl font-semibold text-center mb-2">
+        <h2 className="text-3xl text-white md:text-6xl font-bold mb-4 text-center">
           Our Packages
-        </h3>
-        <p className="text-center text-gray-400 text-xs md:text-sm max-w-[600px] mx-auto mb-6">
+        </h2>
+        <p className="text-center text-xl md:text-[28px] text-white/80 max-w-5xl mx-auto mb-16">
           Weather You Want To Build A Website Or You Want To Start Your YouTube
           Journey Our Packages Will Provide You The Best Value.
         </p>
 
-        <div className="flex justify-center gap-2 text-xs md:text-sm font-semibold">
+        <div className="flex border border-gray-600 w-[314px] h-[52px] mx-auto rounded-[16.5px] p-1 justify-center items-center gap-2 text-xs md:text-sm font-semibold">
           <button
             type="button"
-            className={`rounded-full px-4 py-1 ${
+            className={`w-[153px] text-[20px] rounded-[14.25px] leading-tight h-[45px] px-4 py-1 ${
               activeTab === "youtube"
-                ? "bg-gradient-to-r from-[#ff4c4c] via-[#ff9a4c] to-[#ffb14c] text-black"
-                : "border border-gray-600 text-gray-400"
+                ? "bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] text-black"
+                : " text-gray-400"
             }`}
             onClick={() => setActiveTab("youtube")}
           >
@@ -105,10 +105,10 @@ const PlansSection = () => {
           </button>
           <button
             type="button"
-            className={`rounded-full px-4 py-1 ${
-              activeTab === "website"
-                ? "bg-gradient-to-r from-[#ff4c4c] via-[#ff9a4c] to-[#ffb14c] text-black"
-                : "border border-gray-600 text-gray-400"
+            className={`w-[153px] text-[20px] rounded-[14.25px] leading-tight h-[45px] px-4 py-1 ${
+              activeTab === "youtube"
+                ? "bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] text-black"
+                : " text-gray-400"
             }`}
             onClick={() => setActiveTab("website")}
           >
