@@ -63,101 +63,81 @@ const PriceHero = () => {
 
   return (
     <>
-      <section className="flex flex-col md:flex-row md:justify-between md:items-center gap-10 md:gap-20 mb-20">
+      <section className="flex flex-col w-full md:max-w-[1305px] md:flex-row md:justify-center md:items-center gap-10 md:gap-20 mb-20">
         {/* Triangle with interactive circles and labels */}
         <div className="relative w-full max-w-[320px] md:max-w-[350px] h-[320px] md:h-[350px]">
-          <svg
-            className="w-full h-full"
-            viewBox="0 0 320 320"
-            xmlns="http://www.w3.org/2000/svg"
-            role="img"
-            aria-hidden="true"
+          <img
+            src="/images/triangle2.svg"
+            alt="Triangle"
+            className=" absolute object-fit cover -z-0 w-full h-full"
+          />
+
+          {/* Triangle SVG */}
+          {/* Interactive Circles as absolutely positioned divs */}
+          {/* Delivery Time (Top) */}
+          <div
+            className={`absolute left-1/2 top-5 -translate-x-1/2 z-10 w-10 h-10 flex items-center justify-center cursor-pointer transition-all duration-300`}
+            style={{ transform: "translate(1%, 0)" }} // moved dot more to the right
+            onClick={() => toggleDot("deliveryTime")}
           >
-            {/* Triangle lines */}
-            <path
-              className="stroke-white stroke-[1.5px] fill-none filter drop-shadow-[0_0_1px_white]"
-              d="M160 20 L40 280 L280 280 Z"
-            />
-
-            {/* Interactive Circles */}
-            <circle
-              cx="160"
-              cy="20"
-              r="12"
-              fill={
+            <div
+              className={`w-6 h-6 rounded-full border-2 border-[#222] ${
                 selectedDots.deliveryTime
-                  ? "#a3ff00"
+                  ? "bg-[#a3ff00] shadow-[0_0_8px_#a3ff00]"
                   : redDot === "deliveryTime"
-                  ? "#ff4c4c"
-                  : "#444444"
-              }
-              className={`filter ${
-                selectedDots.deliveryTime
-                  ? "drop-shadow-[0_0_6px_#a3ff00]"
-                  : redDot === "deliveryTime"
-                  ? "drop-shadow-[0_0_6px_#ff4c4c]"
-                  : ""
-              } cursor-pointer transition-all duration-300`}
-              onClick={() => toggleDot("deliveryTime")}
+                  ? "bg-[#ff4c4c] shadow-[0_0_8px_#ff4c4c]"
+                  : "bg-[#444444]"
+              } transition-all duration-300`}
             />
-            <circle
-              cx="40"
-              cy="280"
-              r="12"
-              fill={
+            {/* Labels */}
+            <span className="absolute text-center w-[100px] -top-6 left-1/2 -translate-x-1/2 text-white text-sm select-none">
+              Delivery Time
+            </span>
+          </div>
+          {/* Budget (Bottom Left) */}
+          <div
+            className={`absolute left-1.5 bottom-7 z-10 w-10 h-10 flex items-center justify-center cursor-pointer transition-all duration-300`}
+            style={{ transform: "translate(-20%, 20%)" }}
+            onClick={() => toggleDot("budget")}
+          >
+            <div
+              className={`w-6 h-6 rounded-full border-2 border-[#222] ${
                 selectedDots.budget
-                  ? "#a3ff00"
+                  ? "bg-[#a3ff00] shadow-[0_0_8px_#a3ff00]"
                   : redDot === "budget"
-                  ? "#ff4c4c"
-                  : "#444444"
-              }
-              className={`filter ${
-                selectedDots.budget
-                  ? "drop-shadow-[0_0_6px_#a3ff00]"
-                  : redDot === "budget"
-                  ? "drop-shadow-[0_0_6px_#ff4c4c]"
-                  : ""
-              } cursor-pointer transition-all duration-300`}
-              onClick={() => toggleDot("budget")}
+                  ? "bg-[#ff4c4c] shadow-[0_0_8px_#ff4c4c]"
+                  : "bg-[#444444]"
+              } transition-all duration-300`}
             />
-            <circle
-              cx="280"
-              cy="280"
-              r="12"
-              fill={
+            <span className="absolute -bottom-6 left-1 text-white text-sm select-none">
+              Budget
+            </span>
+          </div>
+          {/* Quality (Bottom Right) */}
+          <div
+            className={`absolute right-1.5 bottom-7 z-10 w-10 h-10 flex items-center justify-center cursor-pointer transition-all duration-300`}
+            style={{ transform: "translate(20%, 20%)" }}
+            onClick={() => toggleDot("quality")}
+          >
+            <div
+              className={`w-6 h-6 rounded-full border-2 border-[#222] ${
                 selectedDots.quality
-                  ? "#a3ff00"
+                  ? "bg-[#a3ff00] shadow-[0_0_8px_#a3ff00]"
                   : redDot === "quality"
-                  ? "#ff4c4c"
-                  : "#444444"
-              }
-              className={`filter ${
-                selectedDots.quality
-                  ? "drop-shadow-[0_0_6px_#a3ff00]"
-                  : redDot === "quality"
-                  ? "drop-shadow-[0_0_6px_#ff4c4c]"
-                  : ""
-              } cursor-pointer transition-all duration-300`}
-              onClick={() => toggleDot("quality")}
+                  ? "bg-[#ff4c4c] shadow-[0_0_8px_#ff4c4c]"
+                  : "bg-[#444444]"
+              } transition-all duration-300`}
             />
-          </svg>
-
-          {/* Labels */}
-          <span className="absolute top-1 left-1/2 -translate-x-1/2 text-white text-sm select-none">
-            Delivery Time
-          </span>
-          <span className="absolute bottom-1 left-1 text-white text-sm select-none">
-            Budget
-          </span>
-          <span className="absolute bottom-1 right-1 text-white text-sm select-none">
-            Quality
-          </span>
+            <span className="absolute -bottom-6 right-0 text-white text-sm select-none">
+              Quality
+            </span>
+          </div>
         </div>
 
         {/* How We Work text and options - dynamically highlighting based on selections */}
         <div className="max-w-[400px] space-y-4">
           <h2 className="text-2xl md:text-3xl font-semibold">
-            That's How We Work?
+            That's How We Work!
           </h2>
           <p className="text-xs md:text-sm font-light">
             Select Any Two Options From Below
