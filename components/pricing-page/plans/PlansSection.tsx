@@ -73,31 +73,100 @@ const youtubePackages: Package[] = [
   },
 ];
 
+// Website packages data
+const websitePackages: Package[] = [
+  {
+    title: "Basic Website",
+    price: "$550",
+    description:
+      'Perfect for small businesses looking to establish an <span class="text-[#ff4c4c] font-semibold">online presence</span> with a professional touch.',
+    features: [
+      "3-5 Pages",
+      "Mobile Responsive",
+      "Contact Form",
+      "Basic SEO Setup",
+      "14 Days Delivery",
+    ],
+  },
+  {
+    title: "Business Website",
+    price: "$1200",
+    description:
+      'Comprehensive solution for growing businesses requiring more <span class="text-[#ff4c4c] font-semibold">features and functionality</span>.',
+    features: [
+      "5-8 Pages",
+      "Mobile Responsive",
+      "Contact Form",
+      "Blog Setup",
+      "Social Media Integration",
+      "Advanced SEO",
+      "21 Days Delivery",
+    ],
+  },
+  {
+    title: "E-Commerce Website",
+    price: "$2500",
+    description:
+      "Full-featured online store with everything you need to start selling products online and grow your business digitally.",
+    features: [
+      "Up to 100 Products",
+      "Secure Payment Gateway",
+      "Inventory Management",
+      "Customer Accounts",
+      "Mobile Responsive",
+      "Advanced SEO",
+      "Product Search & Filtering",
+      "35 Days Delivery",
+    ],
+    highlight: true,
+  },
+  {
+    title: "Enterprise Solution",
+    price: "$5000+",
+    description:
+      "Custom-built website solution tailored specifically to your enterprise needs with advanced functionality.",
+    features: [
+      "Unlimited Pages",
+      "Custom Features & Integrations",
+      "Advanced Analytics",
+      "User Authentication",
+      "Database Integration",
+      "API Development",
+      "Ongoing Support Package",
+      "60+ Days Delivery",
+    ],
+  },
+];
+
 const PlansSection = () => {
   // State for active tab
   const [activeTab, setActiveTab] = React.useState<"youtube" | "website">(
     "youtube"
   );
 
+  // Get active packages based on selected tab
+  const activePackages =
+    activeTab === "youtube" ? youtubePackages : websitePackages;
+
   return (
     <>
       {/* Our Packages Section */}
       <section className="mb-10">
-        <h3 className="text-xl md:text-2xl font-semibold text-center mb-2">
+        <h2 className="text-3xl text-white md:text-6xl font-bold mb-4 text-center">
           Our Packages
-        </h3>
-        <p className="text-center text-gray-400 text-xs md:text-sm max-w-[600px] mx-auto mb-6">
+        </h2>
+        <p className="text-center text-xl md:text-[28px] text-white/80 max-w-5xl mx-auto mb-16">
           Weather You Want To Build A Website Or You Want To Start Your YouTube
           Journey Our Packages Will Provide You The Best Value.
         </p>
 
-        <div className="flex justify-center gap-2 text-xs md:text-sm font-semibold">
+        <div className="flex border border-gray-600 w-[314px] h-[52px] mx-auto rounded-[16.5px] p-1 justify-center items-center gap-2 text-xs md:text-sm font-semibold">
           <button
             type="button"
-            className={`rounded-full px-4 py-1 ${
+            className={`w-[153px] text-[20px] rounded-[14.25px] leading-tight h-[45px] px-4 py-1 ${
               activeTab === "youtube"
-                ? "bg-gradient-to-r from-[#ff4c4c] via-[#ff9a4c] to-[#ffb14c] text-black"
-                : "border border-gray-600 text-gray-400"
+                ? "bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] text-black"
+                : "text-gray-400"
             }`}
             onClick={() => setActiveTab("youtube")}
           >
@@ -105,10 +174,10 @@ const PlansSection = () => {
           </button>
           <button
             type="button"
-            className={`rounded-full px-4 py-1 ${
+            className={`w-[153px] text-[20px] rounded-[14.25px] leading-tight h-[45px] px-4 py-1 ${
               activeTab === "website"
-                ? "bg-gradient-to-r from-[#ff4c4c] via-[#ff9a4c] to-[#ffb14c] text-black"
-                : "border border-gray-600 text-gray-400"
+                ? "bg-gradient-to-r from-[#D469C3] via-[#FC5F67] to-[#FFAB55] text-black"
+                : "text-gray-400"
             }`}
             onClick={() => setActiveTab("website")}
           >
@@ -121,7 +190,7 @@ const PlansSection = () => {
         {/* Wrapper for cards - using overflow-x-auto for mobile scrolling */}
         <div className="overflow-x-auto pb-6">
           <div className="flex flex-row max-w-full md:max-w-[1305px] mx-auto min-w-max py-12">
-            {youtubePackages.map((pkg, index) => {
+            {activePackages.map((pkg, index) => {
               const isHighlight = pkg.highlight;
               return (
                 <article
@@ -134,7 +203,7 @@ const PlansSection = () => {
           ${
             index === 0
               ? "rounded-l-2xl"
-              : index === youtubePackages.length - 1
+              : index === activePackages.length - 1
               ? "rounded-r-2xl"
               : ""
           }
@@ -175,7 +244,7 @@ const PlansSection = () => {
                             Limited Offer
                           </span>
                           <span className="text-sm text-gray-400 line-through">
-                            $1750
+                            {activeTab === "youtube" ? "$1750" : "$3000"}
                           </span>
                         </span>
                       )}
