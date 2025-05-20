@@ -26,7 +26,7 @@ const VideosLayout: React.FC<VideosLayoutProps> = ({ items }) => {
   return (
     <div className="space-y-8">
       {/* Category Tabs */}
-      <div className="border-b border-gray-800">
+      {/* <div className="border-b border-gray-800">
         <div className="flex overflow-x-auto hide-scrollbar">
           {subCategories.map((category, index) => (
             <button
@@ -42,7 +42,7 @@ const VideosLayout: React.FC<VideosLayoutProps> = ({ items }) => {
             </button>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Featured Video */}
       {filteredItems.length > 0 && (

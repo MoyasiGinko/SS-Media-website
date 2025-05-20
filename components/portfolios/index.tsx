@@ -109,15 +109,12 @@ export default function Dashboard() {
           subItem.active = false;
         });
       }
-
-      // Close all dropdowns when clicking on a non-dropdown item
-      if (subIndex === undefined) {
-        item.expanded = false;
-      }
     });
 
     // Set active state for clicked item
     if (subIndex !== undefined && updatedNavItems[index].subItems) {
+      // Also activate the parent item when a subitem is clicked
+      updatedNavItems[index].active = true;
       updatedNavItems[index].subItems![subIndex].active = true;
       setActiveCategory(updatedNavItems[index].name);
       setActiveSubCategory(updatedNavItems[index].subItems![subIndex].name);
@@ -128,6 +125,22 @@ export default function Dashboard() {
     }
 
     setNavItems(updatedNavItems);
+  };
+
+  // Modified click handler for parent items
+  const handleParentItemClick = (index: number) => {
+    const item = navItems[index];
+
+    if (item.subItems) {
+      // For items with subitems, toggle expansion
+      toggleExpand(index);
+
+      // Also set this as the active item to show all its content
+      setActive(index);
+    } else {
+      // For regular items, just set active
+      setActive(index);
+    }
   };
 
   return (
@@ -162,9 +175,7 @@ export default function Dashboard() {
                       ? "bg-gradient-to-r from-red-500 to-orange-500 text-black"
                       : "hover:bg-gray-800"
                   }`}
-                  onClick={() =>
-                    item.subItems ? toggleExpand(index) : setActive(index)
-                  }
+                  onClick={() => handleParentItemClick(index)}
                 >
                   <div className="flex items-center">
                     <img
@@ -195,30 +206,71 @@ export default function Dashboard() {
 
                 {/* Sub-items with circular bullets */}
                 {item.subItems && item.expanded && (
-                  <ul className="ml-8 mt-1">
+                  <ul className="mx-[20.16px] my-[8px]">
                     {item.subItems.map((subItem, subIndex) => (
                       <li
                         key={subIndex}
-                        className={`flex items-center px-4 py-2 rounded-md cursor-pointer ${
+                        className={`flex items-center px-4 py-0 rounded-[15.12px] cursor-pointer ${
                           subItem.active
-                            ? "bg-gradient-to-r from-red-500 to-orange-500"
-                            : "hover:bg-gray-800"
+                            ? "bg-[#3C3C3C]"
+                            : "hover:bg-gradient-to-r hover:from-[#BB6FFB] hover:via-[#FC5F67] hover:to-[#FFB054] hover:bg-clip-text hover:text-transparent"
                         }`}
-                        onClick={() => setActive(index, subIndex)}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent parent click event
+                          setActive(index, subIndex);
+                        }}
                       >
                         {/* Circle bullet indicator */}
-                        <div
-                          className={`w-4 h-4 rounded-full flex items-center justify-center mr-3 ${
-                            subItem.active
-                              ? "bg-red-500"
-                              : "border border-white"
+                        <div className="flex flex-col items-center mr-3">
+                          {/* Vertical line above */}
+                          <div
+                            className="w-px flex-1"
+                            style={{
+                              minHeight: 18,
+                              backgroundColor:
+                                subIndex === 0
+                                  ? "transparent"
+                                  : "rgba(255,255,255,1)",
+                              opacity: subIndex === 0 ? 0 : 1,
+                            }}
+                          />
+                          {/* Circle bullet */}
+                          <div
+                            className={`w-4 h-4 rounded-full flex items-center justify-center ${
+                              subItem.active
+                                ? "bg-red-500"
+                                : "border border-white"
+                            }`}
+                          >
+                            {subItem.active && (
+                              <div className="w-4 h-4 rounded-full border border-[#FC5F67] bg-white"></div>
+                            )}
+                          </div>
+                          {/* Vertical line below */}
+                          <div
+                            className="w-px flex-1"
+                            style={{
+                              minHeight: 18,
+                              backgroundColor:
+                                item.subItems &&
+                                subIndex === item.subItems.length - 1
+                                  ? "transparent"
+                                  : "rgba(255,255,255,1)",
+                              opacity:
+                                item.subItems &&
+                                subIndex === item.subItems.length - 1
+                                  ? 0
+                                  : 1,
+                            }}
+                          />
+                        </div>
+                        <span
+                          className={`text-[17.64px] ${
+                            subItem.active ? "text-white" : ""
                           }`}
                         >
-                          {subItem.active && (
-                            <div className="w-2 h-2 rounded-full bg-white"></div>
-                          )}
-                        </div>
-                        <span>{subItem.name}</span>
+                          {subItem.name}
+                        </span>
                       </li>
                     ))}
                   </ul>
