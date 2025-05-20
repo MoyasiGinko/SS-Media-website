@@ -28,7 +28,7 @@ type SubItem = {
 
 type NavItem = {
   name: string;
-  icon: React.ReactNode;
+  icon: string;
   expanded?: boolean;
   active?: boolean;
   subItems?: SubItem[];
@@ -39,28 +39,28 @@ export default function Dashboard() {
   const [navItems, setNavItems] = useState<NavItem[]>([
     {
       name: "UI/UX",
-      icon: <Layout size={20} />,
+      icon: "/images/icons/uiux.svg",
       active: false,
     },
     {
       name: "Graphic Design",
-      icon: <Pen size={20} />,
+      icon: "/images/icons/graphics.svg",
       expanded: false,
       active: false,
     },
     {
       name: "Shorts/Reels",
-      icon: <Film size={20} />,
+      icon: "/images/icons/shorts.svg",
       active: false,
     },
     {
       name: "Websites",
-      icon: <Globe size={20} />,
+      icon: "/images/icons/website.svg",
       active: false,
     },
     {
       name: "Videos",
-      icon: <Video size={20} />,
+      icon: "/images/icons/videos.svg",
       expanded: true,
       active: false,
       subItems: [
@@ -127,7 +127,7 @@ export default function Dashboard() {
       {/* Sidebar */}
       <div className="w-[347px] bg-black border-r border-gray-800 flex flex-col">
         {/* Logo */}
-        <div className="px-[15.12px] py-[13.5px] border border-gray-800 rounded-[20.16px] m-3 flex items-center">
+        <div className="px-[15.12px] py-[13.5px] border border-gray-800 rounded-[20.16px] mt-[24px] mx-[22.3px] mb-[19.3px] flex items-center">
           <div className="w-[63px] h-[63px] rounded-[9px] bg-white">
             <img src="/images/logo/ss.svg" alt="SS" className="w-full h-full" />
           </div>
@@ -142,13 +142,13 @@ export default function Dashboard() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 py-4">
+        <nav className="flex-1 mx-[22.3px]">
           <ul>
             {navItems.map((item, index) => (
               <li key={index} className="mb-1">
                 {/* Main nav item */}
                 <div
-                  className={`flex items-center justify-between px-4 py-2 mx-3 rounded-md cursor-pointer ${
+                  className={`flex items-center justify-between px-[20.16px] py-[15.12px] rounded-md cursor-pointer ${
                     item.active
                       ? "bg-white text-black"
                       : item.expanded &&
@@ -162,14 +162,23 @@ export default function Dashboard() {
                   }
                 >
                   <div className="flex items-center">
-                    <span className="mr-3">{item.icon}</span>
-                    <span>{item.name}</span>
+                    <img
+                      src={item.icon}
+                      className="mr-[12.6px] w-[22px] h-[22px]"
+                    />
+                    <span className="text-[17.64px]">{item.name}</span>
                   </div>
                   {item.subItems &&
                     (item.expanded ? (
-                      <ChevronDown size={16} />
+                      <img
+                        src="/images/icons/chevron-up.svg"
+                        className="mr-[12.6px] w-[22px] h-[22px]"
+                      />
                     ) : (
-                      <ChevronRight size={16} />
+                      <img
+                        src="/images/icons/chevron-down.svg"
+                        className="mr-[12.6px] w-[22px] h-[22px]"
+                      />
                     ))}
                 </div>
 
