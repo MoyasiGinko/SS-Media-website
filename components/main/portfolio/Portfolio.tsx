@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useRef, useState } from "react";
 
 const Portfolio = () => {
   // Sample portfolio data - this could come from an API, props, or context
@@ -37,8 +38,64 @@ const Portfolio = () => {
     },
   ];
 
+  // Create ref for the section
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [sectionInView, setSectionInView] = useState(false);
+
+  // Effect to handle section visibility
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          setSectionInView(true);
+        } else {
+          setSectionInView(false);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.1, // Trigger when 10% of the section is visible
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
+
+  // Determine if a card should be visible based on section visibility and card position
+  const isCardVisible = (index: number) => {
+    if (!sectionInView) return false;
+
+    // Group cards by delay - 1st and 2nd have no delay, 3rd and 4th have delay
+    const element = document.getElementById(`card-${index}`);
+    if (element) {
+      if (index >= 2) {
+        // 3rd and 4th cards
+        element.style.transitionDelay = "300ms";
+      } else {
+        // 1st and 2nd cards
+        element.style.transitionDelay = "0ms";
+      }
+    }
+
+    return true;
+  };
+
   return (
-    <section id="work" className="w-full py-16 px-4 flex flex-col items-center">
+    <section
+      id="work"
+      className="w-full py-16 px-4 flex flex-col items-center"
+      ref={sectionRef}
+    >
       <h2 className="text-3xl text-white md:text-6xl font-bold mb-4 text-center">
         Explore Our Portfolio
       </h2>
@@ -49,10 +106,21 @@ const Portfolio = () => {
       </p>
 
       <div className="flex flex-wrap justify-center gap-8 w-full max-w-7xl">
-        {portfolioItems.map((item) => (
+        {portfolioItems.map((item, index) => (
           <div
             key={item.id}
+            id={`card-${index}`}
             className="relative bg-transparent rounded-xl overflow-hidden w-full md:w-[590px] h-[410px]"
+            style={{
+              transform: isCardVisible(index)
+                ? "rotate(0deg) translateX(0px)"
+                : index % 2 === 0
+                ? "rotate(-2deg) translateX(-200px)"
+                : "rotate(2deg) translateX(200px)",
+              opacity: isCardVisible(index) ? 1 : 0,
+              transition: "transform 1800ms ease, opacity 1800ms ease",
+              transformOrigin: index % 2 === 0 ? "top left" : "top right", // Set anchor points based on card position
+            }}
           >
             <img
               src={item.image}
