@@ -125,15 +125,19 @@ export default function Dashboard() {
   return (
     <div className="flex h-screen bg-black text-white">
       {/* Sidebar */}
-      <div className="w-56 bg-black border-r border-gray-800 flex flex-col">
+      <div className="w-[347px] bg-black border-r border-gray-800 flex flex-col">
         {/* Logo */}
-        <div className="p-4 border border-gray-800 rounded-md m-3 flex items-center">
-          <div className="bg-gradient-to-r from-red-500 to-orange-500 w-8 h-8 rounded-md flex items-center justify-center text-white font-bold">
-            SS
+        <div className="px-[15.12px] py-[13.5px] border border-gray-800 rounded-[20.16px] m-3 flex items-center">
+          <div className="w-[63px] h-[63px] rounded-[9px] bg-white">
+            <img src="/images/logo/ss.svg" alt="SS" className="w-full h-full" />
           </div>
-          <div className="ml-2">
-            <div className="font-bold">SS Media</div>
-            <div className="text-xs text-gray-400">Your Creative Studio</div>
+          <div className="ml-[15.3px] text-left">
+            <div className="font-bold text-[34.2px] text-[#F8F8F8] leading-[1.1]">
+              SS Media
+            </div>
+            <div className="text-[12.6px] text-white/50 leading-tight">
+              Your Growth, Your Goal.
+            </div>
           </div>
         </div>
 
