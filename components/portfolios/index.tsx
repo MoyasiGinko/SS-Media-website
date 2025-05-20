@@ -1,28 +1,14 @@
 // app/page.tsx
 "use client";
 import React, { useState } from "react";
-import {
-  ChevronDown,
-  ChevronRight,
-  Phone,
-  Layout,
-  Pen,
-  Film,
-  Globe,
-  Video,
-  BookOpen,
-  MessageCircle,
-  FileText,
-  Activity,
-  Award,
-} from "lucide-react";
+import { ChevronRight, Phone } from "lucide-react";
 import sampleData from "./sampleData";
 import ContentDisplay from "./ContentDisplay";
 
 // Define types for our navigation items
 type SubItem = {
   name: string;
-  icon?: React.ReactNode;
+  icon?: string;
   active?: boolean;
 };
 
@@ -45,8 +31,20 @@ export default function Dashboard() {
     {
       name: "Graphic Design",
       icon: "/images/icons/graphics.svg",
-      expanded: false,
+      expanded: true,
       active: false,
+      subItems: [
+        {
+          name: "Poster",
+          icon: "",
+          active: false,
+        },
+        {
+          name: "Thumbnail",
+          icon: "",
+          active: false,
+        },
+      ],
     },
     {
       name: "Shorts/Reels",
@@ -66,17 +64,17 @@ export default function Dashboard() {
       subItems: [
         {
           name: "Educational Videos",
-          icon: <BookOpen size={18} />,
+          icon: "",
           active: false,
         },
         {
           name: "Talking Head",
-          icon: <MessageCircle size={18} />,
+          icon: "",
           active: false,
         },
-        { name: "Documentary", icon: <FileText size={18} />, active: true },
-        { name: "Sports", icon: <Activity size={18} />, active: false },
-        { name: "Promo/Ad", icon: <Award size={18} />, active: false },
+        { name: "Documentary", icon: "", active: true },
+        { name: "Sports", icon: "", active: false },
+        { name: "Promo/Ad", icon: "", active: false },
       ],
     },
   ]);
@@ -196,7 +194,10 @@ export default function Dashboard() {
                         onClick={() => setActive(index, subIndex)}
                       >
                         {subItem.icon && (
-                          <span className="mr-2">{subItem.icon}</span>
+                          <img
+                            src={subItem.icon}
+                            className="mr-[12.6px] w-[22px] h-[22px]"
+                          />
                         )}
                         <span>{subItem.name}</span>
                       </li>
