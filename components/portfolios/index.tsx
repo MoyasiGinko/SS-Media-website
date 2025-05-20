@@ -109,6 +109,11 @@ export default function Dashboard() {
           subItem.active = false;
         });
       }
+
+      // Close all dropdowns when clicking on a non-dropdown item
+      if (subIndex === undefined) {
+        item.expanded = false;
+      }
     });
 
     // Set active state for clicked item
@@ -190,68 +195,30 @@ export default function Dashboard() {
 
                 {/* Sub-items with circular bullets */}
                 {item.subItems && item.expanded && (
-                  <ul className="mx-[20.16px] my-[8px]">
+                  <ul className="ml-8 mt-1">
                     {item.subItems.map((subItem, subIndex) => (
                       <li
                         key={subIndex}
-                        className={`flex items-center px-4 py-0 rounded-[15.12px] cursor-pointer ${
+                        className={`flex items-center px-4 py-2 rounded-md cursor-pointer ${
                           subItem.active
-                            ? "bg-[#3C3C3C]"
-                            : "hover:bg-gradient-to-r hover:from-[#BB6FFB] hover:via-[#FC5F67] hover:to-[#FFB054] hover:bg-clip-text hover:text-transparent"
+                            ? "bg-gradient-to-r from-red-500 to-orange-500"
+                            : "hover:bg-gray-800"
                         }`}
                         onClick={() => setActive(index, subIndex)}
                       >
                         {/* Circle bullet indicator */}
-                        <div className="flex flex-col items-center mr-3">
-                          {/* Vertical line above */}
-                          <div
-                            className="w-px flex-1"
-                            style={{
-                              minHeight: 18,
-                              backgroundColor:
-                                subIndex === 0
-                                  ? "transparent"
-                                  : "rgba(255,255,255,1)",
-                              opacity: subIndex === 0 ? 0 : 1,
-                            }}
-                          />
-                          {/* Circle bullet */}
-                          <div
-                            className={`w-4 h-4 rounded-full flex items-center justify-center ${
-                              subItem.active
-                                ? "bg-red-500"
-                                : "border border-white"
-                            }`}
-                          >
-                            {subItem.active && (
-                              <div className="w-4 h-4 rounded-full border border-[#FC5F67] bg-white"></div>
-                            )}
-                          </div>
-                          {/* Vertical line below */}
-                          <div
-                            className="w-px flex-1"
-                            style={{
-                              minHeight: 18,
-                              backgroundColor:
-                                item.subItems &&
-                                subIndex === item.subItems.length - 1
-                                  ? "transparent"
-                                  : "rgba(255,255,255,1)",
-                              opacity:
-                                item.subItems &&
-                                subIndex === item.subItems.length - 1
-                                  ? 0
-                                  : 1,
-                            }}
-                          />
-                        </div>
-                        <span
-                          className={`text-[17.64px] ${
-                            subItem.active ? "text-white" : ""
+                        <div
+                          className={`w-4 h-4 rounded-full flex items-center justify-center mr-3 ${
+                            subItem.active
+                              ? "bg-red-500"
+                              : "border border-white"
                           }`}
                         >
-                          {subItem.name}
-                        </span>
+                          {subItem.active && (
+                            <div className="w-2 h-2 rounded-full bg-white"></div>
+                          )}
+                        </div>
+                        <span>{subItem.name}</span>
                       </li>
                     ))}
                   </ul>
