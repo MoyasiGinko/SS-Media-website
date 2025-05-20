@@ -38,64 +38,64 @@ const Portfolio = () => {
     },
   ];
 
-  // Create ref for the section
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const [sectionInView, setSectionInView] = useState(false);
+  // Create ref array for cards
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [cardsVisible, setCardsVisible] = useState<Record<number, boolean>>({});
 
-  // Effect to handle section visibility
   useEffect(() => {
+    // Create IntersectionObserver to monitor each card
     const observer = new IntersectionObserver(
       (entries) => {
-        const entry = entries[0];
-        if (entry.isIntersecting) {
-          setSectionInView(true);
-        } else {
-          setSectionInView(false);
-        }
+        entries.forEach((entry) => {
+          const index = Number(entry.target.getAttribute("data-index"));
+
+          // When card enters viewport
+          if (entry.isIntersecting) {
+            // Set card visibility
+            setCardsVisible((prev) => ({
+              ...prev,
+              [index]: true,
+            }));
+          } else {
+            // When card leaves viewport, reset animation
+            setCardsVisible((prev) => ({
+              ...prev,
+              [index]: false,
+            }));
+          }
+        });
       },
       {
-        root: null,
+        threshold: 0.15, // Trigger when card is 15% visible
         rootMargin: "0px",
-        threshold: 0.1, // Trigger when 10% of the section is visible
       }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+    // Observe all card elements
+    cardRefs.current.forEach((card, index) => {
+      if (card) {
+        // Apply proper transition delay based on card position
+        if (index >= 2) {
+          // 3rd and 4th cards
+          card.style.transitionDelay = "300ms";
+        } else {
+          // 1st and 2nd cards
+          card.style.transitionDelay = "0ms";
+        }
+        observer.observe(card);
       }
+    });
+
+    // Cleanup observer on component unmount
+    return () => {
+      cardRefs.current.forEach((card) => {
+        if (card) observer.unobserve(card);
+      });
     };
   }, []);
 
-  // Determine if a card should be visible based on section visibility and card position
-  const isCardVisible = (index: number) => {
-    if (!sectionInView) return false;
-
-    // Group cards by delay - 1st and 2nd have no delay, 3rd and 4th have delay
-    const element = document.getElementById(`card-${index}`);
-    if (element) {
-      if (index >= 2) {
-        // 3rd and 4th cards
-        element.style.transitionDelay = "300ms";
-      } else {
-        // 1st and 2nd cards
-        element.style.transitionDelay = "0ms";
-      }
-    }
-
-    return true;
-  };
-
   return (
-    <section
-      id="work"
-      className="w-full py-16 px-4 flex flex-col items-center"
-      ref={sectionRef}
-    >
+    <section id="work" className="w-full py-16 px-4 flex flex-col items-center">
       <h2 className="text-3xl text-white md:text-6xl font-bold mb-4 text-center">
         Explore Our Portfolio
       </h2>
@@ -109,15 +109,18 @@ const Portfolio = () => {
         {portfolioItems.map((item, index) => (
           <div
             key={item.id}
-            id={`card-${index}`}
+            ref={(el) => {
+              cardRefs.current[index] = el;
+            }}
+            data-index={index}
             className="relative bg-transparent rounded-xl overflow-hidden w-full md:w-[590px] h-[410px]"
             style={{
-              transform: isCardVisible(index)
+              transform: cardsVisible[index]
                 ? "rotate(0deg) translateX(0px)"
                 : index % 2 === 0
                 ? "rotate(-2deg) translateX(-200px)"
                 : "rotate(2deg) translateX(200px)",
-              opacity: isCardVisible(index) ? 1 : 0,
+              opacity: cardsVisible[index] ? 1 : 0,
               transition: "transform 1800ms ease, opacity 1800ms ease",
               transformOrigin: index % 2 === 0 ? "top left" : "top right", // Set anchor points based on card position
             }}
