@@ -36,12 +36,10 @@ export default function Dashboard() {
       subItems: [
         {
           name: "Poster",
-          icon: "",
           active: false,
         },
         {
           name: "Thumbnail",
-          icon: "",
           active: false,
         },
       ],
@@ -64,17 +62,15 @@ export default function Dashboard() {
       subItems: [
         {
           name: "Educational Videos",
-          icon: "",
           active: false,
         },
         {
           name: "Talking Head",
-          icon: "",
           active: false,
         },
-        { name: "Documentary", icon: "", active: true },
-        { name: "Sports", icon: "", active: false },
-        { name: "Promo/Ad", icon: "", active: false },
+        { name: "Documentary", active: true },
+        { name: "Sports", active: false },
+        { name: "Promo/Ad", active: false },
       ],
     },
   ]);
@@ -88,6 +84,15 @@ export default function Dashboard() {
   // Function to toggle expansion of nav items with sub-items
   const toggleExpand = (index: number) => {
     const updatedNavItems = [...navItems];
+
+    // Close all other expanded items
+    updatedNavItems.forEach((item, i) => {
+      if (i !== index && item.expanded) {
+        item.expanded = false;
+      }
+    });
+
+    // Toggle current item
     updatedNavItems[index].expanded = !updatedNavItems[index].expanded;
     setNavItems(updatedNavItems);
   };
@@ -147,12 +152,9 @@ export default function Dashboard() {
                 {/* Main nav item */}
                 <div
                   className={`flex items-center justify-between px-[20.16px] py-[15.12px] rounded-md cursor-pointer ${
-                    item.active
-                      ? "bg-white text-black"
-                      : item.expanded &&
-                        item.subItems &&
-                        item.subItems.some((sub) => sub.active)
-                      ? "bg-gradient-to-r from-red-500 to-orange-500"
+                    item.active ||
+                    (item.subItems && item.subItems.some((sub) => sub.active))
+                      ? "bg-gradient-to-r from-red-500 to-orange-500 text-black"
                       : "hover:bg-gray-800"
                   }`}
                   onClick={() =>
@@ -162,7 +164,13 @@ export default function Dashboard() {
                   <div className="flex items-center">
                     <img
                       src={item.icon}
-                      className="mr-[12.6px] w-[22px] h-[22px]"
+                      className={`mr-[12.6px] w-[22px] h-[22px] ${
+                        item.active ||
+                        (item.subItems &&
+                          item.subItems.some((sub) => sub.active))
+                          ? "filter brightness-0" // Make SVG black when active
+                          : ""
+                      }`}
                     />
                     <span className="text-[17.64px]">{item.name}</span>
                   </div>
@@ -180,26 +188,70 @@ export default function Dashboard() {
                     ))}
                 </div>
 
-                {/* Sub-items */}
+                {/* Sub-items with circular bullets */}
                 {item.subItems && item.expanded && (
-                  <ul className="ml-8 mt-1">
+                  <ul className="mx-[20.16px] my-[8px]">
                     {item.subItems.map((subItem, subIndex) => (
                       <li
                         key={subIndex}
-                        className={`flex items-center px-4 py-2 rounded-md cursor-pointer ${
+                        className={`flex items-center px-4 py-0 rounded-[15.12px] cursor-pointer ${
                           subItem.active
-                            ? "bg-gradient-to-r from-red-500 to-orange-500"
-                            : "hover:bg-gray-800"
+                            ? "bg-[#3C3C3C]"
+                            : "hover:bg-gradient-to-r hover:from-[#BB6FFB] hover:via-[#FC5F67] hover:to-[#FFB054] hover:bg-clip-text hover:text-transparent"
                         }`}
                         onClick={() => setActive(index, subIndex)}
                       >
-                        {subItem.icon && (
-                          <img
-                            src={subItem.icon}
-                            className="mr-[12.6px] w-[22px] h-[22px]"
+                        {/* Circle bullet indicator */}
+                        <div className="flex flex-col items-center mr-3">
+                          {/* Vertical line above */}
+                          <div
+                            className="w-px flex-1"
+                            style={{
+                              minHeight: 18,
+                              backgroundColor:
+                                subIndex === 0
+                                  ? "transparent"
+                                  : "rgba(255,255,255,1)",
+                              opacity: subIndex === 0 ? 0 : 1,
+                            }}
                           />
-                        )}
-                        <span>{subItem.name}</span>
+                          {/* Circle bullet */}
+                          <div
+                            className={`w-4 h-4 rounded-full flex items-center justify-center ${
+                              subItem.active
+                                ? "bg-red-500"
+                                : "border border-white"
+                            }`}
+                          >
+                            {subItem.active && (
+                              <div className="w-4 h-4 rounded-full border border-blue-500 bg-white"></div>
+                            )}
+                          </div>
+                          {/* Vertical line below */}
+                          <div
+                            className="w-px flex-1"
+                            style={{
+                              minHeight: 18,
+                              backgroundColor:
+                                item.subItems &&
+                                subIndex === item.subItems.length - 1
+                                  ? "transparent"
+                                  : "rgba(255,255,255,1)",
+                              opacity:
+                                item.subItems &&
+                                subIndex === item.subItems.length - 1
+                                  ? 0
+                                  : 1,
+                            }}
+                          />
+                        </div>
+                        <span
+                          className={`text-[17.64px] ${
+                            subItem.active ? "text-white" : ""
+                          }`}
+                        >
+                          {subItem.name}
+                        </span>
                       </li>
                     ))}
                   </ul>
