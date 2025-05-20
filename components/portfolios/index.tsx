@@ -224,7 +224,7 @@ export default function Dashboard() {
                             }`}
                           >
                             {subItem.active && (
-                              <div className="w-4 h-4 rounded-full border border-blue-500 bg-white"></div>
+                              <div className="w-4 h-4 rounded-full border border-[#FC5F67] bg-white"></div>
                             )}
                           </div>
                           {/* Vertical line below */}
