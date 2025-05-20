@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 // import Navbar from "@/components/main/header/Navbar";
-import Footer from "@/components/main/footer/Footer";
+// import Footer from "@/components/main/footer/Footer";
 import { Outfit, Syne } from "next/font/google";
 // import { BackHomeButton } from "@/components/common/HomeButton";
 
@@ -31,7 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   );

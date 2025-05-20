@@ -31,7 +31,7 @@ export default function Dashboard() {
     {
       name: "Graphic Design",
       icon: "/images/icons/graphics.svg",
-      expanded: true,
+      expanded: false,
       active: false,
       subItems: [
         {
@@ -79,7 +79,7 @@ export default function Dashboard() {
   const [activeCategory, setActiveCategory] = useState("Videos");
   const [activeSubCategory, setActiveSubCategory] = useState<
     string | undefined
-  >("Documentary");
+  >("");
 
   // Function to toggle expansion of nav items with sub-items
   const toggleExpand = (index: number) => {
@@ -153,22 +153,30 @@ export default function Dashboard() {
 
   return (
     <div className="flex min-h-screen bg-transparent text-white">
-      {/* Sidebar */}
-      <div className="w-[347px] bg-[#1B1B1B] border-r border-gray-800 flex flex-col">
+      {/* Sidebar - Made sticky with fixed height and overflow-y-auto */}
+      <div className="w-[347px] bg-[#1B1B1B] border-r border-[#383838] fixed h-screen flex flex-col overflow-y-auto">
         {/* Logo */}
-        <div className="px-[15.12px] py-[13.5px] border border-gray-800 rounded-[20.16px] mt-[24px] mx-[22.3px] mb-[19.3px] flex items-center">
-          <div className="w-[63px] h-[63px] rounded-[9px] bg-white">
-            <img src="/images/logo/ss.svg" alt="SS" className="w-full h-full" />
-          </div>
-          <div className="ml-[15.3px] text-left">
-            <div className="font-bold text-[34.2px] text-[#F8F8F8] leading-[1.1]">
-              SS Media
+        <a href="/">
+          <div className="px-[15.12px] w-full max-w-[302px] h-full max-h-[90px] cursor-pointer bg-[#141313] py-[13.5px] border hover:border-white/25 border-[#383838] rounded-[20.16px] mt-[24px] mx-[22.3px] mb-[19.3px] flex items-center">
+            <div className="w-[63px] h-[63px] rounded-[9px] bg-white">
+              <img
+                src="/images/logo/ss.svg"
+                alt="SS"
+                className="w-full h-full"
+              />
             </div>
-            <div className="text-[12.6px] text-white/50 leading-tight">
-              Your Growth, Your Goal.
+            <div className="ml-[15.3px] text-left">
+              <div className="font-bold text-[34.2px] text-[#F8F8F8] leading-[1.1]">
+                SS Media
+              </div>
+              <div className="text-[12.6px] text-white/50 leading-tight">
+                Your Growth, Your Goal.
+              </div>
             </div>
           </div>
-        </div>
+        </a>
+
+        {/* Search Bar */}
 
         {/* Navigation */}
         <nav className="flex-1 mx-[22.3px]">
@@ -289,8 +297,8 @@ export default function Dashboard() {
         </nav>
 
         {/* Book A Call Button */}
-        <div className="mx-[22.3px] mb-[24px] rounded-[20.16px]  border border-white/50">
-          <button className="w-full hover:bg-gray-700 text-white  py-[9px] px-[10.8px] flex items-center justify-between">
+        <a href="/contact">
+          <button className="w-full max-w-[302px] h-full max-h-[67.5px] bg-[#141313] cursor-pointer hover:text-white mx-[22.3px] mb-[24px] rounded-[20.16px] border hover:border-white/25 border-[#383838] text-white/70 py-[9px] px-[10.8px] flex items-center justify-between">
             <div className="flex items-center">
               <div className="bg-white w-[49.5px] h-[49.5px] rounded-full p-2 mr-[21.6px]">
                 <img
@@ -301,13 +309,13 @@ export default function Dashboard() {
               </div>
               <span className="text-[18.9px]">Book A Call</span>
             </div>
-            <ChevronRight strokeWidth={3} size={20} className="opacity-60 " />
+            <ChevronRight strokeWidth={3} size={20} className="opacity-60" />
           </button>
-        </div>
+        </a>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-6 overflow-auto">
+      {/* Main Content - Added left margin to account for fixed sidebar */}
+      <div className="flex-1 p-6 ml-[347px] overflow-auto">
         <ContentDisplay
           activeCategory={activeCategory}
           activeSubCategory={activeSubCategory}
