@@ -58,7 +58,7 @@ export default function Dashboard() {
       name: "Videos",
       icon: "/images/icons/videos.svg",
       expanded: true,
-      active: false,
+      active: true,
       subItems: [
         {
           name: "Educational Videos",
@@ -68,7 +68,7 @@ export default function Dashboard() {
           name: "Talking Head",
           active: false,
         },
-        { name: "Documentary", active: true },
+        { name: "Documentary", active: false },
         { name: "Sports", active: false },
         { name: "Promo/Ad", active: false },
       ],
@@ -152,9 +152,9 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-black text-white">
+    <div className="flex min-h-screen bg-transparent text-white">
       {/* Sidebar */}
-      <div className="w-[347px] bg-black border-r border-gray-800 flex flex-col">
+      <div className="w-[347px] bg-[#1B1B1B] border-r border-gray-800 flex flex-col">
         {/* Logo */}
         <div className="px-[15.12px] py-[13.5px] border border-gray-800 rounded-[20.16px] mt-[24px] mx-[22.3px] mb-[19.3px] flex items-center">
           <div className="w-[63px] h-[63px] rounded-[9px] bg-white">
@@ -289,15 +289,19 @@ export default function Dashboard() {
         </nav>
 
         {/* Book A Call Button */}
-        <div className="p-3">
-          <button className="w-full bg-gray-800 hover:bg-gray-700 text-white rounded-full py-2 px-4 flex items-center justify-between">
+        <div className="mx-[22.3px] mb-[24px] rounded-[20.16px]  border border-white/50">
+          <button className="w-full hover:bg-gray-700 text-white  py-[9px] px-[10.8px] flex items-center justify-between">
             <div className="flex items-center">
-              <div className="bg-indigo-500 rounded-full p-1 mr-2">
-                <Phone size={16} />
+              <div className="bg-white w-[49.5px] h-[49.5px] rounded-full p-2 mr-[21.6px]">
+                <img
+                  src="/images/icons/book-call.svg"
+                  alt="Phone"
+                  className="w-full h-full"
+                />
               </div>
-              <span>Book A Call</span>
+              <span className="text-[18.9px]">Book A Call</span>
             </div>
-            <ChevronRight size={16} />
+            <ChevronRight strokeWidth={3} size={20} className="opacity-60 " />
           </button>
         </div>
       </div>
