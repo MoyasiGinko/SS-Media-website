@@ -19,6 +19,22 @@ const Portfolio = () => {
       categoryUrl: "/graphic-design",
       detailUrl: "/graphic-design/details",
     },
+    {
+      id: 3,
+      title: "Websites",
+      image: "/video_card.svg",
+      alt: "Video Thumbnail",
+      categoryUrl: "/videos",
+      detailUrl: "/videos/details",
+    },
+    {
+      id: 4,
+      title: "UI/UX",
+      image: "/graphics_card.svg",
+      alt: "Graphic Thumbnail",
+      categoryUrl: "/graphic-design",
+      detailUrl: "/graphic-design/details",
+    },
   ];
 
   return (
