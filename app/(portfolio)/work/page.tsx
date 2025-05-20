@@ -1,10 +1,5 @@
-import SSDashboard from "@/components/portfolios";
-import React from "react";
+import PageRedirectLoading from "@/lib/PageRedirectLoading";
 
-export default function Page() {
-  return (
-    <div className="bg-transparent">
-      <SSDashboard />
-    </div>
-  );
+export default function WorkPage() {
+  return <PageRedirectLoading />;
 }
