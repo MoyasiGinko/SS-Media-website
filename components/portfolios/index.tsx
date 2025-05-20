@@ -102,12 +102,17 @@ export default function Dashboard() {
     const updatedNavItems = [...navItems];
 
     // Reset all active states
-    updatedNavItems.forEach((item) => {
+    updatedNavItems.forEach((item, i) => {
       item.active = false;
       if (item.subItems) {
         item.subItems.forEach((subItem) => {
           subItem.active = false;
         });
+      }
+
+      // Close all dropdowns except the current one
+      if (i !== index) {
+        item.expanded = false;
       }
     });
 
@@ -132,13 +137,16 @@ export default function Dashboard() {
     const item = navItems[index];
 
     if (item.subItems) {
-      // For items with subitems, toggle expansion
-      toggleExpand(index);
-
-      // Also set this as the active item to show all its content
-      setActive(index);
+      // If the item is already active, just toggle expansion
+      if (item.active) {
+        toggleExpand(index);
+      } else {
+        // For items with subitems, toggle expansion and set active
+        toggleExpand(index);
+        setActive(index);
+      }
     } else {
-      // For regular items, just set active
+      // For regular items, just set active (which will close other dropdowns)
       setActive(index);
     }
   };
@@ -169,10 +177,10 @@ export default function Dashboard() {
               <li key={index} className="mb-1">
                 {/* Main nav item */}
                 <div
-                  className={`flex items-center justify-between px-[20.16px] py-[15.12px] rounded-md cursor-pointer ${
+                  className={`flex items-center justify-between px-[20.16px] py-[15.12px] rounded-[15.12px] cursor-pointer ${
                     item.active ||
                     (item.subItems && item.subItems.some((sub) => sub.active))
-                      ? "bg-gradient-to-r from-red-500 to-orange-500 text-black"
+                      ? "bg-gradient-to-r from-[#DA67B4] via-[#FC5F67] to-[#FE955A] text-black"
                       : "hover:bg-gray-800"
                   }`}
                   onClick={() => handleParentItemClick(index)}
@@ -213,7 +221,7 @@ export default function Dashboard() {
                         className={`flex items-center px-4 py-0 rounded-[15.12px] cursor-pointer ${
                           subItem.active
                             ? "bg-[#3C3C3C]"
-                            : "hover:bg-gradient-to-r hover:from-[#BB6FFB] hover:via-[#FC5F67] hover:to-[#FFB054] hover:bg-clip-text hover:text-transparent"
+                            : "hover:bg-gradient-to-r hover:from-[#DA67B4] hover:via-[#FC5F67] hover:to-[#FE955A] hover:bg-clip-text hover:text-transparent"
                         }`}
                         onClick={(e) => {
                           e.stopPropagation(); // Prevent parent click event
@@ -243,7 +251,7 @@ export default function Dashboard() {
                             }`}
                           >
                             {subItem.active && (
-                              <div className="w-4 h-4 rounded-full border border-[#FC5F67] bg-white"></div>
+                              <div className="w-4 h-4 rounded-full border-2 border-[#FC5F67] bg-white"></div>
                             )}
                           </div>
                           {/* Vertical line below */}
