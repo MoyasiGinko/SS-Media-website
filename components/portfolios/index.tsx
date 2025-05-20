@@ -157,12 +157,12 @@ export default function Dashboard() {
       <div className="w-[347px] bg-[#1B1B1B] border-r border-[#383838] fixed h-screen flex flex-col overflow-y-auto">
         {/* Logo */}
         <a href="/">
-          <div className="px-[15.12px] w-full max-w-[302px] h-full max-h-[90px] cursor-pointer bg-[#141313] py-[13.5px] border hover:border-white/25 border-[#383838] rounded-[20.16px] mt-[24px] mx-[22.3px] mb-[19.3px] flex items-center">
+          <div className="px-[13.5px] w-full max-w-[302px] h-full max-h-[90px] cursor-pointer bg-[#141313] py-[13.5px] border hover:border-white/25 border-[#383838] rounded-[20.16px] mt-[24px] mx-[22.3px] mb-[19.3px] flex items-center">
             <div className="w-[63px] h-[63px] rounded-[9px] bg-white">
               <img
                 src="/images/logo/ss.svg"
                 alt="SS"
-                className="w-full h-full"
+                className="w-full h-full object-fit cover"
               />
             </div>
             <div className="ml-[15.3px] text-left">
