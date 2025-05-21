@@ -1,34 +1,20 @@
 // app/page.tsx
 "use client";
 import React, { useState } from "react";
-import {
-  ChevronDown,
-  ChevronRight,
-  Phone,
-  Layout,
-  Pen,
-  Film,
-  Globe,
-  Video,
-  BookOpen,
-  MessageCircle,
-  FileText,
-  Activity,
-  Award,
-} from "lucide-react";
+import { ChevronRight, Phone } from "lucide-react";
 import sampleData from "./sampleData";
 import ContentDisplay from "./ContentDisplay";
 
 // Define types for our navigation items
 type SubItem = {
   name: string;
-  icon?: React.ReactNode;
+  icon?: string;
   active?: boolean;
 };
 
 type NavItem = {
   name: string;
-  icon: React.ReactNode;
+  icon: string;
   expanded?: boolean;
   active?: boolean;
   subItems?: SubItem[];
@@ -39,44 +25,52 @@ export default function Dashboard() {
   const [navItems, setNavItems] = useState<NavItem[]>([
     {
       name: "UI/UX",
-      icon: <Layout size={20} />,
+      icon: "/images/icons/uiux.svg",
       active: false,
     },
     {
       name: "Graphic Design",
-      icon: <Pen size={20} />,
+      icon: "/images/icons/graphics.svg",
       expanded: false,
       active: false,
+      subItems: [
+        {
+          name: "Poster",
+          active: false,
+        },
+        {
+          name: "Thumbnail",
+          active: false,
+        },
+      ],
     },
     {
       name: "Shorts/Reels",
-      icon: <Film size={20} />,
+      icon: "/images/icons/shorts.svg",
       active: false,
     },
     {
       name: "Websites",
-      icon: <Globe size={20} />,
+      icon: "/images/icons/website.svg",
       active: false,
     },
     {
       name: "Videos",
-      icon: <Video size={20} />,
+      icon: "/images/icons/videos.svg",
       expanded: true,
-      active: false,
+      active: true,
       subItems: [
         {
           name: "Educational Videos",
-          icon: <BookOpen size={18} />,
           active: false,
         },
         {
           name: "Talking Head",
-          icon: <MessageCircle size={18} />,
           active: false,
         },
-        { name: "Documentary", icon: <FileText size={18} />, active: true },
-        { name: "Sports", icon: <Activity size={18} />, active: false },
-        { name: "Promo/Ad", icon: <Award size={18} />, active: false },
+        { name: "Documentary", active: false },
+        { name: "Sports", active: false },
+        { name: "Promo/Ad", active: false },
       ],
     },
   ]);
@@ -85,11 +79,20 @@ export default function Dashboard() {
   const [activeCategory, setActiveCategory] = useState("Videos");
   const [activeSubCategory, setActiveSubCategory] = useState<
     string | undefined
-  >("Documentary");
+  >("");
 
   // Function to toggle expansion of nav items with sub-items
   const toggleExpand = (index: number) => {
     const updatedNavItems = [...navItems];
+
+    // Close all other expanded items
+    updatedNavItems.forEach((item, i) => {
+      if (i !== index && item.expanded) {
+        item.expanded = false;
+      }
+    });
+
+    // Toggle current item
     updatedNavItems[index].expanded = !updatedNavItems[index].expanded;
     setNavItems(updatedNavItems);
   };
@@ -99,17 +102,24 @@ export default function Dashboard() {
     const updatedNavItems = [...navItems];
 
     // Reset all active states
-    updatedNavItems.forEach((item) => {
+    updatedNavItems.forEach((item, i) => {
       item.active = false;
       if (item.subItems) {
         item.subItems.forEach((subItem) => {
           subItem.active = false;
         });
       }
+
+      // Close all dropdowns except the current one
+      if (i !== index) {
+        item.expanded = false;
+      }
     });
 
     // Set active state for clicked item
     if (subIndex !== undefined && updatedNavItems[index].subItems) {
+      // Also activate the parent item when a subitem is clicked
+      updatedNavItems[index].active = true;
       updatedNavItems[index].subItems![subIndex].active = true;
       setActiveCategory(updatedNavItems[index].name);
       setActiveSubCategory(updatedNavItems[index].subItems![subIndex].name);
@@ -122,70 +132,161 @@ export default function Dashboard() {
     setNavItems(updatedNavItems);
   };
 
+  // Modified click handler for parent items
+  const handleParentItemClick = (index: number) => {
+    const item = navItems[index];
+
+    if (item.subItems) {
+      // If the item is already active, just toggle expansion
+      if (item.active) {
+        toggleExpand(index);
+      } else {
+        // For items with subitems, toggle expansion and set active
+        toggleExpand(index);
+        setActive(index);
+      }
+    } else {
+      // For regular items, just set active (which will close other dropdowns)
+      setActive(index);
+    }
+  };
+
   return (
-    <div className="flex h-screen bg-black text-white">
-      {/* Sidebar */}
-      <div className="w-56 bg-black border-r border-gray-800 flex flex-col">
+    <div className="flex min-h-screen bg-transparent text-white">
+      {/* Sidebar - Made sticky with fixed height and overflow-y-auto */}
+      <div className="w-[347px] bg-[#1B1B1B] border-r border-[#383838] fixed h-screen flex flex-col overflow-y-auto">
         {/* Logo */}
-        <div className="p-4 border border-gray-800 rounded-md m-3 flex items-center">
-          <div className="bg-gradient-to-r from-red-500 to-orange-500 w-8 h-8 rounded-md flex items-center justify-center text-white font-bold">
-            SS
+        <a href="/">
+          <div className="px-[13.5px] w-full max-w-[302px] h-full max-h-[90px] cursor-pointer bg-[#141313] py-[13.5px] border hover:border-white/25 border-[#383838] rounded-[20.16px] mt-[24px] mx-[22.3px] mb-[19.3px] flex items-center">
+            <div className="w-[63px] h-[63px] rounded-[9px] bg-white">
+              <img
+                src="/images/logo/ss.svg"
+                alt="SS"
+                className="w-full h-full object-fit cover"
+              />
+            </div>
+            <div className="ml-[15.3px] text-left">
+              <div className="font-bold text-[34.2px] text-[#F8F8F8] leading-[1.1]">
+                SS Media
+              </div>
+              <div className="text-[12.6px] text-white/50 leading-tight">
+                Your Growth, Your Goal.
+              </div>
+            </div>
           </div>
-          <div className="ml-2">
-            <div className="font-bold">SS Media</div>
-            <div className="text-xs text-gray-400">Your Creative Studio</div>
-          </div>
-        </div>
+        </a>
+
+        {/* Search Bar */}
 
         {/* Navigation */}
-        <nav className="flex-1 py-4">
+        <nav className="flex-1 mx-[22.3px]">
           <ul>
             {navItems.map((item, index) => (
               <li key={index} className="mb-1">
                 {/* Main nav item */}
                 <div
-                  className={`flex items-center justify-between px-4 py-2 mx-3 rounded-md cursor-pointer ${
-                    item.active
-                      ? "bg-white text-black"
-                      : item.expanded &&
-                        item.subItems &&
-                        item.subItems.some((sub) => sub.active)
-                      ? "bg-gradient-to-r from-red-500 to-orange-500"
+                  className={`flex items-center justify-between px-[20.16px] py-[15.12px] rounded-[15.12px] cursor-pointer ${
+                    item.active ||
+                    (item.subItems && item.subItems.some((sub) => sub.active))
+                      ? "bg-gradient-to-r from-[#DA67B4] via-[#FC5F67] to-[#FE955A] text-black"
                       : "hover:bg-gray-800"
                   }`}
-                  onClick={() =>
-                    item.subItems ? toggleExpand(index) : setActive(index)
-                  }
+                  onClick={() => handleParentItemClick(index)}
                 >
                   <div className="flex items-center">
-                    <span className="mr-3">{item.icon}</span>
-                    <span>{item.name}</span>
+                    <img
+                      src={item.icon}
+                      className={`mr-[12.6px] w-[22px] h-[22px] ${
+                        item.active ||
+                        (item.subItems &&
+                          item.subItems.some((sub) => sub.active))
+                          ? "filter brightness-0" // Make SVG black when active
+                          : ""
+                      }`}
+                    />
+                    <span className="text-[17.64px]">{item.name}</span>
                   </div>
                   {item.subItems &&
                     (item.expanded ? (
-                      <ChevronDown size={16} />
+                      <img
+                        src="/images/icons/chevron-up.svg"
+                        className="mr-[12.6px] w-[22px] h-[22px]"
+                      />
                     ) : (
-                      <ChevronRight size={16} />
+                      <img
+                        src="/images/icons/chevron-down.svg"
+                        className="mr-[12.6px] w-[22px] h-[22px]"
+                      />
                     ))}
                 </div>
 
-                {/* Sub-items */}
+                {/* Sub-items with circular bullets */}
                 {item.subItems && item.expanded && (
-                  <ul className="ml-8 mt-1">
+                  <ul className="mx-[20.16px] my-[8px]">
                     {item.subItems.map((subItem, subIndex) => (
                       <li
                         key={subIndex}
-                        className={`flex items-center px-4 py-2 rounded-md cursor-pointer ${
+                        className={`flex items-center px-4 py-0 rounded-[15.12px] cursor-pointer ${
                           subItem.active
-                            ? "bg-gradient-to-r from-red-500 to-orange-500"
-                            : "hover:bg-gray-800"
+                            ? "bg-[#3C3C3C]"
+                            : "hover:bg-gradient-to-r hover:from-[#DA67B4] hover:via-[#FC5F67] hover:to-[#FE955A] hover:bg-clip-text hover:text-transparent"
                         }`}
-                        onClick={() => setActive(index, subIndex)}
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent parent click event
+                          setActive(index, subIndex);
+                        }}
                       >
-                        {subItem.icon && (
-                          <span className="mr-2">{subItem.icon}</span>
-                        )}
-                        <span>{subItem.name}</span>
+                        {/* Circle bullet indicator */}
+                        <div className="flex flex-col items-center mr-3">
+                          {/* Vertical line above */}
+                          <div
+                            className="w-px flex-1"
+                            style={{
+                              minHeight: 18,
+                              backgroundColor:
+                                subIndex === 0
+                                  ? "transparent"
+                                  : "rgba(255,255,255,1)",
+                              opacity: subIndex === 0 ? 0 : 1,
+                            }}
+                          />
+                          {/* Circle bullet */}
+                          <div
+                            className={`w-4 h-4 rounded-full flex items-center justify-center ${
+                              subItem.active
+                                ? "bg-red-500"
+                                : "border border-white"
+                            }`}
+                          >
+                            {subItem.active && (
+                              <div className="w-4 h-4 rounded-full border-2 border-[#FC5F67] bg-white"></div>
+                            )}
+                          </div>
+                          {/* Vertical line below */}
+                          <div
+                            className="w-px flex-1"
+                            style={{
+                              minHeight: 18,
+                              backgroundColor:
+                                item.subItems &&
+                                subIndex === item.subItems.length - 1
+                                  ? "transparent"
+                                  : "rgba(255,255,255,1)",
+                              opacity:
+                                item.subItems &&
+                                subIndex === item.subItems.length - 1
+                                  ? 0
+                                  : 1,
+                            }}
+                          />
+                        </div>
+                        <span
+                          className={`text-[17.64px] ${
+                            subItem.active ? "text-white" : ""
+                          }`}
+                        >
+                          {subItem.name}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -196,21 +297,25 @@ export default function Dashboard() {
         </nav>
 
         {/* Book A Call Button */}
-        <div className="p-3">
-          <button className="w-full bg-gray-800 hover:bg-gray-700 text-white rounded-full py-2 px-4 flex items-center justify-between">
+        <a href="/contact">
+          <button className="w-full max-w-[302px] h-full max-h-[67.5px] bg-[#141313] cursor-pointer hover:text-white mx-[22.3px] mb-[24px] rounded-[20.16px] border hover:border-white/25 border-[#383838] text-white/70 py-[9px] px-[10.8px] flex items-center justify-between">
             <div className="flex items-center">
-              <div className="bg-indigo-500 rounded-full p-1 mr-2">
-                <Phone size={16} />
+              <div className="bg-white w-[49.5px] h-[49.5px] rounded-full p-2 mr-[21.6px]">
+                <img
+                  src="/images/icons/book-call.svg"
+                  alt="Phone"
+                  className="w-full h-full"
+                />
               </div>
-              <span>Book A Call</span>
+              <span className="text-[18.9px]">Book A Call</span>
             </div>
-            <ChevronRight size={16} />
+            <ChevronRight strokeWidth={3} size={20} className="opacity-60" />
           </button>
-        </div>
+        </a>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-6 overflow-auto">
+      {/* Main Content - Added left margin to account for fixed sidebar */}
+      <div className="flex-1 p-6 ml-[347px] overflow-auto">
         <ContentDisplay
           activeCategory={activeCategory}
           activeSubCategory={activeSubCategory}

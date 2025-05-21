@@ -499,6 +499,34 @@ const Hero = () => {
           <motion.a
             href="#work"
             className="bg-white/15 text-white h-10 w-32 text-md font-medium flex items-center justify-center rounded-xl border-2 border-gray-50  hover:bg-white/20 transition-all duration-300"
+            onClick={(e) => {
+              e.preventDefault();
+              const section = document.getElementById("work");
+              if (section) {
+                // Custom smooth scroll with 3000ms duration
+                const startY = window.scrollY;
+                const endY =
+                  section.getBoundingClientRect().top + window.scrollY;
+                const duration = 3000;
+                const startTime = performance.now();
+
+                function animateScroll(currentTime: number) {
+                  const elapsed = currentTime - startTime;
+                  const progress = Math.min(elapsed / duration, 1);
+                  // Ease in-out cubic
+                  const ease =
+                    progress < 0.5
+                      ? 4 * progress * progress * progress
+                      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+                  window.scrollTo(0, startY + (endY - startY) * ease);
+                  if (progress < 1) {
+                    requestAnimationFrame(animateScroll);
+                  }
+                }
+
+                requestAnimationFrame(animateScroll);
+              }
+            }}
           >
             Works
           </motion.a>

@@ -109,7 +109,7 @@ const Navbar = () => {
           {[
             { name: "Services", id: "#services" },
             { name: "Reviews", id: "#reviews" },
-            { name: "Work", id: "#work" },
+            { name: "Work", id: "/work" },
             { name: "FAQs", id: "#faqs" },
             { name: "About Us", id: "about-us" },
           ].map((item) => (
