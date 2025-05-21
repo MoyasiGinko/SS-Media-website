@@ -47,35 +47,33 @@ const Portfolio = () => {
     // Function to calculate card progress based on viewport position
     const calculateCardProgress = () => {
       const viewportHeight = window.innerHeight;
-      const centerZoneStart = viewportHeight * 0.1; // Zone starts at 40% down the screen
-      const centerZoneEnd = viewportHeight * 0.9; // Zone ends at 60% down the screen
-
       const newProgress: Record<number, number> = {};
 
       cardRefs.current.forEach((card, index) => {
         if (!card) return;
 
         const rect = card.getBoundingClientRect();
-        const cardCenter = rect.top + rect.height / 2;
+        const cardTop = rect.top + rect.height / 8;
+        const cardBottom = rect.bottom - rect.height / 8;
 
-        // Calculate progress based on card's position relative to viewport
-        let progress;
+        // When cardTop touches bottom of viewport, progress = 0
+        // When cardBottom touches top of viewport, progress = 1
+        // When card is fully in view, progress = 0.5
+        let progress: number;
 
-        if (cardCenter <= centerZoneStart) {
-          // Card is above center zone - scale from 0 to 0.4
-          progress = Math.max(0, (cardCenter / centerZoneStart) * 0.4);
-        } else if (cardCenter <= centerZoneEnd) {
-          // Card is in center zone - stay at 0.5 (normal state)
-          progress = 0.5;
-        } else if (cardCenter <= viewportHeight) {
-          // Card is below center zone but still in viewport - scale from 0.6 to 1
-          progress =
-            0.6 +
-            ((cardCenter - centerZoneEnd) / (viewportHeight - centerZoneEnd)) *
-              0.4;
-        } else {
-          // Card is below viewport
+        if (cardBottom <= 0) {
+          // Card is above viewport
           progress = 1;
+        } else if (cardTop >= viewportHeight) {
+          // Card is below viewport
+          progress = 0;
+        } else {
+          // Card is in viewport
+          const totalDistance = viewportHeight + rect.height;
+          const distance = viewportHeight - cardTop;
+          progress = 1 - distance / totalDistance;
+          // Clamp between 0 and 1
+          progress = Math.max(0, Math.min(1, progress));
         }
 
         newProgress[index] = progress;
@@ -105,13 +103,13 @@ const Portfolio = () => {
 
     let rotation, translation, opacity;
 
-    if (progress <= 0.4) {
+    if (progress <= 0.1) {
       // Coming in from top
       const entryFactor = 1 - progress / 0.4;
       rotation = rotationDirection * 2 * entryFactor;
       translation = translationDirection * 200 * entryFactor;
       opacity = 1 - entryFactor * 0.5; // Fade in (0.5 to 1)
-    } else if (progress >= 0.6) {
+    } else if (progress >= 0.9) {
       // Going out to bottom
       const exitFactor = (progress - 0.6) / 0.4;
       rotation = rotationDirection * 2 * exitFactor;
