@@ -166,9 +166,6 @@ const Portfolio = () => {
             />
             <a
               href={item.categoryUrl}
-              ref={(el) => {
-                cardRefs.current[index] = el;
-              }}
               className="absolute border-[1px] border-[#FC5F67] rounded-full text-[30px] top-2 right-2 bg-white text-transparent bg-clip-text px-2 py-1 cursor-pointer text-sm"
               style={{
                 width: "245px",
