@@ -1,159 +1,269 @@
-// app/page.tsx
+// components/layout/DashboardLayout.tsx
 "use client";
-import React, { useState } from "react";
-import { ChevronRight, Phone } from "lucide-react";
-import sampleData from "./sampleData";
-import ContentDisplay from "./ContentDisplay";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { ChevronRight } from "lucide-react";
 
 // Define types for our navigation items
 type SubItem = {
   name: string;
+  slug: string;
   icon?: string;
   active?: boolean;
 };
 
 type NavItem = {
   name: string;
+  slug: string;
   icon: string;
   expanded?: boolean;
   active?: boolean;
   subItems?: SubItem[];
 };
 
-export default function Dashboard() {
-  // State to manage navigation items
+interface DashboardLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
+  const pathname = usePathname();
+  const router = useRouter();
+
+  // State to manage navigation items with slugs
   const [navItems, setNavItems] = useState<NavItem[]>([
     {
       name: "UI/UX",
+      slug: "ui-ux",
       icon: "/images/icons/uiux.svg",
       active: false,
     },
     {
       name: "Graphic Design",
+      slug: "graphic-design",
       icon: "/images/icons/graphics.svg",
       expanded: false,
       active: false,
       subItems: [
         {
           name: "Poster",
+          slug: "poster",
           active: false,
         },
         {
           name: "Thumbnail",
+          slug: "thumbnail",
+          active: false,
+        },
+        {
+          name: "Carousel",
+          slug: "carousel",
           active: false,
         },
       ],
     },
     {
       name: "Shorts/Reels",
+      slug: "shorts-reels",
       icon: "/images/icons/shorts.svg",
       active: false,
     },
     {
       name: "Websites",
+      slug: "websites",
       icon: "/images/icons/website.svg",
       active: false,
     },
     {
       name: "Videos",
+      slug: "videos",
       icon: "/images/icons/videos.svg",
-      expanded: true,
-      active: true,
+      expanded: false,
+      active: false,
       subItems: [
         {
           name: "Educational Videos",
+          slug: "educational-videos",
           active: false,
         },
         {
           name: "Talking Head",
+          slug: "talking-head",
           active: false,
         },
-        { name: "Documentary", active: false },
-        { name: "Sports", active: false },
-        { name: "Promo/Ad", active: false },
+        {
+          name: "Documentary",
+          slug: "documentary",
+          active: false,
+        },
+        {
+          name: "Sports",
+          slug: "sports",
+          active: false,
+        },
+        {
+          name: "Promo/Ad",
+          slug: "promo-ad",
+          active: false,
+        },
       ],
     },
   ]);
 
-  // State to track active category and subcategory
-  const [activeCategory, setActiveCategory] = useState("Videos");
-  const [activeSubCategory, setActiveSubCategory] = useState<
-    string | undefined
-  >("");
+  // Function to update nav item states based on pathname
+  const updateNavItemStates = useCallback(() => {
+    const pathSegments = pathname.replace(/^\//, "").split("/").filter(Boolean);
 
-  // Function to toggle expansion of nav items with sub-items
-  const toggleExpand = (index: number) => {
-    const updatedNavItems = [...navItems];
+    // Handle /work prefix - skip it if present
+    let targetSlug;
 
-    // Close all other expanded items
-    updatedNavItems.forEach((item, i) => {
-      if (i !== index && item.expanded) {
-        item.expanded = false;
-      }
+    if (pathSegments[0] === "work") {
+      targetSlug = pathSegments[1];
+    } else {
+      targetSlug = pathSegments[0];
+    }
+
+    setNavItems((prevItems) => {
+      return prevItems.map((item) => {
+        // Check if this is the active main category
+        const isCategoryActive = item.slug === targetSlug;
+
+        // Check if any subcategory is active
+        let hasActiveSubCategory = false;
+        let shouldExpand = false;
+
+        const updatedSubItems = item.subItems?.map((subItem) => {
+          const isSubActive = subItem.slug === targetSlug;
+          if (isSubActive) {
+            hasActiveSubCategory = true;
+            shouldExpand = true;
+          }
+          return {
+            ...subItem,
+            active: isSubActive,
+          };
+        });
+
+        // Category is active if it's directly selected OR if one of its subcategories is active
+        const isActive = isCategoryActive || hasActiveSubCategory;
+
+        // Expand if category is active and has subitems, or if a subcategory is active
+        if (isActive && item.subItems && item.subItems.length > 0) {
+          shouldExpand = true;
+        }
+
+        return {
+          ...item,
+          active: isActive,
+          expanded: shouldExpand,
+          subItems: updatedSubItems,
+        };
+      });
     });
+  }, [pathname]);
 
-    // Toggle current item
-    updatedNavItems[index].expanded = !updatedNavItems[index].expanded;
-    setNavItems(updatedNavItems);
-  };
+  // Effect to handle pathname changes
+  useEffect(() => {
+    updateNavItemStates();
+  }, [pathname, updateNavItemStates]);
 
-  // Function to set active item
-  const setActive = (index: number, subIndex?: number) => {
-    const updatedNavItems = [...navItems];
+  // Memoized navigation handlers to prevent re-renders
+  const handleNavigationMemo = useCallback(
+    (categorySlug: string, subCategorySlug?: string) => {
+      let newPath;
+      if (subCategorySlug) {
+        // For subcategories, navigate directly to /work/subcategory-slug
+        newPath = `/work/${subCategorySlug}`;
+      } else {
+        // For main categories, navigate to /work/category-slug
+        newPath = `/work/${categorySlug}`;
+      }
 
-    // Reset all active states
-    updatedNavItems.forEach((item, i) => {
-      item.active = false;
-      if (item.subItems) {
-        item.subItems.forEach((subItem) => {
-          subItem.active = false;
+      // Only navigate if the path is different from current path
+      if (pathname !== newPath) {
+        router.push(newPath);
+      }
+    },
+    [router, pathname]
+  );
+
+  // Memoized toggle function
+  const toggleExpandMemo = useCallback(
+    (index: number) => {
+      const item = navItems[index];
+
+      if (!item.subItems) return;
+
+      const hasActiveSubItem = item.subItems.some((subItem) => subItem.active);
+
+      // If a subcategory is active, don't just toggle - navigate to parent first
+      if (hasActiveSubItem) {
+        handleNavigationMemo(item.slug);
+        return;
+      }
+
+      // If item is not active, navigate to it first
+      if (!item.active) {
+        handleNavigationMemo(item.slug);
+      } else {
+        // If already active and no subcategory is active, toggle expansion state
+        setNavItems((prevItems) => {
+          const updatedItems = [...prevItems];
+          updatedItems[index] = {
+            ...updatedItems[index],
+            expanded: !updatedItems[index].expanded,
+          };
+          return updatedItems;
         });
       }
+    },
+    [navItems, handleNavigationMemo]
+  );
 
-      // Close all dropdowns except the current one
-      if (i !== index) {
-        item.expanded = false;
-      }
-    });
+  // Memoized parent click handler
+  const handleParentItemClickMemo = useCallback(
+    (index: number) => {
+      const item = navItems[index];
 
-    // Set active state for clicked item
-    if (subIndex !== undefined && updatedNavItems[index].subItems) {
-      // Also activate the parent item when a subitem is clicked
-      updatedNavItems[index].active = true;
-      updatedNavItems[index].subItems![subIndex].active = true;
-      setActiveCategory(updatedNavItems[index].name);
-      setActiveSubCategory(updatedNavItems[index].subItems![subIndex].name);
-    } else {
-      updatedNavItems[index].active = true;
-      setActiveCategory(updatedNavItems[index].name);
-      setActiveSubCategory(undefined);
-    }
+      if (item.subItems && item.subItems.length > 0) {
+        // For items with subitems
+        const hasActiveSubItem = item.subItems.some(
+          (subItem) => subItem.active
+        );
 
-    setNavItems(updatedNavItems);
-  };
-
-  // Modified click handler for parent items
-  const handleParentItemClick = (index: number) => {
-    const item = navItems[index];
-
-    if (item.subItems) {
-      // If the item is already active, just toggle expansion
-      if (item.active) {
-        toggleExpand(index);
+        if (item.active && !hasActiveSubItem) {
+          // If parent is active but no subcategory is active, toggle expansion
+          toggleExpandMemo(index);
+        } else if (hasActiveSubItem) {
+          // If a subcategory is currently active, navigate to parent category
+          handleNavigationMemo(item.slug);
+        } else {
+          // If parent is not active, navigate to the category
+          handleNavigationMemo(item.slug);
+        }
       } else {
-        // For items with subitems, toggle expansion and set active
-        toggleExpand(index);
-        setActive(index);
+        // For regular items without subitems
+        handleNavigationMemo(item.slug);
       }
-    } else {
-      // For regular items, just set active (which will close other dropdowns)
-      setActive(index);
-    }
-  };
+    },
+    [navItems, toggleExpandMemo, handleNavigationMemo]
+  );
+
+  // Memoized subitem click handler
+  const handleSubItemClickMemo = useCallback(
+    (categoryIndex: number, subIndex: number) => {
+      const categoryItem = navItems[categoryIndex];
+      const subItem = categoryItem.subItems?.[subIndex];
+
+      if (subItem) {
+        handleNavigationMemo(categoryItem.slug, subItem.slug);
+      }
+    },
+    [navItems, handleNavigationMemo]
+  );
 
   return (
     <div className="flex min-h-screen bg-transparent text-white">
-      {/* Sidebar - Made sticky with fixed height and overflow-y-auto */}
+      {/* Sidebar - Fixed Layout */}
       <div className="w-[347px] bg-[#1B1B1B] border-r border-[#383838] fixed h-screen flex flex-col overflow-y-auto">
         {/* Logo */}
         <a href="/">
@@ -176,8 +286,6 @@ export default function Dashboard() {
           </div>
         </a>
 
-        {/* Search Bar */}
-
         {/* Navigation */}
         <nav className="flex-1 mx-[22.3px]">
           <ul>
@@ -191,7 +299,7 @@ export default function Dashboard() {
                       ? "bg-gradient-to-r from-[#DA67B4] via-[#FC5F67] to-[#FE955A] text-black"
                       : "hover:bg-gray-800"
                   }`}
-                  onClick={() => handleParentItemClick(index)}
+                  onClick={() => handleParentItemClickMemo(index)}
                 >
                   <div className="flex items-center">
                     <img
@@ -233,7 +341,7 @@ export default function Dashboard() {
                         }`}
                         onClick={(e) => {
                           e.stopPropagation(); // Prevent parent click event
-                          setActive(index, subIndex);
+                          handleSubItemClickMemo(index, subIndex);
                         }}
                       >
                         {/* Circle bullet indicator */}
@@ -314,14 +422,8 @@ export default function Dashboard() {
         </a>
       </div>
 
-      {/* Main Content - Added left margin to account for fixed sidebar */}
-      <div className="flex-1 p-6 ml-[347px] overflow-auto">
-        <ContentDisplay
-          activeCategory={activeCategory}
-          activeSubCategory={activeSubCategory}
-          items={sampleData}
-        />
-      </div>
+      {/* Main Content Area - Dynamic children */}
+      <div className="flex-1 p-6 ml-[347px] overflow-auto">{children}</div>
     </div>
   );
 }
