@@ -267,11 +267,19 @@ export default function Dashboard() {
 
     if (!item.subItems) return;
 
+    const hasActiveSubItem = item.subItems.some((subItem) => subItem.active);
+
+    // If a subcategory is active, don't just toggle - navigate to parent first
+    if (hasActiveSubItem) {
+      handleNavigation(item.slug);
+      return;
+    }
+
     // If item is not active, navigate to it first
     if (!item.active) {
       handleNavigation(item.slug);
     } else {
-      // If already active, toggle expansion state
+      // If already active and no subcategory is active, toggle expansion state
       const updatedNavItems = [...navItems];
       updatedNavItems[index].expanded = !updatedNavItems[index].expanded;
       setNavItems(updatedNavItems);
@@ -281,18 +289,33 @@ export default function Dashboard() {
   // Modified click handler for parent items
   const handleParentItemClick = (index: number) => {
     const item = navItems[index];
+    console.log("Parent item clicked:", item.name, "Current state:", {
+      active: item.active,
+      expanded: item.expanded,
+      hasSubItems: !!item.subItems?.length,
+    });
 
     if (item.subItems && item.subItems.length > 0) {
       // For items with subitems
-      if (item.active) {
-        // If already active, toggle expansion
+      const hasActiveSubItem = item.subItems.some((subItem) => subItem.active);
+      console.log("Has active sub item:", hasActiveSubItem);
+
+      if (item.active && !hasActiveSubItem) {
+        // If parent is active but no subcategory is active, toggle expansion
+        console.log("Toggling expansion for active parent");
         toggleExpand(index);
+      } else if (hasActiveSubItem) {
+        // If a subcategory is currently active, navigate to parent category
+        console.log("Navigating to parent category from active subcategory");
+        handleNavigation(item.slug);
       } else {
-        // Navigate to the category
+        // If parent is not active, navigate to the category
+        console.log("Navigating to inactive parent category");
         handleNavigation(item.slug);
       }
     } else {
       // For regular items without subitems
+      console.log("Navigating to regular item");
       handleNavigation(item.slug);
     }
   };
