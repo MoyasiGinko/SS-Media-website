@@ -1,6 +1,7 @@
 // app/page.tsx
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { ChevronRight, Phone } from "lucide-react";
 import sampleData from "./sampleData";
 import ContentDisplay from "./ContentDisplay";
@@ -8,12 +9,14 @@ import ContentDisplay from "./ContentDisplay";
 // Define types for our navigation items
 type SubItem = {
   name: string;
+  slug: string;
   icon?: string;
   active?: boolean;
 };
 
 type NavItem = {
   name: string;
+  slug: string;
   icon: string;
   expanded?: boolean;
   active?: boolean;
@@ -21,137 +24,255 @@ type NavItem = {
 };
 
 export default function Dashboard() {
-  // State to manage navigation items
+  const pathname = usePathname();
+  const router = useRouter();
+
+  // State to manage navigation items with slugs
   const [navItems, setNavItems] = useState<NavItem[]>([
     {
       name: "UI/UX",
+      slug: "ui-ux",
       icon: "/images/icons/uiux.svg",
       active: false,
     },
     {
       name: "Graphic Design",
+      slug: "graphic-design", // Fixed: changed from "graphics-design" to match URL
       icon: "/images/icons/graphics.svg",
       expanded: false,
       active: false,
       subItems: [
         {
           name: "Poster",
+          slug: "poster",
           active: false,
         },
         {
           name: "Thumbnail",
+          slug: "thumbnail",
           active: false,
         },
         {
           name: "Carousel",
+          slug: "carousel",
           active: false,
         },
       ],
     },
     {
       name: "Shorts/Reels",
+      slug: "shorts-reels",
       icon: "/images/icons/shorts.svg",
       active: false,
     },
     {
       name: "Websites",
+      slug: "websites",
       icon: "/images/icons/website.svg",
       active: false,
     },
     {
       name: "Videos",
+      slug: "videos",
       icon: "/images/icons/videos.svg",
-      expanded: true,
-      active: true,
+      expanded: false,
+      active: false,
       subItems: [
         {
           name: "Educational Videos",
+          slug: "educational-videos",
           active: false,
         },
         {
           name: "Talking Head",
+          slug: "talking-head",
           active: false,
         },
-        { name: "Documentary", active: false },
-        { name: "Sports", active: false },
-        { name: "Promo/Ad", active: false },
+        {
+          name: "Documentary",
+          slug: "documentary",
+          active: false,
+        },
+        {
+          name: "Sports",
+          slug: "sports",
+          active: false,
+        },
+        {
+          name: "Promo/Ad",
+          slug: "promo-ad",
+          active: false,
+        },
       ],
     },
   ]);
 
   // State to track active category and subcategory
-  const [activeCategory, setActiveCategory] = useState("Videos");
-  const [activeSubCategory, setActiveSubCategory] = useState<
-    string | undefined
-  >("");
+  const [activeCategory, setActiveCategory] = useState<string>("");
+  const [activeSubCategory, setActiveSubCategory] = useState<string>("");
 
-  // Function to toggle expansion of nav items with sub-items
-  const toggleExpand = (index: number) => {
-    const updatedNavItems = [...navItems];
+  // Function to parse pathname and determine active states
+  const parsePathnameAndSetActive = () => {
+    // Remove leading slash and split path
+    const pathSegments = pathname.replace(/^\//, "").split("/").filter(Boolean);
 
-    // Close all other expanded items
-    updatedNavItems.forEach((item, i) => {
-      if (i !== index && item.expanded) {
-        item.expanded = false;
+    console.log("Parsing pathname:", pathname, "Segments:", pathSegments);
+
+    if (pathSegments.length === 0) {
+      // Root path - set default or clear active states
+      setActiveCategory("");
+      setActiveSubCategory("");
+      return;
+    }
+
+    // Handle /work prefix - skip it if present
+    let categorySlug, subCategorySlug;
+
+    if (pathSegments[0] === "work") {
+      categorySlug = pathSegments[1];
+      subCategorySlug = pathSegments[2];
+    } else {
+      categorySlug = pathSegments[0];
+      subCategorySlug = pathSegments[1];
+    }
+
+    console.log("Category slug:", categorySlug, "Sub slug:", subCategorySlug);
+
+    // Find matching category
+    const categoryItem = navItems.find((item) => item.slug === categorySlug);
+
+    console.log("Found category item:", categoryItem);
+
+    if (categoryItem) {
+      setActiveCategory(categoryItem.name);
+
+      // Check for subcategory
+      if (subCategorySlug && categoryItem.subItems) {
+        const subCategoryItem = categoryItem.subItems.find(
+          (subItem) => subItem.slug === subCategorySlug
+        );
+        console.log("Found subcategory item:", subCategoryItem);
+        if (subCategoryItem) {
+          setActiveSubCategory(subCategoryItem.name);
+        } else {
+          setActiveSubCategory("");
+        }
+      } else {
+        setActiveSubCategory("");
       }
+    } else {
+      // No matching category found
+      console.log("No matching category found for slug:", categorySlug);
+      setActiveCategory("");
+      setActiveSubCategory("");
+    }
+  };
+
+  // Function to update nav item states based on pathname
+  const updateNavItemStates = () => {
+    const pathSegments = pathname.replace(/^\//, "").split("/").filter(Boolean);
+
+    // Handle /work prefix - skip it if present
+    let categorySlug, subCategorySlug;
+
+    if (pathSegments[0] === "work") {
+      categorySlug = pathSegments[1];
+      subCategorySlug = pathSegments[2];
+    } else {
+      categorySlug = pathSegments[0];
+      subCategorySlug = pathSegments[1];
+    }
+
+    const updatedNavItems = navItems.map((item) => {
+      const isCategoryActive = item.slug === categorySlug;
+      const shouldExpand =
+        isCategoryActive && item.subItems && item.subItems.length > 0;
+
+      return {
+        ...item,
+        active: isCategoryActive,
+        expanded: shouldExpand,
+        subItems: item.subItems?.map((subItem) => ({
+          ...subItem,
+          active: subItem.slug === subCategorySlug && isCategoryActive,
+        })),
+      };
     });
 
-    // Toggle current item
-    updatedNavItems[index].expanded = !updatedNavItems[index].expanded;
     setNavItems(updatedNavItems);
   };
 
-  // Function to set active item
-  const setActive = (index: number, subIndex?: number) => {
-    const updatedNavItems = [...navItems];
+  // Effect to handle pathname changes
+  useEffect(() => {
+    console.log("Pathname changed:", pathname);
+    console.log(
+      "Current navItems:",
+      navItems.map((item) => ({ name: item.name, slug: item.slug }))
+    );
+    parsePathnameAndSetActive();
+    updateNavItemStates();
+  }, [pathname]); // Remove navItems dependency to avoid infinite loop
 
-    // Reset all active states
-    updatedNavItems.forEach((item, i) => {
-      item.active = false;
-      if (item.subItems) {
-        item.subItems.forEach((subItem) => {
-          subItem.active = false;
-        });
-      }
-
-      // Close all dropdowns except the current one
-      if (i !== index) {
-        item.expanded = false;
-      }
+  // Debug effect to log state changes
+  useEffect(() => {
+    console.log("Active states updated:", {
+      activeCategory,
+      activeSubCategory,
     });
+  }, [activeCategory, activeSubCategory]);
 
-    // Set active state for clicked item
-    if (subIndex !== undefined && updatedNavItems[index].subItems) {
-      // Also activate the parent item when a subitem is clicked
-      updatedNavItems[index].active = true;
-      updatedNavItems[index].subItems![subIndex].active = true;
-      setActiveCategory(updatedNavItems[index].name);
-      setActiveSubCategory(updatedNavItems[index].subItems![subIndex].name);
-    } else {
-      updatedNavItems[index].active = true;
-      setActiveCategory(updatedNavItems[index].name);
-      setActiveSubCategory(undefined);
+  // Function to handle navigation
+  const handleNavigation = (categorySlug: string, subCategorySlug?: string) => {
+    let newPath = `/work/${categorySlug}`; // Added /work prefix
+    if (subCategorySlug) {
+      newPath += `/${subCategorySlug}`;
     }
+    router.push(newPath);
+  };
 
-    setNavItems(updatedNavItems);
+  // Function to toggle expansion of nav items with sub-items
+  const toggleExpand = (index: number) => {
+    const item = navItems[index];
+
+    if (!item.subItems) return;
+
+    // If item is not active, navigate to it first
+    if (!item.active) {
+      handleNavigation(item.slug);
+    } else {
+      // If already active, toggle expansion state
+      const updatedNavItems = [...navItems];
+      updatedNavItems[index].expanded = !updatedNavItems[index].expanded;
+      setNavItems(updatedNavItems);
+    }
   };
 
   // Modified click handler for parent items
   const handleParentItemClick = (index: number) => {
     const item = navItems[index];
 
-    if (item.subItems) {
-      // If the item is already active, just toggle expansion
+    if (item.subItems && item.subItems.length > 0) {
+      // For items with subitems
       if (item.active) {
+        // If already active, toggle expansion
         toggleExpand(index);
       } else {
-        // For items with subitems, toggle expansion and set active
-        toggleExpand(index);
-        setActive(index);
+        // Navigate to the category
+        handleNavigation(item.slug);
       }
     } else {
-      // For regular items, just set active (which will close other dropdowns)
-      setActive(index);
+      // For regular items without subitems
+      handleNavigation(item.slug);
+    }
+  };
+
+  // Handler for subcategory clicks
+  const handleSubItemClick = (categoryIndex: number, subIndex: number) => {
+    const categoryItem = navItems[categoryIndex];
+    const subItem = categoryItem.subItems?.[subIndex];
+
+    if (subItem) {
+      handleNavigation(categoryItem.slug, subItem.slug);
     }
   };
 
@@ -179,8 +300,6 @@ export default function Dashboard() {
             </div>
           </div>
         </a>
-
-        {/* Search Bar */}
 
         {/* Navigation */}
         <nav className="flex-1 mx-[22.3px]">
@@ -237,7 +356,7 @@ export default function Dashboard() {
                         }`}
                         onClick={(e) => {
                           e.stopPropagation(); // Prevent parent click event
-                          setActive(index, subIndex);
+                          handleSubItemClick(index, subIndex);
                         }}
                       >
                         {/* Circle bullet indicator */}
