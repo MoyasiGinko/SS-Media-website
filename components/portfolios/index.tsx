@@ -42,6 +42,10 @@ export default function Dashboard() {
           name: "Thumbnail",
           active: false,
         },
+        {
+          name: "Carousel",
+          active: false,
+        },
       ],
     },
     {

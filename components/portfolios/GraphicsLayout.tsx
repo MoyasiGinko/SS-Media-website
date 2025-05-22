@@ -1,5 +1,3 @@
-// components/layouts/GraphicDesignLayout.tsx
-"use client";
 import React from "react";
 import { MediaItem } from "./sampleData";
 
@@ -7,101 +5,111 @@ interface GraphicDesignLayoutProps {
   items: MediaItem[];
 }
 
+const COLS = 4; // md:grid-cols-4
+
+// Helper to get random span (1 or 2)
+const getRandomSpan = () => (Math.random() > 0.7 ? 2 : 1);
+
+interface PlacedItem {
+  item: MediaItem;
+  colSpan: number;
+  rowSpan: number;
+  colStart: number;
+  rowStart: number;
+}
+
+function placeItems(items: MediaItem[]): PlacedItem[] {
+  const grid: number[][] = []; // 2D array: [row][col] = 1 if filled
+  const placed: PlacedItem[] = [];
+  let maxRow = 0;
+
+  for (let i = 0; i < items.length; i++) {
+    let colSpan = i === 0 ? 2 : getRandomSpan();
+    let rowSpan = i === 0 ? 2 : getRandomSpan();
+
+    // Find first available position
+    let placedFlag = false;
+    for (let row = 0; !placedFlag; row++) {
+      for (let col = 0; col <= COLS - colSpan; col++) {
+        // Check if space is free
+        let fits = true;
+        for (let r = 0; r < rowSpan; r++) {
+          for (let c = 0; c < colSpan; c++) {
+            if ((grid[row + r]?.[col + c] ?? 0) === 1) {
+              fits = false;
+              break;
+            }
+          }
+          if (!fits) break;
+        }
+        if (fits) {
+          // Mark cells as filled
+          for (let r = 0; r < rowSpan; r++) {
+            if (!grid[row + r]) grid[row + r] = Array(COLS).fill(0);
+            for (let c = 0; c < colSpan; c++) {
+              grid[row + r][col + c] = 1;
+            }
+          }
+          placed.push({
+            item: items[i],
+            colSpan,
+            rowSpan,
+            colStart: col + 1,
+            rowStart: row + 1,
+          });
+          maxRow = Math.max(maxRow, row + rowSpan);
+          placedFlag = true;
+          break;
+        }
+      }
+    }
+  }
+  return placed;
+}
+
 const GraphicDesignLayout: React.FC<GraphicDesignLayoutProps> = ({ items }) => {
+  const placedItems = placeItems(items);
+
   return (
     <div className="space-y-8">
-      {/* Featured Gallery */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {items.map((item, index) => (
-          <div
-            key={index}
-            className={`rounded-xl overflow-hidden group hover:ring-2 hover:ring-rose-500 cursor-pointer transition-all ${
-              index === 0 ? "md:col-span-2 md:row-span-2" : ""
-            }`}
-          >
-            <div className="relative aspect-square w-full">
-              <div className="absolute inset-0 bg-gradient-to-tr from-rose-500/20 to-orange-500/10 mix-blend-overlay z-10" />
-              <div
-                className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300"
-                style={{ backgroundImage: `url(${item.imagePath})` }}
-              />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-end z-20">
-                <div className="p-4 text-white translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <h3 className="font-bold">{item.title}</h3>
-                  <p className="text-xs text-gray-200 mt-1">{item.client}</p>
+      <div
+        className="grid grid-cols-2 md:grid-cols-4 gap-6"
+        style={{
+          gridAutoRows: "minmax(120px, auto)",
+        }}
+      >
+        {placedItems.map(
+          ({ item, colSpan, rowSpan, colStart, rowStart }, index) => (
+            <div
+              key={index}
+              className={`
+              rounded-xl overflow-hidden group hover:ring-2 hover:ring-rose-500 cursor-pointer transition-all
+              aspect-[16/9]
+            `}
+              style={{
+                gridColumn: `span ${colSpan} / span ${colSpan}`,
+                gridRow: `span ${rowSpan} / span ${rowSpan}`,
+                gridColumnStart: colStart,
+                gridRowStart: rowStart,
+              }}
+            >
+              <div className="relative w-full h-full">
+                <div className="absolute inset-0 bg-gradient-to-tr from-rose-500/20 to-orange-500/10 mix-blend-overlay z-10" />
+                <img
+                  src={item.imagePath}
+                  alt={item.title}
+                  className="w-full h-full object-fit cover bg-center group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-end z-20">
+                  <div className="p-4 text-white translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    <h3 className="font-bold">{item.title}</h3>
+                    <p className="text-xs text-gray-200 mt-1">{item.client}</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Project Details */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {items.map((item, index) => (
-          <div key={`detail-${index}`} className="bg-gray-900 rounded-xl p-5">
-            <h3 className="font-bold text-lg">{item.title}</h3>
-            <p className="text-gray-400 text-sm mt-2">{item.description}</p>
-
-            <div className="mt-4 flex flex-wrap gap-2">
-              {item.tags?.slice(0, 4).map((tag, tagIndex) => (
-                <span
-                  key={tagIndex}
-                  className="bg-gradient-to-r from-rose-500 to-orange-500 px-3 py-1 rounded-full text-xs text-white"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-
-            <div className="mt-4 flex justify-between items-center text-sm">
-              <span className="text-gray-500">{item.date}</span>
-              {item.pdfPath ? (
-                <button className="text-rose-500 hover:text-rose-400 flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
-                    />
-                  </svg>
-                  Brand Guide
-                </button>
-              ) : (
-                <button className="text-rose-500 hover:text-rose-400 flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                    />
-                  </svg>
-                  View Project
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
+          )
+        )}
       </div>
     </div>
   );
