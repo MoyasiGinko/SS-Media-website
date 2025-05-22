@@ -1,15 +1,41 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MediaItem } from "./sampleData";
 
-interface GraphicDesignLayoutProps {
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
+
+interface LayoutProps {
   items: MediaItem[];
 }
 
-const COLS = 4; // md:grid-cols-4
+const COLS = 4;
 
-// Define 4 main layout patterns that will be randomly selected
-const LAYOUT_PATTERNS = [
-  // Pattern 3: Big left (2x2) + 4 small right (1x1 each)
+interface PlacedItem {
+  item: MediaItem;
+  colSpan: number;
+  rowSpan: number;
+  colStart: number;
+  rowStart: number;
+}
+
+// Fixed layout patterns - preventing random generation
+const THUMBNAIL_PATTERNS = [
+  // Pattern 1: All 1x1 uniform grid
+  {
+    name: "uniform-grid",
+    items: [
+      { colSpan: 1, rowSpan: 1 },
+      { colSpan: 1, rowSpan: 1 },
+      { colSpan: 1, rowSpan: 1 },
+      { colSpan: 1, rowSpan: 1 },
+    ],
+  },
+];
+
+const POSTER_PATTERNS = [
+  // Pattern 1: Big left (2x2) + 4 small right (1x1 each)
   {
     name: "big-left-small-right",
     items: [
@@ -20,7 +46,7 @@ const LAYOUT_PATTERNS = [
       { colSpan: 1, rowSpan: 1, position: "right" }, // Small
     ],
   },
-  // Pattern 4: 4 small left (1x1 each) + Big right (2x2)
+  // Pattern 2: 4 small left (1x1 each) + Big right (2x2)
   {
     name: "small-left-big-right",
     items: [
@@ -33,56 +59,310 @@ const LAYOUT_PATTERNS = [
   },
 ];
 
-// Helper function to get random pattern
-const getRandomPattern = () => {
-  return LAYOUT_PATTERNS[Math.floor(Math.random() * LAYOUT_PATTERNS.length)];
+const CAROUSEL_PATTERNS = [
+  // Pattern 1: Full width + 2 half width
+  {
+    name: "full-then-halves",
+    items: [
+      { colSpan: 4, rowSpan: 1 }, // Full width
+      { colSpan: 2, rowSpan: 1 }, // Half width
+      { colSpan: 2, rowSpan: 1 }, // Half width
+    ],
+  },
+  // Pattern 2: 2 half width + full width
+  {
+    name: "halves-then-full",
+    items: [
+      { colSpan: 2, rowSpan: 1 }, // Half width
+      { colSpan: 2, rowSpan: 1 }, // Half width
+      { colSpan: 4, rowSpan: 1 }, // Full width
+    ],
+  },
+];
+
+// Shared hooks and utilities
+const useImageLoading = (items: MediaItem[]) => {
+  const [imageAspectRatios, setImageAspectRatios] = useState<
+    Record<string, number>
+  >({});
+  const [imageLoadingStates, setImageLoadingStates] = useState<
+    Record<string, boolean>
+  >({});
+  const [imageLoadProgress, setImageLoadProgress] = useState<
+    Record<string, number>
+  >({});
+
+  useEffect(() => {
+    const initialLoadingStates: Record<string, boolean> = {};
+    const initialProgress: Record<string, number> = {};
+
+    items.forEach((item) => {
+      initialLoadingStates[item.imagePath] = true;
+      initialProgress[item.imagePath] = 0;
+    });
+
+    setImageLoadingStates(initialLoadingStates);
+    setImageLoadProgress(initialProgress);
+  }, [items]);
+
+  const handleImageLoadStart = (imagePath: string) => {
+    setImageLoadingStates((prev) => ({ ...prev, [imagePath]: true }));
+    setImageLoadProgress((prev) => ({ ...prev, [imagePath]: 0 }));
+
+    const progressInterval = setInterval(() => {
+      setImageLoadProgress((prev) => {
+        const currentProgress = prev[imagePath] || 0;
+        if (currentProgress >= 90) {
+          clearInterval(progressInterval);
+          return prev;
+        }
+        return {
+          ...prev,
+          [imagePath]: Math.min(currentProgress + Math.random() * 15, 90),
+        };
+      });
+    }, 100);
+  };
+
+  const handleImageLoad = (
+    imagePath: string,
+    event: React.SyntheticEvent<HTMLImageElement>
+  ) => {
+    const img = event.currentTarget;
+    const aspectRatio = img.naturalWidth / img.naturalHeight;
+
+    setImageLoadProgress((prev) => ({ ...prev, [imagePath]: 100 }));
+
+    setTimeout(() => {
+      setImageLoadingStates((prev) => ({ ...prev, [imagePath]: false }));
+      setImageAspectRatios((prev) => ({ ...prev, [imagePath]: aspectRatio }));
+    }, 200);
+  };
+
+  const handleImageError = (imagePath: string) => {
+    setImageLoadingStates((prev) => ({ ...prev, [imagePath]: false }));
+    setImageLoadProgress((prev) => ({ ...prev, [imagePath]: 0 }));
+  };
+
+  return {
+    imageAspectRatios,
+    imageLoadingStates,
+    imageLoadProgress,
+    handleImageLoadStart,
+    handleImageLoad,
+    handleImageError,
+  };
 };
 
-interface PlacedItem {
-  item: MediaItem;
-  colSpan: number;
-  rowSpan: number;
-  colStart: number;
-  rowStart: number;
-  naturalAspectRatio?: number;
-}
+const useGSAPAnimation = (
+  containerRef: React.RefObject<HTMLDivElement | null>,
+  itemRefs:
+    | React.RefObject<(HTMLDivElement | null)[]>
+    | { current: (HTMLDivElement | null)[] },
+  placedItems: PlacedItem[]
+) => {
+  useEffect(() => {
+    if (!containerRef.current) return;
 
-function placeItems(items: MediaItem[]): PlacedItem[] {
-  const grid: number[][] = [];
-  const placed: PlacedItem[] = [];
+    const ctx = gsap.context(() => {
+      itemRefs.current.forEach((item, index) => {
+        if (!item) return;
+
+        gsap.set(item, {
+          opacity: 0,
+          y: 50,
+          scale: 0.9,
+        });
+
+        gsap.to(item, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 85%",
+            end: "bottom 15%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, [placedItems]);
+};
+
+// Get subcategory styles - from original design
+const getSubcategoryStyles = (subCategory: string) => {
+  const normalizedSubCategory = subCategory.toLowerCase();
+  const styles = {
+    thumbnail: {
+      className: "rounded-lg lg:rounded-xl",
+    },
+    poster: {
+      className: "rounded-xl lg:rounded-2xl",
+    },
+    carousel: {
+      className: "rounded-2xl lg:rounded-3xl",
+    },
+    default: {
+      className: "rounded-lg lg:rounded-xl",
+    },
+  };
+  return styles[normalizedSubCategory as keyof typeof styles] || styles.default;
+};
+
+const ItemRenderer: React.FC<{
+  placedItem: PlacedItem;
+  index: number;
+  itemRef: (el: HTMLDivElement | null) => void;
+  imageStates: ReturnType<typeof useImageLoading>;
+  getContainerStyle: (item: PlacedItem) => React.CSSProperties;
+}> = ({ placedItem, index, itemRef, imageStates, getContainerStyle }) => {
+  const { item, colSpan, rowSpan } = placedItem;
+  const {
+    imageAspectRatios,
+    imageLoadingStates,
+    imageLoadProgress,
+    handleImageLoadStart,
+    handleImageLoad,
+    handleImageError,
+  } = imageStates;
+
+  const naturalAspectRatio = imageAspectRatios[item.imagePath];
+  const styles = getSubcategoryStyles(item.subCategory || "default");
+  const isLoading = imageLoadingStates[item.imagePath];
+  const loadProgress = imageLoadProgress[item.imagePath] || 0;
+
+  return (
+    <div
+      key={`${item.imagePath}-${index}`}
+      ref={itemRef}
+      className={`
+        ${styles.className}
+        overflow-hidden
+        cursor-pointer
+        shadow-lg
+      `}
+      style={getContainerStyle(placedItem)}
+    >
+      <div className="relative w-full h-full">
+        {/* Loading State */}
+        {isLoading && (
+          <div className="absolute inset-0 bg-gray-900/95 backdrop-blur-sm z-30 flex flex-col items-center justify-center">
+            <div className="relative mb-4">
+              <div className="w-12 h-12 border-4 border-gray-600 border-t-white rounded-full animate-spin" />
+              <div
+                className="absolute inset-0 w-12 h-12 border-4 border-transparent border-t-purple-500 rounded-full animate-spin"
+                style={{
+                  animationDirection: "reverse",
+                  animationDuration: "0.8s",
+                }}
+              />
+            </div>
+
+            <div className="w-3/4 max-w-32 bg-gray-700 rounded-full h-2 overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 rounded-full transition-all duration-300 ease-out relative"
+                style={{ width: `${loadProgress}%` }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
+              </div>
+            </div>
+
+            <div className="text-xs text-gray-400 mt-2 font-medium">
+              {Math.round(loadProgress)}%
+            </div>
+
+            <div className="absolute top-4 left-4">
+              <span className="text-xs px-2 py-1 bg-white/10 backdrop-blur-sm rounded-full capitalize font-medium text-white/70 border border-white/20">
+                {item.subCategory}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Image */}
+        <img
+          src={item.imagePath}
+          alt={item.title}
+          className={`
+            w-full h-full object-cover transition-opacity duration-300
+            ${isLoading ? "opacity-0" : "opacity-100"}
+          `}
+          onLoadStart={() => handleImageLoadStart(item.imagePath)}
+          onLoad={(e) => handleImageLoad(item.imagePath, e)}
+          onError={() => handleImageError(item.imagePath)}
+          loading="lazy"
+        />
+
+        {/* Content overlay - from original design */}
+        {!isLoading && (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end">
+            <div className="p-3 md:p-4 lg:p-6 text-white">
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <span className="text-xs px-3 py-1 bg-white/20 backdrop-blur-md rounded-full capitalize font-medium border border-white/30">
+                  {item.subCategory}
+                </span>
+                {naturalAspectRatio && (
+                  <span className="text-xs px-3 py-1 bg-black/40 backdrop-blur-md rounded-full border border-white/20">
+                    {naturalAspectRatio.toFixed(2)}:1
+                  </span>
+                )}
+                <span className="text-xs px-3 py-1 bg-purple-500/30 backdrop-blur-md rounded-full border border-purple-400/30">
+                  {colSpan}×{rowSpan}
+                </span>
+              </div>
+
+              <h3 className="font-bold text-sm md:text-base lg:text-lg leading-tight mb-1">
+                {item.title}
+              </h3>
+              <p className="text-xs md:text-sm text-gray-200 opacity-90">
+                {item.client}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// 1. THUMBNAIL LAYOUT COMPONENT - Using the same pattern as Poster layout
+const ThumbnailLayoutComponent: React.FC<LayoutProps> = ({ items }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const imageStates = useImageLoading(items);
+
+  // Using the same pattern layout as posters
+  const placedItems: PlacedItem[] = [];
   let currentRow = 0;
-
-  // Process items in groups based on pattern sizes
   let itemIndex = 0;
+  let patternIndex = 0;
 
   while (itemIndex < items.length) {
-    const pattern = getRandomPattern();
+    const pattern = POSTER_PATTERNS[patternIndex % POSTER_PATTERNS.length];
     const patternItems = items.slice(
       itemIndex,
-      itemIndex + pattern.items.length
+      Math.min(itemIndex + pattern.items.length, items.length)
     );
 
     if (patternItems.length === 0) break;
 
-    // Calculate the required rows for this pattern
     const maxRowSpan = Math.max(...pattern.items.map((item) => item.rowSpan));
 
-    // Ensure we have enough grid rows
-    while (grid.length < currentRow + maxRowSpan) {
-      grid.push(Array(COLS).fill(0));
-    }
-
-    // Place items according to the pattern
     let leftCol = 0;
-    let rightCol = 2; // Right side starts at column 2 (since left side can use 0-1)
+    let rightCol = 2;
     let leftRowOffset = 0;
     let rightRowOffset = 0;
 
-    pattern.items.forEach((patternItem, patternIndex) => {
-      if (patternIndex >= patternItems.length) return; // Skip if we don't have enough items
+    pattern.items.forEach((patternItem, patternItemIndex) => {
+      if (patternItemIndex >= patternItems.length) return;
 
-      const item = patternItems[patternIndex];
-      let { colSpan, rowSpan } = patternItem;
+      const item = patternItems[patternItemIndex];
+      const { colSpan, rowSpan } = patternItem;
       let colStart: number;
       let rowStart: number;
 
@@ -90,192 +370,441 @@ function placeItems(items: MediaItem[]): PlacedItem[] {
         colStart = leftCol;
         rowStart = currentRow + leftRowOffset;
 
-        // Update left column position for next left item
         if (colSpan === 1) {
-          leftCol = leftCol === 0 ? 1 : 0; // Alternate between columns 0 and 1
-          if (leftCol === 0) leftRowOffset += rowSpan; // Move to next row when wrapping
+          leftCol = leftCol === 0 ? 1 : 0;
+          if (leftCol === 0) leftRowOffset += rowSpan;
         } else {
-          leftRowOffset += rowSpan; // Big item takes full width, move down
+          leftRowOffset += rowSpan;
         }
       } else {
         colStart = rightCol;
         rowStart = currentRow + rightRowOffset;
 
-        // Update right column position for next right item
         if (colSpan === 1) {
-          rightCol = rightCol === 2 ? 3 : 2; // Alternate between columns 2 and 3
-          if (rightCol === 2) rightRowOffset += rowSpan; // Move to next row when wrapping
+          rightCol = rightCol === 2 ? 3 : 2;
+          if (rightCol === 2) rightRowOffset += rowSpan;
         } else {
-          rightRowOffset += rowSpan; // Big item takes full width, move down
+          rightRowOffset += rowSpan;
         }
       }
 
-      // Ensure the item fits within grid bounds
-      colStart = Math.min(colStart, COLS - colSpan);
+      colStart = Math.max(0, Math.min(colStart, COLS - colSpan));
 
-      // Mark grid cells as occupied
-      for (let r = 0; r < rowSpan; r++) {
-        if (!grid[rowStart + r]) {
-          while (grid.length <= rowStart + r) {
-            grid.push(Array(COLS).fill(0));
-          }
-        }
-        for (let c = 0; c < colSpan; c++) {
-          if (colStart + c < COLS) {
-            grid[rowStart + r][colStart + c] = 1;
-          }
-        }
-      }
-
-      placed.push({
+      placedItems.push({
         item,
         colSpan,
         rowSpan,
-        colStart: colStart + 1, // CSS Grid is 1-indexed
-        rowStart: rowStart + 1, // CSS Grid is 1-indexed
+        colStart: colStart + 1,
+        rowStart: rowStart + 1,
       });
     });
 
-    // Move to next pattern starting row
     currentRow += maxRowSpan;
-    itemIndex += pattern.items.length;
+    itemIndex += patternItems.length;
+    patternIndex++;
   }
 
-  return placed;
-}
+  useGSAPAnimation(containerRef, itemRefs, placedItems);
 
-const GraphicDesignLayout: React.FC<GraphicDesignLayoutProps> = ({ items }) => {
-  const placedItems = placeItems(items);
-  const [imageAspectRatios, setImageAspectRatios] = React.useState<
-    Record<string, number>
-  >({});
+  const getContainerStyle = (placedItem: PlacedItem) => {
+    const { colSpan, rowSpan, colStart, rowStart } = placedItem;
 
-  // Function to handle image load and calculate natural aspect ratio
-  const handleImageLoad = (
-    imagePath: string,
-    event: React.SyntheticEvent<HTMLImageElement>
-  ) => {
-    const img = event.currentTarget;
-    const aspectRatio = img.naturalWidth / img.naturalHeight;
-    setImageAspectRatios((prev) => ({
-      ...prev,
-      [imagePath]: aspectRatio,
-    }));
+    // Force 16:9 aspect ratio for all thumbnails, regardless of natural aspect ratio
+    const baseStyle = {
+      gridColumn: `span ${colSpan} / span ${colSpan}`,
+      gridRow: `span ${rowSpan} / span ${rowSpan}`,
+      gridColumnStart: colStart,
+      gridRowStart: rowStart,
+      aspectRatio: "16/9", // Fixed 16:9 aspect ratio
+    };
+
+    return baseStyle;
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 px-4 lg:px-8" ref={containerRef}>
       <div
         className="grid grid-cols-2 md:grid-cols-4 gap-2"
         style={{
           gridAutoRows: "minmax(120px, auto)",
         }}
       >
-        {placedItems.map(
-          ({ item, colSpan, rowSpan, colStart, rowStart }, index) => {
-            const naturalAspectRatio = imageAspectRatios[item.imagePath];
+        {placedItems.map((placedItem, index) => (
+          <ItemRenderer
+            key={`thumb-${index}`}
+            placedItem={placedItem}
+            index={index}
+            itemRef={(el) => (itemRefs.current[index] = el)}
+            imageStates={imageStates}
+            getContainerStyle={getContainerStyle}
+          />
+        ))}
+      </div>
 
-            // Get subcategory-specific styling
-            const getSubcategoryStyles = () => {
-              switch (item.subCategory) {
-                case "thumbnail":
-                  return {
-                    className: "rounded-lg",
-                    overlayGradient: "from-blue-500/20 to-purple-500/10",
-                    borderColor: "hover:ring-blue-400",
-                  };
-                case "poster":
-                  return {
-                    className: "rounded-xl",
-                    overlayGradient: "from-rose-500/20 to-pink-500/10",
-                    borderColor: "hover:ring-rose-400",
-                  };
-                case "carousel":
-                  return {
-                    className: "rounded-2xl",
-                    overlayGradient: "from-emerald-500/20 to-teal-500/10",
-                    borderColor: "hover:ring-emerald-400",
-                  };
-                default:
-                  return {
-                    className: "rounded-lg",
-                    overlayGradient: "from-gray-500/20 to-slate-500/10",
-                    borderColor: "hover:ring-gray-400",
-                  };
-              }
-            };
+      {/* Loading indicator */}
+      <div className="text-center text-gray-500 text-sm mt-8">
+        <div className="flex items-center justify-center gap-4">
+          {/* <span>
+            {
+              Object.values(imageStates.imageLoadingStates).filter(
+                (loading) => !loading
+              ).length
+            }{" "}
+            / {items.length} thumbnails loaded
+          </span> */}
+          {Object.values(imageStates.imageLoadingStates).some(
+            (loading) => loading
+          ) && (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-gray-400 border-t-purple-500 rounded-full animate-spin" />
+              <span className="text-purple-400">Loading...</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-            const styles = getSubcategoryStyles();
+// 2. POSTER LAYOUT COMPONENT - Fixed alternating pattern from original
+const PosterLayoutComponent: React.FC<LayoutProps> = ({ items }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const imageStates = useImageLoading(items);
 
-            // Calculate dynamic height based on natural aspect ratio or fallback
-            const getContainerStyle = () => {
-              const baseStyle = {
-                gridColumn: `span ${colSpan} / span ${colSpan}`,
-                gridRow: `span ${rowSpan} / span ${rowSpan}`,
-                gridColumnStart: colStart,
-                gridRowStart: rowStart,
-              };
+  // Fixed alternating pattern layout - exactly like original
+  const placedItems: PlacedItem[] = [];
+  let currentRow = 0;
+  let itemIndex = 0;
+  let patternIndex = 0;
 
-              // If we have the natural aspect ratio, use it
-              if (naturalAspectRatio) {
-                return {
-                  ...baseStyle,
-                  aspectRatio: naturalAspectRatio.toString(),
-                };
-              }
+  while (itemIndex < items.length) {
+    const pattern = POSTER_PATTERNS[patternIndex % POSTER_PATTERNS.length];
+    const patternItems = items.slice(
+      itemIndex,
+      Math.min(itemIndex + pattern.items.length, items.length)
+    );
 
-              // Fallback: use grid spans to determine aspect ratio
-              const fallbackAspectRatio = (colSpan * 1.5) / rowSpan; // Adjust multiplier as needed
-              return {
-                ...baseStyle,
-                aspectRatio: fallbackAspectRatio.toString(),
-              };
-            };
+    if (patternItems.length === 0) break;
 
-            return (
-              <div
-                key={index}
-                className={`
-                  ${styles.className} overflow-hidden group ${styles.borderColor} hover:ring-2 cursor-pointer transition-all duration-300
-                `}
-                style={getContainerStyle()}
-              >
-                <div className="relative w-full h-full">
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-tr ${styles.overlayGradient} mix-blend-overlay z-10`}
-                  />
-                  <img
-                    src={item.imagePath}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onLoad={(e) => handleImageLoad(item.imagePath, e)}
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-end z-20">
-                    <div className="p-3 md:p-4 text-white translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full capitalize font-medium">
-                          {item.subCategory}
-                        </span>
-                        {naturalAspectRatio && (
-                          <span className="text-xs px-2 py-1 bg-black/30 backdrop-blur-sm rounded-full">
-                            {naturalAspectRatio.toFixed(2)}:1
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="font-bold text-sm md:text-base leading-tight">
-                        {item.title}
-                      </h3>
-                      <p className="text-xs text-gray-200 mt-1 opacity-90">
-                        {item.client}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          }
-        )}
+    const maxRowSpan = Math.max(...pattern.items.map((item) => item.rowSpan));
+
+    let leftCol = 0;
+    let rightCol = 2;
+    let leftRowOffset = 0;
+    let rightRowOffset = 0;
+
+    pattern.items.forEach((patternItem, patternItemIndex) => {
+      if (patternItemIndex >= patternItems.length) return;
+
+      const item = patternItems[patternItemIndex];
+      const { colSpan, rowSpan } = patternItem;
+      let colStart: number;
+      let rowStart: number;
+
+      if (patternItem.position === "left") {
+        colStart = leftCol;
+        rowStart = currentRow + leftRowOffset;
+
+        if (colSpan === 1) {
+          leftCol = leftCol === 0 ? 1 : 0;
+          if (leftCol === 0) leftRowOffset += rowSpan;
+        } else {
+          leftRowOffset += rowSpan;
+        }
+      } else {
+        colStart = rightCol;
+        rowStart = currentRow + rightRowOffset;
+
+        if (colSpan === 1) {
+          rightCol = rightCol === 2 ? 3 : 2;
+          if (rightCol === 2) rightRowOffset += rowSpan;
+        } else {
+          rightRowOffset += rowSpan;
+        }
+      }
+
+      colStart = Math.max(0, Math.min(colStart, COLS - colSpan));
+
+      placedItems.push({
+        item,
+        colSpan,
+        rowSpan,
+        colStart: colStart + 1,
+        rowStart: rowStart + 1,
+      });
+    });
+
+    currentRow += maxRowSpan;
+    itemIndex += patternItems.length;
+    patternIndex++;
+  }
+
+  useGSAPAnimation(containerRef, itemRefs, placedItems);
+
+  const getContainerStyle = (placedItem: PlacedItem) => {
+    const { colSpan, rowSpan, colStart, rowStart } = placedItem;
+    const naturalAspectRatio =
+      imageStates.imageAspectRatios[placedItem.item.imagePath];
+
+    const baseStyle = {
+      gridColumn: `span ${colSpan} / span ${colSpan}`,
+      gridRow: `span ${rowSpan} / span ${rowSpan}`,
+      gridColumnStart: colStart,
+      gridRowStart: rowStart,
+    };
+
+    if (naturalAspectRatio) {
+      return {
+        ...baseStyle,
+        aspectRatio: naturalAspectRatio.toString(),
+      };
+    }
+
+    // Fixed fallback - same as original
+    const fallbackAspectRatio = (colSpan * 1.5) / rowSpan;
+    return {
+      ...baseStyle,
+      aspectRatio: fallbackAspectRatio.toString(),
+    };
+  };
+
+  return (
+    <div className="space-y-8 px-4 lg:px-8" ref={containerRef}>
+      <div
+        className="grid grid-cols-2 md:grid-cols-4 gap-2"
+        style={{
+          gridAutoRows: "minmax(120px, auto)",
+        }}
+      >
+        {placedItems.map((placedItem, index) => (
+          <ItemRenderer
+            key={`poster-${index}`}
+            placedItem={placedItem}
+            index={index}
+            itemRef={(el) => (itemRefs.current[index] = el)}
+            imageStates={imageStates}
+            getContainerStyle={getContainerStyle}
+          />
+        ))}
+      </div>
+
+      {/* Loading indicator */}
+      <div className="text-center text-gray-500 text-sm mt-8">
+        <div className="flex items-center justify-center gap-4">
+          {/* <span>
+            {
+              Object.values(imageStates.imageLoadingStates).filter(
+                (loading) => !loading
+              ).length
+            }{" "}
+            / {items.length} posters loaded
+          </span> */}
+          {Object.values(imageStates.imageLoadingStates).some(
+            (loading) => loading
+          ) && (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-gray-400 border-t-purple-500 rounded-full animate-spin" />
+              <span className="text-purple-400">Loading...</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 3. CAROUSEL LAYOUT COMPONENT - Now using the same layout as Poster
+const CarouselLayoutComponent: React.FC<LayoutProps> = ({ items }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const imageStates = useImageLoading(items);
+
+  // Using poster layout pattern for carousel items
+  const placedItems: PlacedItem[] = [];
+  let currentRow = 0;
+  let itemIndex = 0;
+  let patternIndex = 0;
+
+  while (itemIndex < items.length) {
+    const pattern = POSTER_PATTERNS[patternIndex % POSTER_PATTERNS.length];
+    const patternItems = items.slice(
+      itemIndex,
+      Math.min(itemIndex + pattern.items.length, items.length)
+    );
+
+    if (patternItems.length === 0) break;
+
+    const maxRowSpan = Math.max(...pattern.items.map((item) => item.rowSpan));
+
+    let leftCol = 0;
+    let rightCol = 2;
+    let leftRowOffset = 0;
+    let rightRowOffset = 0;
+
+    pattern.items.forEach((patternItem, patternItemIndex) => {
+      if (patternItemIndex >= patternItems.length) return;
+
+      const item = patternItems[patternItemIndex];
+      const { colSpan, rowSpan } = patternItem;
+      let colStart: number;
+      let rowStart: number;
+
+      if (patternItem.position === "left") {
+        colStart = leftCol;
+        rowStart = currentRow + leftRowOffset;
+
+        if (colSpan === 1) {
+          leftCol = leftCol === 0 ? 1 : 0;
+          if (leftCol === 0) leftRowOffset += rowSpan;
+        } else {
+          leftRowOffset += rowSpan;
+        }
+      } else {
+        colStart = rightCol;
+        rowStart = currentRow + rightRowOffset;
+
+        if (colSpan === 1) {
+          rightCol = rightCol === 2 ? 3 : 2;
+          if (rightCol === 2) rightRowOffset += rowSpan;
+        } else {
+          rightRowOffset += rowSpan;
+        }
+      }
+
+      colStart = Math.max(0, Math.min(colStart, COLS - colSpan));
+
+      placedItems.push({
+        item,
+        colSpan,
+        rowSpan,
+        colStart: colStart + 1,
+        rowStart: rowStart + 1,
+      });
+    });
+
+    currentRow += maxRowSpan;
+    itemIndex += patternItems.length;
+    patternIndex++;
+  }
+
+  useGSAPAnimation(containerRef, itemRefs, placedItems);
+
+  const getContainerStyle = (placedItem: PlacedItem) => {
+    const { colSpan, rowSpan, colStart, rowStart } = placedItem;
+    const naturalAspectRatio =
+      imageStates.imageAspectRatios[placedItem.item.imagePath];
+
+    const baseStyle = {
+      gridColumn: `span ${colSpan} / span ${colSpan}`,
+      gridRow: `span ${rowSpan} / span ${rowSpan}`,
+      gridColumnStart: colStart,
+      gridRowStart: rowStart,
+    };
+
+    if (naturalAspectRatio) {
+      return {
+        ...baseStyle,
+        aspectRatio: naturalAspectRatio.toString(),
+      };
+    }
+
+    // Using same aspect ratio logic as posters
+    const fallbackAspectRatio = (colSpan * 1.5) / rowSpan;
+    return {
+      ...baseStyle,
+      aspectRatio: fallbackAspectRatio.toString(),
+    };
+  };
+
+  return (
+    <div className="space-y-8 px-4 lg:px-8" ref={containerRef}>
+      <div
+        className="grid grid-cols-2 md:grid-cols-4 gap-2"
+        style={{
+          gridAutoRows: "minmax(120px, auto)",
+        }}
+      >
+        {placedItems.map((placedItem, index) => (
+          <ItemRenderer
+            key={`carousel-${index}`}
+            placedItem={placedItem}
+            index={index}
+            itemRef={(el) => (itemRefs.current[index] = el)}
+            imageStates={imageStates}
+            getContainerStyle={getContainerStyle}
+          />
+        ))}
+      </div>
+
+      {/* Loading indicator */}
+      <div className="text-center text-gray-500 text-sm mt-8">
+        <div className="flex items-center justify-center gap-4">
+          {/* <span>
+            {
+              Object.values(imageStates.imageLoadingStates).filter(
+                (loading) => !loading
+              ).length
+            }{" "}
+            / {items.length} carousel items loaded
+          </span> */}
+          {Object.values(imageStates.imageLoadingStates).some(
+            (loading) => loading
+          ) && (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-gray-400 border-t-purple-500 rounded-full animate-spin" />
+              <span className="text-purple-400">Loading...</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// MAIN COMPONENT - Routes to appropriate layout component
+const GraphicDesignLayout: React.FC<{ items: MediaItem[] }> = ({ items }) => {
+  // Group items by subcategory (case-insensitive)
+  const groupedItems = items.reduce((acc, item) => {
+    const normalizedSubCategory = (item.subCategory ?? "unknown").toLowerCase();
+    if (!acc[normalizedSubCategory]) {
+      acc[normalizedSubCategory] = [];
+    }
+    acc[normalizedSubCategory].push(item);
+    return acc;
+  }, {} as Record<string, MediaItem[]>);
+
+  return (
+    <div className="space-y-12">
+      {/* Render Thumbnails */}
+      {groupedItems.thumbnail && groupedItems.thumbnail.length > 0 && (
+        <div>
+          <h2 className="text-2xl font-bold mb-6 px-4 lg:px-8">Thumbnails</h2>
+          <ThumbnailLayoutComponent items={groupedItems.thumbnail} />
+        </div>
+      )}
+
+      {/* Render Posters */}
+      {groupedItems.poster && groupedItems.poster.length > 0 && (
+        <div>
+          <h2 className="text-2xl font-bold mb-6 px-4 lg:px-8">Posters</h2>
+          <PosterLayoutComponent items={groupedItems.poster} />
+        </div>
+      )}
+
+      {/* Render Carousel */}
+      {groupedItems.carousel && groupedItems.carousel.length > 0 && (
+        <div>
+          <h2 className="text-2xl font-bold mb-6 px-4 lg:px-8">Carousel</h2>
+          <CarouselLayoutComponent items={groupedItems.carousel} />
+        </div>
+      )}
+
+      {/* Overall loading indicator */}
+      <div className="text-center text-gray-500 text-sm mt-8">
+        <div className="flex items-center justify-center gap-4">
+          <span>{items.length} total items loaded</span>
+        </div>
       </div>
     </div>
   );
