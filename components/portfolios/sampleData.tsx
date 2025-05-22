@@ -602,14 +602,6 @@ export const graphicDesignProjects: MediaItem[] = [
     tags: ["Poster", "Startup", "Celebration", "Business"],
   },
   {
-    id: "design-67",
-    title: "Startup Celebration Poster",
-    imagePath: "/work/poster/ps41.png",
-    category: "Graphic Design",
-    subCategory: "Poster",
-    tags: ["Poster", "Startup", "Celebration", "Business"],
-  },
-  {
     id: "design-68",
     title: "Startup Celebration Poster",
     imagePath: "/work/carousel/cr1.png",

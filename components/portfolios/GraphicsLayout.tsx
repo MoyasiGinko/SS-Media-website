@@ -7,8 +7,47 @@ interface GraphicDesignLayoutProps {
 
 const COLS = 4; // md:grid-cols-4
 
-// Helper to get random span (1 or 2)
-const getRandomSpan = () => (Math.random() > 0.7 ? 2 : 1);
+// Define aspect ratios and sizing for different subcategories
+const SUBCATEGORY_CONFIG = {
+  thumbnail: {
+    aspectRatio: "16/9", // 16:9 landscape for thumbnails
+    preferredColSpan: [2, 4],
+    preferredRowSpan: [1, 2],
+    weight: { 2: 0.7, 4: 0.3, 1: 0.0 },
+  },
+  poster: {
+    aspectRatio: "3/4", // Typical poster ratio (portrait)
+    preferredColSpan: [1, 2],
+    preferredRowSpan: [2, 3],
+    weight: { 2: 0.7, 3: 0.3 },
+  },
+  carousel: {
+    aspectRatio: "3/4", // Typical carousel ratio (portrait)
+    preferredColSpan: [1, 2],
+    preferredRowSpan: [2, 3],
+    weight: { 2: 0.7, 3: 0.3 },
+  },
+  default: {
+    aspectRatio: "1/1", // Square fallback
+    preferredColSpan: [1, 2],
+    preferredRowSpan: [1, 2],
+    weight: { 1: 0.5, 2: 0.5 },
+  },
+};
+
+// Helper to get weighted random span based on subcategory
+const getRandomSpan = (spans: number[], weights: Record<number, number>) => {
+  const rand = Math.random();
+  let cumulative = 0;
+
+  for (const span of spans) {
+    cumulative += weights[span] || 0;
+    if (rand <= cumulative) {
+      return span;
+    }
+  }
+  return spans[0]; // fallback
+};
 
 interface PlacedItem {
   item: MediaItem;
@@ -16,16 +55,37 @@ interface PlacedItem {
   rowSpan: number;
   colStart: number;
   rowStart: number;
+  config: (typeof SUBCATEGORY_CONFIG)[keyof typeof SUBCATEGORY_CONFIG];
 }
 
 function placeItems(items: MediaItem[]): PlacedItem[] {
-  const grid: number[][] = []; // 2D array: [row][col] = 1 if filled
+  const grid: number[][] = [];
   const placed: PlacedItem[] = [];
   let maxRow = 0;
 
   for (let i = 0; i < items.length; i++) {
-    let colSpan = i === 0 ? 2 : getRandomSpan();
-    let rowSpan = i === 0 ? 2 : getRandomSpan();
+    const item = items[i];
+
+    // Get configuration based on subcategory
+    const config =
+      SUBCATEGORY_CONFIG[item.subCategory as keyof typeof SUBCATEGORY_CONFIG] ||
+      SUBCATEGORY_CONFIG.default;
+
+    // Generate spans based on subcategory preferences
+    let colSpan: number;
+    let rowSpan: number;
+
+    if (i === 0) {
+      // First item gets prominent placement
+      colSpan = 2;
+      rowSpan = 2;
+    } else {
+      colSpan = getRandomSpan(config.preferredColSpan, config.weight);
+      rowSpan = getRandomSpan(config.preferredRowSpan, config.weight);
+    }
+
+    // Ensure spans don't exceed grid boundaries
+    colSpan = Math.min(colSpan, COLS);
 
     // Find first available position
     let placedFlag = false;
@@ -56,6 +116,7 @@ function placeItems(items: MediaItem[]): PlacedItem[] {
             rowSpan,
             colStart: col + 1,
             rowStart: row + 1,
+            config,
           });
           maxRow = Math.max(maxRow, row + rowSpan);
           placedFlag = true;
@@ -73,42 +134,87 @@ const GraphicDesignLayout: React.FC<GraphicDesignLayoutProps> = ({ items }) => {
   return (
     <div className="space-y-8">
       <div
-        className="grid grid-cols-2 md:grid-cols-4 gap-6"
+        className="grid grid-cols-2 md:grid-cols-4 gap-4"
         style={{
-          gridAutoRows: "minmax(120px, auto)",
+          gridAutoRows: "minmax(100px, auto)",
         }}
       >
         {placedItems.map(
-          ({ item, colSpan, rowSpan, colStart, rowStart }, index) => (
-            <div
-              key={index}
-              className={`
-              rounded-xl overflow-hidden group hover:ring-2 hover:ring-rose-500 cursor-pointer transition-all
-              aspect-[16/9]
-            `}
-              style={{
-                gridColumn: `span ${colSpan} / span ${colSpan}`,
-                gridRow: `span ${rowSpan} / span ${rowSpan}`,
-                gridColumnStart: colStart,
-                gridRowStart: rowStart,
-              }}
-            >
-              <div className="relative w-full h-full">
-                <div className="absolute inset-0 bg-gradient-to-tr from-rose-500/20 to-orange-500/10 mix-blend-overlay z-10" />
-                <img
-                  src={item.imagePath}
-                  alt={item.title}
-                  className="w-full h-full object-fit cover bg-center group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-end z-20">
-                  <div className="p-4 text-white translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 className="font-bold">{item.title}</h3>
-                    <p className="text-xs text-gray-200 mt-1">{item.client}</p>
+          ({ item, colSpan, rowSpan, colStart, rowStart, config }, index) => {
+            // Get subcategory-specific styling
+            const getSubcategoryStyles = () => {
+              switch (item.subCategory) {
+                case "thumbnail":
+                  return {
+                    aspectRatio: config.aspectRatio,
+                    className: "rounded-lg",
+                    overlayGradient: "from-blue-500/20 to-purple-500/10",
+                  };
+                case "poster":
+                  return {
+                    aspectRatio: config.aspectRatio,
+                    className: "rounded-xl",
+                    overlayGradient: "from-rose-500/20 to-pink-500/10",
+                  };
+                case "carousel":
+                  return {
+                    aspectRatio: config.aspectRatio,
+                    className: "rounded-2xl",
+                    overlayGradient: "from-emerald-500/20 to-teal-500/10",
+                  };
+                default:
+                  return {
+                    aspectRatio: config.aspectRatio,
+                    className: "rounded-lg",
+                    overlayGradient: "from-gray-500/20 to-slate-500/10",
+                  };
+              }
+            };
+
+            const styles = getSubcategoryStyles();
+
+            return (
+              <div
+                key={index}
+                className={`
+                  ${styles.className} overflow-hidden group hover:ring-2 hover:ring-rose-500 cursor-pointer transition-all
+                `}
+                style={{
+                  gridColumn: `span ${colSpan} / span ${colSpan}`,
+                  gridRow: `span ${rowSpan} / span ${rowSpan}`,
+                  gridColumnStart: colStart,
+                  gridRowStart: rowStart,
+                  aspectRatio: styles.aspectRatio,
+                }}
+              >
+                <div className="relative w-full h-full">
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-tr ${styles.overlayGradient} mix-blend-overlay z-10`}
+                  />
+                  <img
+                    src={item.imagePath}
+                    alt={item.title}
+                    className="w-full h-full object-fit cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-end z-20">
+                    <div className="p-3 md:p-4 text-white translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs px-2 py-1 bg-white/20 rounded-full capitalize">
+                          {item.subCategory}
+                        </span>
+                      </div>
+                      <h3 className="font-bold text-sm md:text-base">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs text-gray-200 mt-1">
+                        {item.client}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )
+            );
+          }
         )}
       </div>
     </div>
