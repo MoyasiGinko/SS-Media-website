@@ -126,46 +126,55 @@ export default function Dashboard() {
     }
 
     // Handle /work prefix - skip it if present
-    let categorySlug, subCategorySlug;
+    let targetSlug;
 
     if (pathSegments[0] === "work") {
-      categorySlug = pathSegments[1];
-      subCategorySlug = pathSegments[2];
+      targetSlug = pathSegments[1];
     } else {
-      categorySlug = pathSegments[0];
-      subCategorySlug = pathSegments[1];
+      targetSlug = pathSegments[0];
     }
 
-    console.log("Category slug:", categorySlug, "Sub slug:", subCategorySlug);
+    console.log("Target slug:", targetSlug);
 
-    // Find matching category
-    const categoryItem = navItems.find((item) => item.slug === categorySlug);
-
-    console.log("Found category item:", categoryItem);
+    // First, try to find a matching main category
+    const categoryItem = navItems.find((item) => item.slug === targetSlug);
 
     if (categoryItem) {
+      // Found a main category
+      console.log("Found main category:", categoryItem);
       setActiveCategory(categoryItem.name);
-
-      // Check for subcategory
-      if (subCategorySlug && categoryItem.subItems) {
-        const subCategoryItem = categoryItem.subItems.find(
-          (subItem) => subItem.slug === subCategorySlug
-        );
-        console.log("Found subcategory item:", subCategoryItem);
-        if (subCategoryItem) {
-          setActiveSubCategory(subCategoryItem.name);
-        } else {
-          setActiveSubCategory("");
-        }
-      } else {
-        setActiveSubCategory("");
-      }
-    } else {
-      // No matching category found
-      console.log("No matching category found for slug:", categorySlug);
-      setActiveCategory("");
       setActiveSubCategory("");
+      return;
     }
+
+    // If not found in main categories, search in subcategories
+    for (const navItem of navItems) {
+      if (navItem.subItems) {
+        const subCategoryItem = navItem.subItems.find(
+          (subItem) => subItem.slug === targetSlug
+        );
+        if (subCategoryItem) {
+          // Found a subcategory
+          console.log(
+            "Found subcategory:",
+            subCategoryItem,
+            "in category:",
+            navItem
+          );
+          setActiveCategory(navItem.name);
+          setActiveSubCategory(subCategoryItem.name);
+          return;
+        }
+      }
+    }
+
+    // No matching category or subcategory found
+    console.log(
+      "No matching category or subcategory found for slug:",
+      targetSlug
+    );
+    setActiveCategory("");
+    setActiveSubCategory("");
   };
 
   // Function to update nav item states based on pathname
@@ -173,29 +182,47 @@ export default function Dashboard() {
     const pathSegments = pathname.replace(/^\//, "").split("/").filter(Boolean);
 
     // Handle /work prefix - skip it if present
-    let categorySlug, subCategorySlug;
+    let targetSlug;
 
     if (pathSegments[0] === "work") {
-      categorySlug = pathSegments[1];
-      subCategorySlug = pathSegments[2];
+      targetSlug = pathSegments[1];
     } else {
-      categorySlug = pathSegments[0];
-      subCategorySlug = pathSegments[1];
+      targetSlug = pathSegments[0];
     }
 
     const updatedNavItems = navItems.map((item) => {
-      const isCategoryActive = item.slug === categorySlug;
-      const shouldExpand =
-        isCategoryActive && item.subItems && item.subItems.length > 0;
+      // Check if this is the active main category
+      const isCategoryActive = item.slug === targetSlug;
+
+      // Check if any subcategory is active
+      let hasActiveSubCategory = false;
+      let shouldExpand = false;
+
+      const updatedSubItems = item.subItems?.map((subItem) => {
+        const isSubActive = subItem.slug === targetSlug;
+        if (isSubActive) {
+          hasActiveSubCategory = true;
+          shouldExpand = true;
+        }
+        return {
+          ...subItem,
+          active: isSubActive,
+        };
+      });
+
+      // Category is active if it's directly selected OR if one of its subcategories is active
+      const isActive = isCategoryActive || hasActiveSubCategory;
+
+      // Expand if category is active and has subitems, or if a subcategory is active
+      if (isActive && item.subItems && item.subItems.length > 0) {
+        shouldExpand = true;
+      }
 
       return {
         ...item,
-        active: isCategoryActive,
+        active: isActive,
         expanded: shouldExpand,
-        subItems: item.subItems?.map((subItem) => ({
-          ...subItem,
-          active: subItem.slug === subCategorySlug && isCategoryActive,
-        })),
+        subItems: updatedSubItems,
       };
     });
 
@@ -223,9 +250,13 @@ export default function Dashboard() {
 
   // Function to handle navigation
   const handleNavigation = (categorySlug: string, subCategorySlug?: string) => {
-    let newPath = `/work/${categorySlug}`; // Added /work prefix
+    let newPath;
     if (subCategorySlug) {
-      newPath += `/${subCategorySlug}`;
+      // For subcategories, navigate directly to /work/subcategory-slug
+      newPath = `/work/${subCategorySlug}`;
+    } else {
+      // For main categories, navigate to /work/category-slug
+      newPath = `/work/${categorySlug}`;
     }
     router.push(newPath);
   };
