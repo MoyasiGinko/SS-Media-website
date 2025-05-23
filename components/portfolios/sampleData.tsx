@@ -47,8 +47,8 @@ export const uiuxProjects: MediaItem[] = [
   {
     id: "uiux-3",
     title: "Fitness Tracking App",
-    imagePath: "/samples/uiux/fitness-app.jpg",
-    uxImage: ["/samples/uiux/fitness-app-prototype.pdf"], // Changed to array
+    imagePath: "/work/uiux/th-ux3.png",
+    uxImage: ["/work/uiux/ui3.png"], // Changed to array
     category: "UI/UX",
     description:
       "User-centered fitness application with progress tracking and personalized workout plans",
@@ -59,14 +59,38 @@ export const uiuxProjects: MediaItem[] = [
   {
     id: "uiux-4",
     title: "Smart Home Control Interface",
-    imagePath: "/samples/uiux/smart-home.jpg",
-    uxImage: [], // Empty array as this entry didn't have a uxImage before
+    imagePath: "/work/uiux/th-ux4.png",
+    uxImage: ["/work/uiux/ui4.png"], // Empty array as this entry didn't have a uxImage before
     category: "UI/UX",
     description:
       "Intuitive interface for controlling smart home devices with voice and touch interactions",
     date: "2024-12-05",
     client: "ConnectedHome Technologies",
     tags: ["IoT", "Smart Home", "Voice UI", "Touchscreen"],
+  },
+  {
+    id: "uiux-5",
+    title: "Travel Booking Website",
+    imagePath: "/work/uiux/th-ux5.png",
+    uxImage: ["/work/uiux/ui5.png"], // Empty array as this entry didn't have a uxImage before
+    category: "UI/UX",
+    description:
+      "User-friendly travel booking website with integrated flight and hotel search",
+    date: "2024-11-20",
+    client: "Wanderlust Travels",
+    tags: ["Web", "Travel", "Booking", "Responsive"],
+  },
+  {
+    id: "uiux-6",
+    title: "Online Learning Platform",
+    imagePath: "/work/uiux/th-ux6.png",
+    uxImage: ["/work/uiux/ui6.png"], // Empty array as this entry didn't have a uxImage before
+    category: "UI/UX",
+    description:
+      "Interactive online learning platform with course management and student engagement features",
+    date: "2024-10-15",
+    client: "EduTech Innovations",
+    tags: ["E-learning", "Web", "Course Management", "User Engagement"],
   },
 ];
 
