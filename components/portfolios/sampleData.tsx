@@ -3,7 +3,7 @@ export type MediaItem = {
   id: string;
   title: string;
   imagePath: string;
-  pdfPath?: string;
+  uxImage?: string;
   videoPath?: string;
   category: "UI/UX" | "Graphic Design" | "Shorts/Reels" | "Websites" | "Videos";
   subCategory?: string;
@@ -23,8 +23,8 @@ export const uiuxProjects: MediaItem[] = [
   {
     id: "uiux-1",
     title: "Mobile Banking App Redesign",
-    imagePath: "/samples/uiux/banking-app.jpg",
-    pdfPath: "/samples/uiux/banking-app-case-study.pdf",
+    imagePath: "/work/uiux/th-ux1.png",
+    uxImage: "/work/uiux/ui1.png",
     category: "UI/UX",
     description:
       "Complete redesign of a mobile banking application with focus on improved user experience and accessibility",
@@ -35,7 +35,8 @@ export const uiuxProjects: MediaItem[] = [
   {
     id: "uiux-2",
     title: "E-commerce Dashboard",
-    imagePath: "/samples/uiux/ecommerce-dashboard.jpg",
+    imagePath: "/work/uiux/th-ux2.png",
+    uxImage: "/work/uiux/ui2.png",
     category: "UI/UX",
     description:
       "Comprehensive merchant dashboard for e-commerce platform with analytics and inventory management",
@@ -47,7 +48,7 @@ export const uiuxProjects: MediaItem[] = [
     id: "uiux-3",
     title: "Fitness Tracking App",
     imagePath: "/samples/uiux/fitness-app.jpg",
-    pdfPath: "/samples/uiux/fitness-app-prototype.pdf",
+    uxImage: "/samples/uiux/fitness-app-prototype.pdf",
     category: "UI/UX",
     description:
       "User-centered fitness application with progress tracking and personalized workout plans",
@@ -73,7 +74,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-1",
     title: "Eco-Friendly Product Packaging",
-    imagePath: "/work/thumbnails/th1.png",
+    imagePath: "https://i.imgur.com/nR4dV6U.jpeg",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Packaging", "Eco-Friendly", "Product", "Sustainability"],
@@ -81,8 +82,8 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-2",
     title: "Tech Conference Branding",
-    imagePath: "/work/thumbnails/th2.png",
-    pdfPath: "/samples/design/tech-conference-brand-guide.pdf",
+    imagePath: "https://i.imgur.com/OWIQX5n.jpeg",
+    uxImage: "/samples/design/tech-conference-brand-guide.pdf",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Branding", "Conference", "Technology", "Event"],
@@ -90,8 +91,8 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-3",
     title: "Annual Report Design",
-    imagePath: "/work/thumbnails/th3.png",
-    pdfPath: "/samples/design/annual-report-2024.pdf",
+    imagePath: "https://i.imgur.com/kTinACo.png",
+    uxImage: "/samples/design/annual-report-2024.pdf",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Report", "Corporate", "Annual", "Print"],
@@ -99,7 +100,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-4",
     title: "Food Delivery App Icons",
-    imagePath: "/work/thumbnails/th4.png",
+    imagePath: "https://i.imgur.com/2dOjunt.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Icons", "App", "Food", "Delivery"],
@@ -107,7 +108,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-5",
     title: "Minimalist Poster Series",
-    imagePath: "/work/thumbnails/th5.png",
+    imagePath: "https://i.imgur.com/IDhYe6p.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Poster", "Minimalist", "Series", "Art"],
@@ -115,7 +116,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-6",
     title: "Corporate Business Card Set",
-    imagePath: "/work/thumbnails/th6.png",
+    imagePath: "https://i.imgur.com/Llxfg24.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Business Card", "Corporate", "Stationery", "Identity"],
@@ -123,7 +124,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-7",
     title: "Music Festival Flyer",
-    imagePath: "/work/thumbnails/th7.png",
+    imagePath: "https://i.imgur.com/Cf4RdTT.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Flyer", "Music", "Festival", "Event"],
@@ -131,7 +132,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-8",
     title: "Children's Book Illustration",
-    imagePath: "/work/thumbnails/th8.png",
+    imagePath: "https://i.imgur.com/SbXOke2.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Illustration", "Children", "Book", "Story"],
@@ -139,7 +140,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-9",
     title: "Restaurant Menu Design",
-    imagePath: "/work/thumbnails/th9.png",
+    imagePath: "https://i.imgur.com/kYZpMJw.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Menu", "Restaurant", "Food", "Print"],
@@ -147,7 +148,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-10",
     title: "Social Media Ad Campaign",
-    imagePath: "/work/thumbnails/th10.png",
+    imagePath: "https://i.imgur.com/ALyqOcK.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Social Media", "Ad", "Campaign", "Marketing"],
@@ -155,7 +156,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-11",
     title: "Event Invitation Card",
-    imagePath: "/work/thumbnails/th11.png",
+    imagePath: "https://i.imgur.com/j9aheTd.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Invitation", "Event", "Card", "Print"],
@@ -163,7 +164,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-12",
     title: "Travel Brochure",
-    imagePath: "/work/thumbnails/th12.png",
+    imagePath: "https://i.imgur.com/ZQLCBKk.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Brochure", "Travel", "Tourism", "Print"],
@@ -171,7 +172,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-13",
     title: "Fitness Brand Logo",
-    imagePath: "/work/thumbnails/th13.png",
+    imagePath: "https://i.imgur.com/0pqnL7H.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Logo", "Fitness", "Brand", "Identity"],
@@ -179,7 +180,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-14",
     title: "Coffee Shop Loyalty Card",
-    imagePath: "/work/thumbnails/th14.png",
+    imagePath: "https://i.imgur.com/Eq30R8V.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Loyalty Card", "Coffee Shop", "Cafe", "Print"],
@@ -187,7 +188,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-15",
     title: "Wedding Invitation Suite",
-    imagePath: "/work/thumbnails/th15.png",
+    imagePath: "https://i.imgur.com/VRhsolE.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Wedding", "Invitation", "Suite", "Event"],
@@ -195,7 +196,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-16",
     title: "Nonprofit Awareness Poster",
-    imagePath: "/work/thumbnails/th16.png",
+    imagePath: "https://i.imgur.com/FL0Yxx0.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Poster", "Nonprofit", "Awareness", "Charity"],
@@ -203,7 +204,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-17",
     title: "Fashion Lookbook Layout",
-    imagePath: "/work/thumbnails/th17.png",
+    imagePath: "https://i.imgur.com/SFRdr0X.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Lookbook", "Fashion", "Layout", "Style"],
@@ -211,7 +212,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-18",
     title: "Podcast Cover Art",
-    imagePath: "/work/thumbnails/th18.png",
+    imagePath: "https://i.imgur.com/r0JbtU5.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Podcast", "Cover Art", "Audio", "Media"],
@@ -219,7 +220,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-19",
     title: "E-book Cover Design",
-    imagePath: "/work/thumbnails/th19.png",
+    imagePath: "https://i.imgur.com/7qYOywZ.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["E-book", "Cover", "Design", "Digital"],
@@ -227,7 +228,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-20",
     title: "Startup Pitch Deck Slides",
-    imagePath: "/work/thumbnails/th20.png",
+    imagePath: "https://i.imgur.com/M3ZOW4m.jpeg",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Pitch Deck", "Startup", "Slides", "Presentation"],
@@ -235,7 +236,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-21",
     title: "Healthcare Infographic",
-    imagePath: "/work/thumbnails/th21.png",
+    imagePath: "https://i.imgur.com/YQZBaq7.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Infographic", "Healthcare", "Medical", "Visual"],
@@ -243,7 +244,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-22",
     title: "Real Estate Signage",
-    imagePath: "/work/thumbnails/th22.png",
+    imagePath: "https://i.imgur.com/bgbY01y.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Signage", "Real Estate", "Property", "Outdoor"],
@@ -251,7 +252,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-23",
     title: "Online Course Certificate",
-    imagePath: "/work/thumbnails/th23.png",
+    imagePath: "https://i.imgur.com/JEZWvvp.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Certificate", "Online Course", "Education", "Achievement"],
@@ -259,7 +260,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-24",
     title: "Mobile App Splash Screen",
-    imagePath: "/work/thumbnails/th24.png",
+    imagePath: "https://i.imgur.com/OiCZCm5.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Splash Screen", "Mobile App", "UI", "Startup"],
@@ -267,7 +268,7 @@ export const graphicDesignProjects: MediaItem[] = [
   {
     id: "design-25",
     title: "Holiday Greeting Card",
-    imagePath: "/work/thumbnails/th25.png",
+    imagePath: "https://i.imgur.com/slgcGMa.png",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Greeting Card", "Holiday", "Seasonal", "Print"],
