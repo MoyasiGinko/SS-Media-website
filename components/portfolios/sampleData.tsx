@@ -3,7 +3,7 @@ export type MediaItem = {
   id: string;
   title: string;
   imagePath: string;
-  uxImage?: string;
+  uxImage?: string[]; // Changed from string to string[] to support multiple images
   videoPath?: string;
   category: "UI/UX" | "Graphic Design" | "Shorts/Reels" | "Websites" | "Videos";
   subCategory?: string;
@@ -24,7 +24,7 @@ export const uiuxProjects: MediaItem[] = [
     id: "uiux-1",
     title: "Mobile Banking App Redesign",
     imagePath: "/work/uiux/th-ux1.png",
-    uxImage: "/work/uiux/ui1.png",
+    uxImage: ["/work/uiux/ui1.png"], // Changed to array
     category: "UI/UX",
     description:
       "Complete redesign of a mobile banking application with focus on improved user experience and accessibility",
@@ -36,7 +36,7 @@ export const uiuxProjects: MediaItem[] = [
     id: "uiux-2",
     title: "E-commerce Dashboard",
     imagePath: "/work/uiux/th-ux2.png",
-    uxImage: "/work/uiux/ui2.png",
+    uxImage: ["/work/uiux/ui2.png", "/work/uiux/th-ux2.png"], // Changed to array
     category: "UI/UX",
     description:
       "Comprehensive merchant dashboard for e-commerce platform with analytics and inventory management",
@@ -48,7 +48,7 @@ export const uiuxProjects: MediaItem[] = [
     id: "uiux-3",
     title: "Fitness Tracking App",
     imagePath: "/samples/uiux/fitness-app.jpg",
-    uxImage: "/samples/uiux/fitness-app-prototype.pdf",
+    uxImage: ["/samples/uiux/fitness-app-prototype.pdf"], // Changed to array
     category: "UI/UX",
     description:
       "User-centered fitness application with progress tracking and personalized workout plans",
@@ -60,6 +60,7 @@ export const uiuxProjects: MediaItem[] = [
     id: "uiux-4",
     title: "Smart Home Control Interface",
     imagePath: "/samples/uiux/smart-home.jpg",
+    uxImage: [], // Empty array as this entry didn't have a uxImage before
     category: "UI/UX",
     description:
       "Intuitive interface for controlling smart home devices with voice and touch interactions",
@@ -83,7 +84,6 @@ export const graphicDesignProjects: MediaItem[] = [
     id: "design-2",
     title: "Tech Conference Branding",
     imagePath: "https://i.imgur.com/OWIQX5n.jpeg",
-    uxImage: "/samples/design/tech-conference-brand-guide.pdf",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Branding", "Conference", "Technology", "Event"],
@@ -92,7 +92,6 @@ export const graphicDesignProjects: MediaItem[] = [
     id: "design-3",
     title: "Annual Report Design",
     imagePath: "https://i.imgur.com/kTinACo.png",
-    uxImage: "/samples/design/annual-report-2024.pdf",
     category: "Graphic Design",
     subCategory: "Thumbnail",
     tags: ["Report", "Corporate", "Annual", "Print"],
